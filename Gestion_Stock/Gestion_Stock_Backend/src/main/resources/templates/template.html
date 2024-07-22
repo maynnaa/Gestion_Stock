@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap-icons/1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+</head>
+<body style="font-family: Optima" class="space">
+<!-- Grey with black text -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand spaceLeft" th:href="@{/}">
+          <img th:src="@{/images/logo.png}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top align-top">
+          <!-- Optionally add text beside the logo -->
+          <b class="yellow align-bottom">Bankati</b>
+          <!-- Separator -->
+          <span class="nav-separator-v align-bottom"></span>
+      </a>
+
+     <!-- <div th:if="${username != null}">-->
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav align-text-bottom">
+                  <li class="nav-item ">
+                      <a class="nav-link active" th:href="@{/}">Accueil</a>
+                  </li>
+                  <li class="nav-item dropdown ">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" >
+                          <b class="text-light">
+                              Crédits
+                          </b>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" th:href="@{formulaireCredit}"><i class="bi bi-database-add"></i> <b> Nouvelle demande de Crédit</b></a></li>
+                          <li><a class="dropdown-item" th:href="@{credits}"><i class="bi bi-search"></i><b> Chercher un Crédit</b></a></li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+          <ul class="navbar-nav spaceRight3O">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-warning"
+                     role="button"
+                     data-bs-toggle="dropdown">
+                      [Session]
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" > <i class="bi bi-person-fill"></i> Profile</a></li>
+                      <li><a class="dropdown-item" th:href="@{logout}"><b class="text-danger"><i class="bi bi-sign-turn-left-fill"></i> Quitter </b></a></li>
+                  </ul>
+              </li>
+          </ul>
+     <!-- </div>
+      <div th:if="${username == null}">
+          <ul class="navbar-nav spaceRight3O">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-warning"
+                     role="button"
+                     data-bs-toggle="dropdown">
+                      [Non Connecté]
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" th:href="@{/login}"> <i class="bi bi-person-fill"></i> Se Connecter</a></li>
+                      <li><a class="dropdown-item" th:href="@{register}"><b class="text-danger"><i class="bi bi-person-add"></i> Nouveau Compte </b></a></li>
+                  </ul>
+              </li>
+          </ul>
+      </div>-->
+  </div>
+</nav>
+
+<div layout:fragment="content">
+
+</div>
+<script src="/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

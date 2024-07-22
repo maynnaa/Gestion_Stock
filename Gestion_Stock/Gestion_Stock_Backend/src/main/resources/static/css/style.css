@@ -1,0 +1,39 @@
+.yellow {
+    color: yellow;}
+.blue{
+    color: #838bc0;}
+
+/* Custom CSS for separator */
+.nav-separator-h {
+    height: 1px;
+    background-color: #e8ff03;
+    margin: 0.5rem 0;
+}
+
+/* Custom CSS for vertical separator */
+.nav-separator-v {
+    border-left: 1px solid #e8ff03;
+    height: 30px;
+    margin: 0 15px;
+}
+
+.spaceLeft {
+    margin-left: 10px;
+}
+.spaceRight {
+    margin-right: 10px;
+}
+.spaceRight3O {
+    margin-right: 30px;
+}
+.space {
+    margin: 20px;
+}
+.bold {
+    font-weight: bold;
+}
+
+.table-bordered-black {
+    border: 1px solid #838bc0; /* Outer border */
+}
+
