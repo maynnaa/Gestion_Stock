@@ -31,7 +31,21 @@ const Formulaire = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <style>
+        {`
+          ::-webkit-scrollbar {
+            width: 8px;
+          }
+          ::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 4px;
+          }
+          ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+          }
+        `}
+      </style>
       <div className="card shadow-sm" style={styles.card}>
         <div className="card-body">
           <h5 className="card-title mb-3" style={styles.cardTitle}>Formulaire De Besoin</h5>
@@ -81,60 +95,62 @@ const Formulaire = () => {
             <button className="btn btn-secondary" onClick={addRow}>Ajouter un bénéficiaire</button>
           </div>
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Bénéficiaire</th>
-                <th>Matériel</th>
-                <th>Quantité</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableRows.map((row, index) => (
-                <tr key={index}>
-                  <td>
-                    <select
-                      className="form-control"
-                      value={row.beneficiary}
-                      onChange={(e) => handleRowChange(index, 'beneficiary', e.target.value)}
-                    >
-                      {beneficiaries.map((beneficiary, idx) => (
-                        <option key={idx} value={beneficiary}>
-                          {beneficiary}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <select
-                      className="form-control"
-                      value={row.material}
-                      onChange={(e) => handleRowChange(index, 'material', e.target.value)}
-                    >
-                      {materials.map((material, idx) => (
-                        <option key={idx} value={material}>
-                          {material}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={row.quantity}
-                      onChange={(e) => handleRowChange(index, 'quantity', e.target.value)}
-                      min="1"
-                    />
-                  </td>
-                  <td>
-                    <button className="btn btn-danger" onClick={() => removeRow(index)}>🗑️</button>
-                  </td>
+          <div style={styles.tableContainer}>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Bénéficiaire</th>
+                  <th>Matériel</th>
+                  <th>Quantité</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tableRows.map((row, index) => (
+                  <tr key={index}>
+                    <td>
+                      <select
+                        className="form-control"
+                        value={row.beneficiary}
+                        onChange={(e) => handleRowChange(index, 'beneficiary', e.target.value)}
+                      >
+                        {beneficiaries.map((beneficiary, idx) => (
+                          <option key={idx} value={beneficiary}>
+                            {beneficiary}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <select
+                        className="form-control"
+                        value={row.material}
+                        onChange={(e) => handleRowChange(index, 'material', e.target.value)}
+                      >
+                        {materials.map((material, idx) => (
+                          <option key={idx} value={material}>
+                            {material}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={row.quantity}
+                        onChange={(e) => handleRowChange(index, 'quantity', e.target.value)}
+                        min="1"
+                      />
+                    </td>
+                    <td>
+                      <button className="btn btn-danger" onClick={() => removeRow(index)}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <div className="text-center" style={styles.buttonContainer}>
             <button className="btn btn-secondary" style={styles.cancelButton} onClick={() => window.location.reload()}>
@@ -159,6 +175,10 @@ const styles = {
   },
   cardTitle: {
     marginBottom: '15px',
+  },
+  tableContainer: {
+    maxHeight: '150px',
+    overflowY: 'auto',
   },
   buttonContainer: {
     marginTop: '15px',
