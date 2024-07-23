@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const generateRandomCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -14,9 +14,21 @@ const Formulaire = () => {
   const [ppr] = useState(generateRandomCode());
   const [selectedDivision, setSelectedDivision] = useState(divisions[0]);
   const [selectedService, setSelectedService] = useState(services[0]);
-  const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
-  const [articleCount, setArticleCount] = useState(1);
-  const [selectedBeneficiary, setSelectedBeneficiary] = useState(beneficiaries[0]);
+  const [tableRows, setTableRows] = useState([{ material: materials[0], quantity: 1, beneficiary: beneficiaries[0] }]);
+
+  const addRow = () => {
+    setTableRows([...tableRows, { material: materials[0], quantity: 1, beneficiary: beneficiaries[0] }]);
+  };
+
+  const removeRow = (index) => {
+    setTableRows(tableRows.filter((_, i) => i !== index));
+  };
+
+  const handleRowChange = (index, field, value) => {
+    const newTableRows = [...tableRows];
+    newTableRows[index][field] = value;
+    setTableRows(newTableRows);
+  };
 
   return (
     <div className="container mt-5">
@@ -65,52 +77,64 @@ const Formulaire = () => {
             </div>
           </div>
 
-          <div className="form-group row mb-3">
-            <label className="col-sm-3 col-form-label">Matériel:</label>
-            <div className="col-sm-9">
-              <select
-                className="form-control"
-                value={selectedMaterial}
-                onChange={(e) => setSelectedMaterial(e.target.value)}
-              >
-                {materials.map((material, index) => (
-                  <option key={index} value={material}>
-                    {material}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="d-flex justify-content-end mb-3">
+            <button className="btn btn-secondary" onClick={addRow}>Ajouter un bénéficiaire</button>
           </div>
 
-          <div className="form-group row mb-3">
-            <label className="col-sm-3 col-form-label">Nombre d'articles:</label>
-            <div className="col-sm-9">
-              <input
-                type="number"
-                className="form-control"
-                value={articleCount}
-                onChange={(e) => setArticleCount(e.target.value)}
-                min="1"
-              />
-            </div>
-          </div>
-
-          <div className="form-group row mb-3">
-            <label className="col-sm-3 col-form-label">Bénéficiaire:</label>
-            <div className="col-sm-9">
-              <select
-                className="form-control"
-                value={selectedBeneficiary}
-                onChange={(e) => setSelectedBeneficiary(e.target.value)}
-              >
-                {beneficiaries.map((beneficiary, index) => (
-                  <option key={index} value={beneficiary}>
-                    {beneficiary}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Bénéficiaire</th>
+                <th>Matériel</th>
+                <th>Quantité</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableRows.map((row, index) => (
+                <tr key={index}>
+                  <td>
+                    <select
+                      className="form-control"
+                      value={row.beneficiary}
+                      onChange={(e) => handleRowChange(index, 'beneficiary', e.target.value)}
+                    >
+                      {beneficiaries.map((beneficiary, idx) => (
+                        <option key={idx} value={beneficiary}>
+                          {beneficiary}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      className="form-control"
+                      value={row.material}
+                      onChange={(e) => handleRowChange(index, 'material', e.target.value)}
+                    >
+                      {materials.map((material, idx) => (
+                        <option key={idx} value={material}>
+                          {material}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={row.quantity}
+                      onChange={(e) => handleRowChange(index, 'quantity', e.target.value)}
+                      min="1"
+                    />
+                  </td>
+                  <td>
+                    <button className="btn btn-danger" onClick={() => removeRow(index)}>🗑️</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
           <div className="text-center" style={styles.buttonContainer}>
             <button className="btn btn-secondary" style={styles.cancelButton} onClick={() => window.location.reload()}>
@@ -145,7 +169,7 @@ const styles = {
     marginRight: '10px',
   },
   submitButton: {
-    marginLeft: '10px', 
+    marginLeft: '10px',
   },
 };
 
