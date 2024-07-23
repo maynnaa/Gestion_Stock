@@ -1,10 +1,10 @@
 import React from 'react';
-import Login from '../components/login'; // Ensure the path is correct
+import Login from '../components/login'; 
+
 
 const LoginPage = () => {
   return (
-    <div className='text'>LOGIN 
-    <Login/>
+    <div className='text'> <Login/>
     </div>
   );
 };

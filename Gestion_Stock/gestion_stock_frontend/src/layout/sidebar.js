@@ -24,7 +24,7 @@ const Sidebar = () => {
           onMouseEnter={() => handleMouseEnter('home')}
           onMouseLeave={handleMouseLeave}
         >
-          Acceuil
+          Accueil
         </Button>
         <Button
           variant="outline-secondary"
@@ -53,7 +53,7 @@ const styles = {
   sidebar: {
     height: '100vh',
     width: '250px',
-    backgroundColor: '#ABEDDD', // Couleur de fond du sidebar
+    backgroundColor: '#ABEDDD', 
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
