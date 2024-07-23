@@ -17,11 +17,9 @@ const PageWithSidebar = () => {
 
   return (
     <div style={styles.page}>
-      <Sidebar />
-      <div style={styles.content}>
-        <NavBar />
-        <Formulaire />
-        <div style={styles.buttonContainer}>
+      <div style={styles.sidebarWrapper}>
+        <Sidebar />
+        <div style={styles.additionalButtons}>
           <DynamicButton
             size="medium"
             hovered={hoveredButton === 'request'}
@@ -40,6 +38,10 @@ const PageWithSidebar = () => {
           </DynamicButton>
         </div>
       </div>
+      <div style={styles.content}>
+        <NavBar />
+        <Formulaire />
+      </div>
     </div>
   );
 };
@@ -47,20 +49,25 @@ const PageWithSidebar = () => {
 const styles = {
   page: {
     display: 'flex',
-    height: '100vh', 
+    height: '100vh',
+  },
+  sidebarWrapper: {
+    position: 'relative',
+    width: '250px',
+  },
+  additionalButtons: {
+    position: 'absolute',
+    top: '300px', // Adjust this value to ensure the buttons are visible and not overlapping other elements
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '10px',
   },
   content: {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  buttonContainer: {
-    marginTop: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
   },
 };
 
