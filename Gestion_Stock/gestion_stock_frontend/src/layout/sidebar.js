@@ -1,9 +1,10 @@
-// sidebar.js
 import React, { useState } from 'react';
-import DynamicButton from '../components/button'; // Chemin mis à jour pour pointer vers components/button
+import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Sidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const navigate = useNavigate();
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -13,37 +14,57 @@ const Sidebar = () => {
     setHoveredButton(null);
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  const buttonStyles = (button) => ({
+    width: button === 'large' ? '100%' : button === 'small' ? '50%' : '75%', 
+    padding: '10px',
+    margin: '10px 0',
+    borderRadius: '20px', 
+    fontSize: '18px',
+    border: '1px solid transparent',
+    transition: 'box-shadow 0.3s',
+    cursor: 'pointer',
+    boxShadow: hoveredButton === button ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
+    borderColor: hoveredButton === button ? '#ccc' : 'transparent',
+  });
+
   return (
     <div style={styles.sidebar}>
       <div style={styles.logo}>
         <img src="/MAPDEF_logo.png" alt='logo' style={styles.logoImage} />
       </div>
       <ul style={styles.sidebarMenu}>
-        <DynamicButton
-          size="medium"
-          hovered={hoveredButton === 'home'}
+        <Button
+          variant="outline-secondary"
+          style={buttonStyles('home')}
           onMouseEnter={() => handleMouseEnter('home')}
           onMouseLeave={handleMouseLeave}
+         
         >
           Accueil
-        </DynamicButton>
-        <DynamicButton
-          size="medium"
-          hovered={hoveredButton === 'stock'}
+        </Button>
+        <Button
+          variant="outline-secondary"
+          style={buttonStyles('stock')}
           onMouseEnter={() => handleMouseEnter('stock')}
           onMouseLeave={handleMouseLeave}
+          onClick={() => handleNavigation('/stock')}
         >
           Stock
-        </DynamicButton>
+        </Button>
         <div style={styles.bottomSection}>
-          <DynamicButton
-            size="medium"
-            hovered={hoveredButton === 'logout'}
+          <Button
+            variant="outline-secondary"
+            style={buttonStyles('logout')}
             onMouseEnter={() => handleMouseEnter('logout')}
             onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/login')}
           >
             Se déconnecter
-          </DynamicButton>
+          </Button>
         </div>
       </ul>
     </div>
@@ -54,7 +75,7 @@ const styles = {
   sidebar: {
     height: '100vh',
     width: '250px',
-    backgroundColor: '#ABEDDD', 
+    backgroundColor: '#ABEDDD',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -67,7 +88,7 @@ const styles = {
     fontWeight: 'bold',
   },
   logoImage: {
-    width: '200px', 
+    width: '200px',
     height: 'auto',
   },
   sidebarMenu: {

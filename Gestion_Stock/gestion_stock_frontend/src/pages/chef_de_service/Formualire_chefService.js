@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importer useNavigate pour la navigation
 import Sidebar from '../../layout/sidebar'; 
 import Formulaire from '../../components/formulaire'; 
 import NavBar from '../../components/navbar';
-import DynamicButton from '../../components/button'; // Assurez-vous que le chemin est correct
+import Button from '../../components/button'; // Assurez-vous que le chemin est correct
 
 const PageWithSidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const navigate = useNavigate(); // Initialiser navigate
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -15,27 +17,34 @@ const PageWithSidebar = () => {
     setHoveredButton(null);
   };
 
+  // Fonction pour gérer la navigation
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-          <DynamicButton
+          <Button
             size="medium"
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/formulaire')} // Redirection vers /formulaire
           >
             Demande de besoins
-          </DynamicButton>
-          <DynamicButton
+          </Button>
+          <Button
             size="medium"
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/historique')} // Redirection vers /historique
           >
             Historique des demandes
-          </DynamicButton>
+          </Button>
         </div>
       </div>
       <div style={styles.content}>
@@ -57,7 +66,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Adjust this value to ensure the buttons are visible and not overlapping other elements
+    top: '300px', // Ajuster cette valeur pour assurer la visibilité des boutons
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
