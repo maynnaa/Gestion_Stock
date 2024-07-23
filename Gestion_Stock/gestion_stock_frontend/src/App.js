@@ -12,12 +12,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/formulaire" element={<PageWithSidebar />} />
-
           <Route path="/" element={<LoginPage />} /> 
           <Route path='/stock' element={<StockChefService/>} />
-          <Route path="/" element={<LoginPage />} /> {/* la  route par défaut */}
           <Route path="/historique" element={<HistoriquePage />} />
-          <Route path="/" element={<LoginPage />} /> {/* la  route par défaut */}
         </Routes>
       </div>
     </Router>
