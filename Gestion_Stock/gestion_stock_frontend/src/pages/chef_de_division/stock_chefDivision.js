@@ -50,7 +50,7 @@ const StockDivision = () => {
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire')}
+            onClick={() => handleNavigation('/formulaireDivision')}
           >
             Demande de besoins
           </Button>
@@ -59,7 +59,7 @@ const StockDivision = () => {
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historique')}
+            onClick={() => handleNavigation('/historiqueDivision')}
           >
             Historique des demandes
           </Button>
@@ -68,7 +68,7 @@ const StockDivision = () => {
             hovered={hoveredButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/recu')}
+            onClick={() => handleNavigation('/demandesRecues')}
           >
             Demandes reçues
           </Button>
