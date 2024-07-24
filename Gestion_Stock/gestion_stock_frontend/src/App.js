@@ -6,7 +6,12 @@ import HistoriquePage from './pages/chef_de_service/historique_chefService';
 import StockChefService from './pages/chef_de_service/stock_chefService';
 import FormulaireDivision from './pages/chef_de_division/Formulaire_chefDivision';
 import HistoriqueDivision from './pages/chef_de_division/historique_chefDivision';
+
 import DemandesRecues from './pages/chef_de_division/Demandes_recues';
+
+
+import StockDivision from './pages/chef_de_division/stock_chefDivision';
+
 
 
 
@@ -23,7 +28,12 @@ function App() {
           <Route path="/historique" element={<HistoriquePage />} />
           <Route path="/formulaireDivision" element={<FormulaireDivision />} />
           <Route path="/historiqueDivision" element={<HistoriqueDivision />} />
+
           <Route path="/demandesRecues" element={<DemandesRecues />} />
+
+
+
+          <Route path='/stockDivision' element={< StockDivision/>} />
 
 
 
