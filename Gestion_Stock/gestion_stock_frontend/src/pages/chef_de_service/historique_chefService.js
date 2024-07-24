@@ -23,7 +23,6 @@ const HistoriquePage = () => {
     setSearchTerm(term);
   };
 
-  
   const handleNavigation = (path) => {
     navigate(path);
   };
@@ -33,6 +32,24 @@ const HistoriquePage = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'home'}
+            onMouseEnter={() => handleMouseEnter('home')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stock')}
+          >
+            Stock
+          </Button>
           <Button
             size="medium"
             hovered={hoveredButton === 'request'}
@@ -47,7 +64,7 @@ const HistoriquePage = () => {
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-             onClick={() => handleNavigation('/historique')}
+            onClick={() => handleNavigation('/historique')}
           >
             Historique des demandes
           </Button>
@@ -77,7 +94,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Adjust this value to ensure the buttons are visible and not overlapping other elements
+    top: '200px', // Adjusted this value to move buttons higher
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -99,12 +116,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: '55px', // Adjust this value to add more space at the top
+    marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%', // Adjust this value to reduce the table size
-    maxWidth: '800px', // Max width to ensure the table doesn't get too wide
-    margin: '20px auto', // Center the table horizontally and add some margin-top
+    width: '80%',
+    maxWidth: '800px',
+    margin: '20px auto',
   },
 };
 
