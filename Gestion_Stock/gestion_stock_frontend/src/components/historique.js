@@ -1,6 +1,8 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { FaArrowRight } from 'react-icons/fa'; // Importation de l'icône pour la redirection
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom'; // Importation pour la redirection
 
 function DefaultExample({ searchTerm }) {
   const items = [
@@ -16,18 +18,30 @@ function DefaultExample({ searchTerm }) {
     { id: 10, creationDate: '10/01/2024' },
   ];
 
+  const navigate = useNavigate(); // Hook pour la redirection
+
   const filteredItems = items.filter(item => 
     item.creationDate.includes(searchTerm)
   );
+
+  const handleRedirect = (id) => {
+    // Redirection vers la page de la demande spécifique
+    navigate(`/demande`);
+  };
 
   return (
     <div className="scrollable-list">
       <ListGroup>
         {filteredItems.map(item => (
           <ListGroup.Item key={item.id}>
-            <div className="d-flex justify-content-between">
-              <div><strong>ID:</strong> {item.id}</div>
-              <div><strong>Date de création:</strong> {item.creationDate}</div>
+            <div className="d-flex justify-content-between align-items-center">
+              <div><strong>Demande de besoin N°{item.id}</strong></div>
+              <div className="d-flex align-items-center">
+                <div><strong>Date de création:</strong> {item.creationDate}</div>
+                <button onClick={() => handleRedirect(item.id)} className="btn btn-link ml-3">
+                  <FaArrowRight />
+                </button>
+              </div>
             </div>
           </ListGroup.Item>
         ))}
