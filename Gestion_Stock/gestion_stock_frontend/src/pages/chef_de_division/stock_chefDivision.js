@@ -25,7 +25,6 @@ const StockDivision = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -73,6 +72,7 @@ const StockDivision = () => {
             Demandes reçues
           </Button>
         </div>
+        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar />
@@ -83,8 +83,6 @@ const StockDivision = () => {
     </div>
   );
 };
-
-
 
 const styles = {
   page: {
@@ -97,7 +95,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px',
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
