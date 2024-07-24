@@ -19,7 +19,7 @@ function App() {
           <Route path='/stock' element={<StockChefService/>} />
           <Route path="/historique" element={<HistoriquePage />} />
           
-
+          gbhjkjjjjjjjjjj
         </Routes>
       </div>
     </Router>
