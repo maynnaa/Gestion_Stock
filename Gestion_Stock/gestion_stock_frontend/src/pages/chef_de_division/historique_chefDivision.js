@@ -38,7 +38,7 @@ const HistoriqueDivision = () => {
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire')}
+            onClick={() => handleNavigation('/formulaireDivision')}
           >
             Demande de besoins
           </Button>
@@ -56,7 +56,7 @@ const HistoriqueDivision = () => {
             hovered={hoveredButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/')} 
+            onClick={() => handleNavigation('/demandesRecues')} 
           >
             Demandes reçues
           </Button>
