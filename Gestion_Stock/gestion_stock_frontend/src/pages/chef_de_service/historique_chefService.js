@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
@@ -8,8 +8,30 @@ import Button from '../../components/button';
 
 const HistoriquePage = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [activeButton, setActiveButton] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    switch (path) {
+      case '/':
+        setActiveButton('home');
+        break;
+      case '/stock':
+        setActiveButton('stock');
+        break;
+      case '/formulaire':
+        setActiveButton('request');
+        break;
+      case '/historique':
+        setActiveButton('history');
+        break;
+      default:
+        setActiveButton(null);
+    }
+  }, [location.pathname]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -23,7 +45,8 @@ const HistoriquePage = () => {
     setSearchTerm(term);
   };
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path, button) => {
+    setActiveButton(button);
     navigate(path);
   };
 
@@ -34,37 +57,37 @@ const HistoriquePage = () => {
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
-            hovered={hoveredButton === 'home'}
+            hovered={hoveredButton === 'home' || activeButton === 'home'}
             onMouseEnter={() => handleMouseEnter('home')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/')}
+            onClick={() => handleNavigation('/', 'home')}
           >
             Accueil
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'stock'}
+            hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stock')}
+            onClick={() => handleNavigation('/stock', 'stock')}
           >
             Stock
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'request'}
+            hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire')}
+            onClick={() => handleNavigation('/formulaire', 'request')}
           >
             Demande de besoins
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'history'}
+            hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historique')}
+            onClick={() => handleNavigation('/historique', 'history')}
           >
             Historique des demandes
           </Button>
@@ -94,7 +117,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', // Adjusted this value to move buttons higher
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

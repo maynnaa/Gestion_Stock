@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
@@ -7,7 +7,32 @@ import Button from '../../components/button'; // Assurez-vous que le chemin est 
 
 const StockDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const navigate = useNavigate(); // Initialiser navigate
+  const [activeButton, setActiveButton] = useState(null);
+  const navigate = useNavigate(); 
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    switch (path) {
+      case '/':
+        setActiveButton('accueil');
+        break;
+      case '/stockDivision':
+        setActiveButton('stock');
+        break;
+      case '/formulaireDivision':
+        setActiveButton('request');
+        break;
+      case '/historiqueDivision':
+        setActiveButton('history');
+        break;
+      case '/demandesRecues':
+        setActiveButton('received');
+        break;
+      default:
+        setActiveButton(null);
+    }
+  }, [location.pathname]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -17,8 +42,8 @@ const StockDivision = () => {
     setHoveredButton(null);
   };
 
-  // Fonction pour gérer la navigation
-  const handleNavigation = (path) => {
+  const handleNavigation = (path, button) => {
+    setActiveButton(button);
     navigate(path);
   };
 
@@ -28,46 +53,46 @@ const StockDivision = () => {
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
-            hovered={hoveredButton === 'accueil'}
+            hovered={hoveredButton === 'accueil' || activeButton === 'accueil'}
             onMouseEnter={() => handleMouseEnter('accueil')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/')}
+            onClick={() => handleNavigation('/', 'accueil')}
           >
             Accueil
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'stock'}
+            hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockDivision')}
+            onClick={() => handleNavigation('/stockDivision', 'stock')}
           >
             Stock
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'request'}
+            hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaireDivision')}
+            onClick={() => handleNavigation('/formulaireDivision', 'request')}
           >
             Demande de besoins
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'history'}
+            hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueDivision')}
+            onClick={() => handleNavigation('/historiqueDivision', 'history')}
           >
             Historique des demandes
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'received'}
+            hovered={hoveredButton === 'received' || activeButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandesRecues')}
+            onClick={() => handleNavigation('/demandesRecues', 'received')}
           >
             Demandes reçues
           </Button>

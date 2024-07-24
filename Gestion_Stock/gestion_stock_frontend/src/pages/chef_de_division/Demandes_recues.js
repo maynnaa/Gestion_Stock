@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
@@ -8,8 +8,33 @@ import Button from '../../components/button';
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [activeButton, setActiveButton] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    switch (path) {
+      case '/':
+        setActiveButton('accueil');
+        break;
+      case '/stockDivision':
+        setActiveButton('stock');
+        break;
+      case '/formulaireDivision':
+        setActiveButton('request');
+        break;
+      case '/historiqueDivision':
+        setActiveButton('history');
+        break;
+      case '/demandesRecues':
+        setActiveButton('received');
+        break;
+      default:
+        setActiveButton(null);
+    }
+  }, [location.pathname]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -23,63 +48,62 @@ const DemandesRecues = () => {
     setSearchTerm(term);
   };
 
-  
-  const handleNavigation = (path) => {
+  const handleNavigation = (path, button) => {
+    setActiveButton(button);
     navigate(path);
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-      <div style={styles.additionalButtons}>
-        <Button
+        <div style={styles.additionalButtons}>
+          <Button
             size="medium"
-            hovered={hoveredButton === 'accueil'}
-            onMouseEnter={() => handleMouseEnter('acceuil')}
+            hovered={hoveredButton === 'accueil' || activeButton === 'accueil'}
+            onMouseEnter={() => handleMouseEnter('accueil')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/')}
+            onClick={() => handleNavigation('/', 'accueil')}
           >
             Accueil
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'stock'}
+            hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockDivision')}
+            onClick={() => handleNavigation('/stockDivision', 'stock')}
           >
             Stock
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'request'}
+            hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaireDivision')}
+            onClick={() => handleNavigation('/formulaireDivision', 'request')}
           >
             Demande de besoins
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'history'}
+            hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-             onClick={() => handleNavigation('/historiqueDivision')}
+            onClick={() => handleNavigation('/historiqueDivision', 'history')}
           >
             Historique des demandes
           </Button>
           <Button
             size="medium"
-            hovered={hoveredButton === 'received'}
+            hovered={hoveredButton === 'received' || activeButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandesRecues')} 
+            onClick={() => handleNavigation('/demandesRecues', 'received')}
           >
             Demandes reçues
           </Button>
         </div>
-       <Sidebar/> 
-       
+        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar />
@@ -134,8 +158,6 @@ const styles = {
     maxWidth: '800px', // Max width to ensure the table doesn't get too wide
     margin: '20px auto', // Center the table horizontally and add some margin-top
   },
- 
 };
-
 
 export default DemandesRecues;
