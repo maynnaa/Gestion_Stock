@@ -31,8 +31,7 @@ const DemandesRecues = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-        <Sidebar />
-        <div style={styles.additionalButtons}>
+      <div style={styles.additionalButtons}>
         <Button
             size="medium"
             hovered={hoveredButton === 'accueil'}
@@ -79,6 +78,8 @@ const DemandesRecues = () => {
             Demandes reçues
           </Button>
         </div>
+       <Sidebar/> 
+       
       </div>
       <div style={styles.content}>
         <NavBar />
@@ -104,7 +105,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Adjust this value to ensure the buttons are visible and not overlapping other elements
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

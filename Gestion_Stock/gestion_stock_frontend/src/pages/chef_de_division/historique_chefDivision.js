@@ -31,7 +31,6 @@ const HistoriqueDivision = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-        <Sidebar />
         <div style={styles.additionalButtons}>
         <Button
             size="medium"
@@ -79,6 +78,7 @@ const HistoriqueDivision = () => {
             Demandes reçues
           </Button>
         </div>
+       <Sidebar/> 
       </div>
       <div style={styles.content}>
         <NavBar />
@@ -104,7 +104,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Adjust this value to ensure the buttons are visible and not overlapping other elements
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

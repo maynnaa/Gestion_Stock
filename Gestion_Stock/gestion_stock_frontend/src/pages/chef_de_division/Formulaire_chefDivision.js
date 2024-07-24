@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
 import Formulaire from '../../components/formulaire';
 import NavBar from '../../components/navbar';
-import Button from '../../components/button'; // Ensure the path is correct
+import Button from '../../components/button';
 
 const FormulaireDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -23,8 +23,8 @@ const FormulaireDivision = () => {
 
   return (
     <div style={styles.page}>
-      <Sidebar>
-        <div style={styles.buttonsContainer}>
+      <div style={styles.sidebarWrapper}>
+        <div style={styles.additionalButtons}>
           <Button
             size="medium"
             hovered={hoveredButton === 'accueil'}
@@ -71,7 +71,8 @@ const FormulaireDivision = () => {
             Demandes reçues
           </Button>
         </div>
-      </Sidebar>
+        <Sidebar />
+      </div>
       <div style={styles.mainContent}>
         <NavBar />
         <Formulaire />
@@ -85,14 +86,23 @@ const styles = {
     display: 'flex',
     height: '100vh',
   },
+  sidebarWrapper: {
+    position: 'relative',
+    width: '250px',
+  },
+  additionalButtons: {
+    position: 'absolute',
+    top: '200px',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '10px',
+  },
   mainContent: {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  buttonsContainer: {
     display: 'flex',
     flexDirection: 'column',
   },
