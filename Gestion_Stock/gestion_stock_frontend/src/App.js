@@ -18,8 +18,16 @@ function App() {
           <Route path="/" element={<LoginPage />} /> 
           <Route path='/stock' element={<StockChefService/>} />
           <Route path="/historique" element={<HistoriquePage />} />
+
           
           gbhjkjjjjjjjjjj
+
+          
+
+
+          aaa
+
+
         </Routes>
       </div>
     </Router>
