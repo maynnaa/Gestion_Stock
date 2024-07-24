@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate pour la navigation
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import Formulaire from '../../components/formulaire'; 
 import NavBar from '../../components/navbar';
-import Button from '../../components/button'; // Assurez-vous que le chemin est correct
+import Button from '../../components/button'; 
 
 const PageWithSidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const navigate = useNavigate(); // Initialiser navigate
+  const navigate = useNavigate();
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -17,7 +17,6 @@ const PageWithSidebar = () => {
     setHoveredButton(null);
   };
 
-  // Fonction pour gérer la navigation
   const handleNavigation = (path) => {
     navigate(path);
   };
@@ -29,10 +28,28 @@ const PageWithSidebar = () => {
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
+            hovered={hoveredButton === 'home'}
+            onMouseEnter={() => handleMouseEnter('home')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stock')}
+          >
+            Stock
+          </Button>
+          <Button
+            size="medium"
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire')} // Redirection vers /formulaire
+            onClick={() => handleNavigation('/formulaire')}
           >
             Demande de besoins
           </Button>
@@ -41,7 +58,7 @@ const PageWithSidebar = () => {
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historique')} // Redirection vers /historique
+            onClick={() => handleNavigation('/historique')}
           >
             Historique des demandes
           </Button>
@@ -66,7 +83,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Ajuster cette valeur pour assurer la visibilité des boutons
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

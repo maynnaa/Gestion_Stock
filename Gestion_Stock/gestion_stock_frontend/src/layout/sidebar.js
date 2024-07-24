@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div style={styles.sidebar}>
       <div style={styles.logo}>
-        <img src="/MAPDEF_logo.png" alt='logo' style={styles.logoImage} />
+        <img src="/MAPDEF_logo.png" alt="logo" style={styles.logoImage} />
       </div>
       <div style={styles.bottomSection}>
         <Button
@@ -76,7 +76,6 @@ const styles = {
     width: '90%',
     display: 'flex',
     justifyContent: 'center',
-    marginBottom: '20px',
   },
 };
 
