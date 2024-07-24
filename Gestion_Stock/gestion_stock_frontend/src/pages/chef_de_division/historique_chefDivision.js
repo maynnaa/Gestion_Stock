@@ -33,6 +33,24 @@ const HistoriqueDivision = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
+        <Button
+            size="medium"
+            hovered={hoveredButton === 'accueil'}
+            onMouseEnter={() => handleMouseEnter('acceuil')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stockDivision')}
+          >
+            Stock
+          </Button>
           <Button
             size="medium"
             hovered={hoveredButton === 'request'}

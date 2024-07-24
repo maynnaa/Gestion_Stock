@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate pour la navigation
-import Sidebar from '../../layout/sidebar'; 
-import Formulaire from '../../components/formulaire'; 
+import { useNavigate } from 'react-router-dom';
+import Sidebar from '../../layout/sidebar';
+import Formulaire from '../../components/formulaire';
 import NavBar from '../../components/navbar';
-import Button from '../../components/button'; // Assurez-vous que le chemin est correct
+import Button from '../../components/button'; // Ensure the path is correct
 
 const FormulaireDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const navigate = useNavigate(); // Initialiser navigate
+  const navigate = useNavigate();
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -17,22 +17,38 @@ const FormulaireDivision = () => {
     setHoveredButton(null);
   };
 
-  // Fonction pour gérer la navigation
   const handleNavigation = (path) => {
     navigate(path);
   };
 
   return (
     <div style={styles.page}>
-      <div style={styles.sidebarWrapper}>
-        <Sidebar />
-        <div style={styles.additionalButtons}>
+      <Sidebar>
+        <div style={styles.buttonsContainer}>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'accueil'}
+            onMouseEnter={() => handleMouseEnter('accueil')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stockDivision')}
+          >
+            Stock
+          </Button>
           <Button
             size="medium"
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaireDivision')} // Redirection vers /formulaire
+            onClick={() => handleNavigation('/formulaireDivision')}
           >
             Demande de besoins
           </Button>
@@ -41,7 +57,7 @@ const FormulaireDivision = () => {
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueDivision')} // Redirection vers /historique
+            onClick={() => handleNavigation('/historiqueDivision')}
           >
             Historique des demandes
           </Button>
@@ -50,13 +66,13 @@ const FormulaireDivision = () => {
             hovered={hoveredButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandesRecues')} // Redirection vers /recu
+            onClick={() => handleNavigation('/demandesRecues')}
           >
             Demandes reçues
           </Button>
         </div>
-      </div>
-      <div style={styles.content}>
+      </Sidebar>
+      <div style={styles.mainContent}>
         <NavBar />
         <Formulaire />
       </div>
@@ -69,23 +85,16 @@ const styles = {
     display: 'flex',
     height: '100vh',
   },
-  sidebarWrapper: {
-    position: 'relative',
-    width: '250px',
-  },
-  additionalButtons: {
-    position: 'absolute',
-    top: '300px', // Ajuster cette valeur pour assurer la visibilité des boutons
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '10px',
-  },
-  content: {
+  mainContent: {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 };
 

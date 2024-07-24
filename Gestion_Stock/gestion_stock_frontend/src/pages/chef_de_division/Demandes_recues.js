@@ -33,6 +33,24 @@ const DemandesRecues = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
+        <Button
+            size="medium"
+            hovered={hoveredButton === 'accueil'}
+            onMouseEnter={() => handleMouseEnter('acceuil')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stockDivision')}
+          >
+            Stock
+          </Button>
           <Button
             size="medium"
             hovered={hoveredButton === 'request'}
@@ -115,6 +133,8 @@ const styles = {
     maxWidth: '800px', // Max width to ensure the table doesn't get too wide
     margin: '20px auto', // Center the table horizontally and add some margin-top
   },
+ 
 };
+
 
 export default DemandesRecues;

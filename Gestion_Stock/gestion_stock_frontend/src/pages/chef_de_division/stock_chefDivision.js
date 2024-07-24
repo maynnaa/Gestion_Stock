@@ -29,10 +29,28 @@ const StockDivision = () => {
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
+            hovered={hoveredButton === 'accueil'}
+            onMouseEnter={() => handleMouseEnter('accueil')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/')}
+          >
+            Accueil
+          </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'stock'}
+            onMouseEnter={() => handleMouseEnter('stock')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/stockDivision')}
+          >
+            Stock
+          </Button>
+          <Button
+            size="medium"
             hovered={hoveredButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire')} // Redirection vers /formulaire
+            onClick={() => handleNavigation('/formulaire')}
           >
             Demande de besoins
           </Button>
@@ -41,7 +59,7 @@ const StockDivision = () => {
             hovered={hoveredButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historique')} // Redirection vers /historique
+            onClick={() => handleNavigation('/historique')}
           >
             Historique des demandes
           </Button>
@@ -50,7 +68,7 @@ const StockDivision = () => {
             hovered={hoveredButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/recu')} // Redirection vers /recu
+            onClick={() => handleNavigation('/recu')}
           >
             Demandes reçues
           </Button>
@@ -66,6 +84,8 @@ const StockDivision = () => {
   );
 };
 
+
+
 const styles = {
   page: {
     display: 'flex',
@@ -77,7 +97,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '300px', // Ajuster cette valeur pour assurer la visibilité des boutons
+    top: '300px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -93,7 +113,7 @@ const styles = {
     alignItems: 'center',
   },
   tableContainer: {
-    marginTop: '60px', // Ajoute un espacement supérieur pour déplacer le tableau plus bas
+    marginTop: '60px',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
