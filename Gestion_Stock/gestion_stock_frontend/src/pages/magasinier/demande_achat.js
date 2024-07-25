@@ -66,7 +66,7 @@ const FormDemandeAchat = () => {
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/gestionStock', 'stock')}
+            onClick={() => handleNavigation('/stockMagasinier', 'stock')}
           >
             Gestion de Stock
           </Button>
@@ -93,7 +93,7 @@ const FormDemandeAchat = () => {
             hovered={hoveredButton === 'historyBesoins' || activeButton === 'historyBesoins'}
             onMouseEnter={() => handleMouseEnter('historyBesoins')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueBesoins', 'historyBesoins')}
+            onClick={() => handleNavigation('/historiqueBesoinsMagasinier', 'historyBesoins')}
           >
             Historique des demandes de besoins
           </Button>
@@ -102,7 +102,6 @@ const FormDemandeAchat = () => {
       <div style={styles.content}>
         <NavBar />
         <FormulaireDemandeAchat />
-        <div>Content for DemandeAchat</div>
       </div>
     </div>
   );

@@ -73,7 +73,7 @@ const HistoriqueBesoins = () => {
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/gestionStock', 'stock')}
+            onClick={() => handleNavigation('/stockMagasinier', 'stock')}
             active={activeButton === 'stock'}
           >
             Gestion de Stock
