@@ -7,17 +7,23 @@ const generateRandomCode = () => {
 
 const divisions = ['Division 1'];
 const services = ['Service 1'];
-const materials = ['Material 1', 'Material 2', 'Material 3'];
+const materialTypes = ['Type 1', 'Type 2', 'Type 3'];
+const materialsByType = {
+  'Type 1': ['Material 1', 'Material 2'],
+  'Type 2': ['Material 3', 'Material 4'],
+  'Type 3': ['Material 5', 'Material 6']
+};
 const beneficiaries = ['User 1', 'User 2', 'User 3'];
 
 const Formulaire = () => {
   const [ppr] = useState(generateRandomCode());
   const [selectedDivision, setSelectedDivision] = useState(divisions[0]);
   const [selectedService, setSelectedService] = useState(services[0]);
-  const [tableRows, setTableRows] = useState([{ material: materials[0], quantity: 1, beneficiary: beneficiaries[0] }]);
+  const [selectedMaterialType, setSelectedMaterialType] = useState('');
+  const [tableRows, setTableRows] = useState([]);
 
   const addRow = () => {
-    setTableRows([...tableRows, { material: materials[0], quantity: 1, beneficiary: beneficiaries[0] }]);
+    setTableRows([...tableRows, { material: '', quantity: 1, beneficiary: beneficiaries[0] }]);
   };
 
   const removeRow = (index) => {
@@ -29,6 +35,8 @@ const Formulaire = () => {
     newTableRows[index][field] = value;
     setTableRows(newTableRows);
   };
+
+  const materials = selectedMaterialType ? materialsByType[selectedMaterialType] : [];
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -91,6 +99,24 @@ const Formulaire = () => {
             </div>
           </div>
 
+          <div className="form-group row mb-3">
+            <label className="col-sm-3 col-form-label">Type du matériel:</label>
+            <div className="col-sm-9">
+              <select
+                className="form-control"
+                value={selectedMaterialType}
+                onChange={(e) => setSelectedMaterialType(e.target.value)}
+              >
+                <option value="">Choisissez un type</option>
+                {materialTypes.map((type, index) => (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="d-flex justify-content-end mb-3">
             <button className="btn btn-secondary" onClick={addRow}>Ajouter un bénéficiaire</button>
           </div>
@@ -126,7 +152,9 @@ const Formulaire = () => {
                         className="form-control"
                         value={row.material}
                         onChange={(e) => handleRowChange(index, 'material', e.target.value)}
+                        disabled={!selectedMaterialType}
                       >
+                        <option value="">Choisissez un matériel</option>
                         {materials.map((material, idx) => (
                           <option key={idx} value={material}>
                             {material}

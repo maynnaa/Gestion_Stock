@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-
-
-const materials = ['Material 1', 'Material 2', 'Material 3'];
+const materialTypes = ['Type 1', 'Type 2', 'Type 3'];
+const materialsByType = {
+  'Type 1': ['Material 1', 'Material 2'],
+  'Type 2': ['Material 3', 'Material 4'],
+  'Type 3': ['Material 5', 'Material 6']
+};
 const fournisseurs = ['Fournisseur 1', 'Fournisseur 2', 'Fournisseur 3'];
 
 const FormulaireDemandeAchat = () => {
   const [selectedFournisseur, setSelectedFournisseur] = useState(fournisseurs[0]);
-  const [tableRows, setTableRows] = useState([{ material: materials[0], quantity: 1 }]);
+  const [selectedMaterialType, setSelectedMaterialType] = useState('');
+  const [tableRows, setTableRows] = useState([]);
 
   const addRow = () => {
-    setTableRows([...tableRows, { material: materials[0], quantity: 1}]);
+    setTableRows([...tableRows, { material: '', quantity: 1 }]);
   };
 
   const removeRow = (index) => {
@@ -29,6 +32,8 @@ const FormulaireDemandeAchat = () => {
     e.preventDefault();
     // Handle form submission logic here
   };
+
+  const materials = selectedMaterialType ? materialsByType[selectedMaterialType] : [];
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -47,6 +52,24 @@ const FormulaireDemandeAchat = () => {
                 {fournisseurs.map((fournisseur, index) => (
                   <option key={index} value={fournisseur}>
                     {fournisseur}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form-group row mb-3">
+            <label className="col-sm-3 col-form-label">Type du matériel:</label>
+            <div className="col-sm-9">
+              <select
+                className="form-control"
+                value={selectedMaterialType}
+                onChange={(e) => setSelectedMaterialType(e.target.value)}
+              >
+                <option value="">Choisissez un type</option>
+                {materialTypes.map((type, index) => (
+                  <option key={index} value={type}>
+                    {type}
                   </option>
                 ))}
               </select>
@@ -74,7 +97,9 @@ const FormulaireDemandeAchat = () => {
                         className="form-control"
                         value={row.material}
                         onChange={(e) => handleRowChange(index, 'material', e.target.value)}
+                        disabled={!selectedMaterialType}
                       >
+                        <option value="">Choisissez un matériel</option>
                         {materials.map((material, idx) => (
                           <option key={idx} value={material}>
                             {material}
