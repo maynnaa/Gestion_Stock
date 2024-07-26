@@ -1,3 +1,4 @@
+// File: ../../pages/gestion_stock.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
@@ -5,10 +6,12 @@ import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import StockMagasinier from '../../components/gestionStock';
 import { FaPlus } from 'react-icons/fa';
+import ProductFormModal from '../../components/ajouter_produit'; 
 
 const GestionStockMagasinier = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const navigate = useNavigate(); 
   const location = useLocation();
 
@@ -49,8 +52,11 @@ const GestionStockMagasinier = () => {
   };
 
   const handleAddProduct = () => {
-    // Logique pour ajouter un produit
-    console.log('Ajouter produit');
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
   };
 
   return (
@@ -114,10 +120,12 @@ const GestionStockMagasinier = () => {
               onClick={handleAddProduct}
               style={styles.addButton}
             >
-              <FaPlus style={styles.icon} /> Ajouter produit
+              <FaPlus style={styles.icon} /> Ajouter un produit
             </button>
           </div>
           <StockMagasinier />
+          {/* Display the modal if isModalOpen is true */}
+          <ProductFormModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
       </div>
     </div>
@@ -151,7 +159,7 @@ const styles = {
     alignItems: 'center',
   },
   tableContainer: {
-    marginTop: '60px',
+    marginTop: '20px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -167,8 +175,9 @@ const styles = {
   },
   addButton: {
     position: 'absolute',
-    marginRight:'30px',
+    marginRight: '30px',
     right: '0', 
+    marginTop: '120px',
   },
   icon: {
     marginRight: '5px',

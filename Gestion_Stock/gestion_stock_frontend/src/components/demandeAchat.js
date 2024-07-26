@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const generateRandomCode = () => {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
-};
+
 
 
 const materials = ['Material 1', 'Material 2', 'Material 3'];

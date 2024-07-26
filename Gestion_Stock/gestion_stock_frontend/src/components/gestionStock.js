@@ -2,16 +2,33 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Search from './search';
+
 const initialData = [
   { id: '1', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
   { id: '2', numSerie: 'B456', dateLivraison: '2024-07-26', nom: 'Matériel B', marque: 'Marque B', quantite: 15, beneficiary: 'User 2' },
   { id: '3', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
-  // More data entries
+  { id: '4', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '5', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '6', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '7', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '8', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '9', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '10', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '11', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '12', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '31', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '32', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+  { id: '33', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
+
+ 
 ];
+
+const ITEMS_PER_PAGE = 9;
 
 const StockMagasinier = () => {
   const [data, setData] = useState(initialData);
   const [filteredData, setFilteredData] = useState(initialData);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleEdit = (id) => {
     console.log('Edit item with id:', id);
@@ -28,14 +45,26 @@ const StockMagasinier = () => {
       item.numSerie.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(newFilteredData);
+    setCurrentPage(1); // Reset to first page on search
   };
+
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const currentData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="container mt-4">
-      <div className="d-flex justify-content-between mb-3">
-        <Search onSearch={handleSearch} />
+      <div className="d-flex justify-content-center mb-3" >
+         <Search onSearch={handleSearch} />
       </div>
-      <div className="table-responsive" style={styles.tableWrapper}>
+    <div className="table-responsive" style={{ ...styles.tableWrapper, marginTop: '35px' }}>
         <table className="table table-bordered">
           <thead>
             <tr>
@@ -50,7 +79,7 @@ const StockMagasinier = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
+            {currentData.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.numSerie}</td>
@@ -78,6 +107,41 @@ const StockMagasinier = () => {
           </tbody>
         </table>
       </div>
+      <nav>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button 
+              className="page-link" 
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+          </li>
+          {[...Array(totalPages).keys()].map(pageNumber => (
+            <li 
+              key={pageNumber + 1} 
+              className={`page-item ${currentPage === pageNumber + 1 ? 'active' : ''}`}
+            >
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(pageNumber + 1)}
+              >
+                {pageNumber + 1}
+              </button>
+            </li>
+          ))}
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button 
+              className="page-link" 
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };
@@ -90,9 +154,9 @@ const styles = {
     overflowY: 'auto',
     scrollbarWidth: 'thin',
   },
-  
 };
 
+// Inject custom scrollbar styles into document
 const customScrollbarStyles = `
   .table-responsive::-webkit-scrollbar {
     width: 8px;
