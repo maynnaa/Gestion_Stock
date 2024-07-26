@@ -4,6 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import StockMagasinier from '../../components/gestionStock';
+import { FaPlus } from 'react-icons/fa';
 
 const GestionStockMagasinier = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -45,6 +46,11 @@ const GestionStockMagasinier = () => {
   const handleNavigation = (path, button) => {
     setActiveButton(button);
     navigate(path);
+  };
+
+  const handleAddProduct = () => {
+    // Logique pour ajouter un produit
+    console.log('Ajouter produit');
   };
 
   return (
@@ -102,6 +108,15 @@ const GestionStockMagasinier = () => {
       <div style={styles.content}>
         <NavBar />
         <div style={styles.tableContainer}>
+          <div style={styles.controlsContainer}>
+            <button 
+              className="btn btn-primary btn-sm" 
+              onClick={handleAddProduct}
+              style={styles.addButton}
+            >
+              <FaPlus style={styles.icon} /> Ajouter produit
+            </button>
+          </div>
           <StockMagasinier />
         </div>
       </div>
@@ -120,7 +135,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', // Adjust this value as needed
+    top: '200px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -139,7 +154,24 @@ const styles = {
     marginTop: '60px',
     width: '100%',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  controlsContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    position: 'relative', 
+    marginBottom: '20px',
+  },
+  addButton: {
+    position: 'absolute',
+    marginRight:'30px',
+    right: '0', 
+  },
+  icon: {
+    marginRight: '5px',
   },
 };
 

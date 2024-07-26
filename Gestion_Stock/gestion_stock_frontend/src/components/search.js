@@ -6,7 +6,7 @@ const Search = ({ onSearch }) => {
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    onSearch(value); // Appeler la fonction de recherche avec la valeur saisie
+    onSearch(value); 
   };
 
   return (
@@ -42,6 +42,7 @@ const styles = {
     borderRadius: '4px',
     padding: '5px 10px',
     width: '250px',
+    //marginLeft: '500px',
   },
   searchInput: {
     border: 'none',
