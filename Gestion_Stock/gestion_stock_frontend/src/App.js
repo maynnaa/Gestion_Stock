@@ -16,7 +16,7 @@ import HistoriqueBesoins from './pages/magasinier/historique_demandes_besoins';
 import FormDemandeAchat from './pages/magasinier/demande_achat';
 import GestionStockMagasinier from './pages/magasinier/gestion_stock';
 import GestionFournisseur from './pages/magasinier/gestion_fournisseur';
-
+import AffectationMateriel from './pages/magasinier/affectation_materiel';
 
 
 
@@ -45,7 +45,7 @@ function App() {
           <Route path="/historiqueBesoinsMagasinier" element={<HistoriqueBesoins />} />
           <Route path="/stockMagasinier" element={<GestionStockMagasinier />} />
           <Route path="/gestionFournisseur" element={<GestionFournisseur />} />
-
+          <Route path="/affectationMateriel" element={<AffectationMateriel />} />
 
 
 

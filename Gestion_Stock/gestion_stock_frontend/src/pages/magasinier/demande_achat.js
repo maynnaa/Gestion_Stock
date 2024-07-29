@@ -98,6 +98,15 @@ const FormDemandeAchat = () => {
           >
             Gestion des Fournisseurs
           </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
+            onMouseEnter={() => handleMouseEnter('affectationMateriel')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/affectationMateriel', 'affectationMateriel')}
+          >
+            Affectation du Matériel
+          </Button>
         </div>
       </div>
       <div style={styles.content}>
