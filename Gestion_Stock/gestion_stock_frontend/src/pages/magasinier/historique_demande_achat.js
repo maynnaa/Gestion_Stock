@@ -103,6 +103,15 @@ const HistoriqueDemandeAchat = () => {
           >
             Historique des demandes de besoins
           </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'gestionFournisseur' || activeButton === 'gestionFournisseur'}
+            onMouseEnter={() => handleMouseEnter('gestionFournisseur')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/gestionFournisseur', 'gestionFournisseur')}
+          >
+            Gestion des Fournisseurs
+          </Button>
         </div>
       </div>
       <div style={styles.content}>

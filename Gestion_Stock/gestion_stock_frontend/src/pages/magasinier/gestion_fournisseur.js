@@ -4,11 +4,13 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button';
 import TableauFournisseur from '../../components/tableau_fournisseur'; 
+import SupplierFormModal from '../../components/ajouter_fournisseur'; // Importation du composant SupplierFormModal
 import { FaPlus } from 'react-icons/fa'; // Importation de l'icône plus
 
 const GestionFournisseur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // État pour contrôler la visibilité du modal
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,8 +54,11 @@ const GestionFournisseur = () => {
   };
 
   const handleAddFournisseur = () => {
-    // Logique pour ajouter un fournisseur
-    console.log('Ajouter fournisseur');
+    setIsModalOpen(true); // Ouvrir le modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Fermer le modal
   };
 
   return (
@@ -120,6 +125,9 @@ const GestionFournisseur = () => {
       <div style={styles.content}>
         <NavBar />
         <div style={styles.controlsContainer}>
+          <div style={styles.searchContainer}>
+            {/* Ajoutez ici votre composant de barre de recherche */}
+          </div>
           <button 
             className="btn btn-primary btn-sm" 
             onClick={handleAddFournisseur}
@@ -131,6 +139,7 @@ const GestionFournisseur = () => {
         <div style={styles.tableContainer}>
           <TableauFournisseur />
         </div>
+        <SupplierFormModal isOpen={isModalOpen} onClose={closeModal} /> {/* Ajout du modal */}
       </div>
     </div>
   );
@@ -165,15 +174,21 @@ const styles = {
   controlsContainer: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'flex-end',
-    marginBottom: '10px', // Reduce bottom margin
-    marginTop: '20px', // Reduce top margin to lift the button
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+    position: 'relative',
+  },
+  searchContainer: {
+    flex: 1,
   },
   addButton: {
     backgroundColor: '#007bff',
     color: 'white',
     border: 'none',
-    marginTop: '10px', 
+    position: 'absolute',
+    right: 0,
+    marginTop: '100px', // Ajustez cette valeur pour déplacer le bouton verticalement
   },
   icon: {
     marginRight: '5px',
@@ -181,9 +196,8 @@ const styles = {
   tableContainer: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'center',
-    marginTop: '5px', 
-    
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 };
 
