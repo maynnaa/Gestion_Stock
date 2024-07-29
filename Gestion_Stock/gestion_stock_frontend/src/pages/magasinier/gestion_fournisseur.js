@@ -63,15 +63,6 @@ const GestionFournisseur = () => {
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
-            hovered={hoveredButton === 'home' || activeButton === 'home'}
-            onMouseEnter={() => handleMouseEnter('home')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/', 'home')}
-          >
-            Accueil
-          </Button>
-          <Button
-            size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
@@ -115,6 +106,15 @@ const GestionFournisseur = () => {
           >
             Gestion des Fournisseurs
           </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
+            onMouseEnter={() => handleMouseEnter('affectationMateriel')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/affectationMateriel', 'affectationMateriel')}
+          >
+            Affectation du Matériel
+          </Button>
         </div>
       </div>
       <div style={styles.content}>
@@ -147,7 +147,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '140px', 
+    top: '180px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -166,14 +166,15 @@ const styles = {
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
-    marginBottom: '10px', // Reduce bottom margin
-    marginTop: '20px', // Reduce top margin to lift the button
+    marginBottom: '10px',
+    marginTop: '10px', // Adjusted marginTop
   },
   addButton: {
     backgroundColor: '#007bff',
     color: 'white',
     border: 'none',
-    marginTop: '10px', 
+    display: 'flex',
+    alignItems: 'center',
   },
   icon: {
     marginRight: '5px',
@@ -182,8 +183,6 @@ const styles = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '5px', 
-    
   },
 };
 

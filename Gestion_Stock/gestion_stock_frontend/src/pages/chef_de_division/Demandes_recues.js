@@ -57,15 +57,7 @@ const DemandesRecues = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          <Button
-            size="medium"
-            hovered={hoveredButton === 'accueil' || activeButton === 'accueil'}
-            onMouseEnter={() => handleMouseEnter('accueil')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/', 'accueil')}
-          >
-            Accueil
-          </Button>
+          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -151,12 +143,12 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: '55px', // Adjust this value to add more space at the top
+    marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%', // Adjust this value to reduce the table size
-    maxWidth: '800px', // Max width to ensure the table doesn't get too wide
-    margin: '20px auto', // Center the table horizontally and add some margin-top
+    width: '80%', 
+    maxWidth: '800px', 
+    margin: '20px auto', 
   },
 };
 

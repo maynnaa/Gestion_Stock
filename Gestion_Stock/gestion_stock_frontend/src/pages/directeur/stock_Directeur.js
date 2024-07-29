@@ -45,15 +45,7 @@ const StockDirecteur = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          <Button
-            size="medium"
-            hovered={hoveredButton === 'accueil' || activeButton === 'accueil'}
-            onMouseEnter={() => handleMouseEnter('accueil')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/', 'accueil')}
-          >
-            Accueil
-          </Button>
+         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
