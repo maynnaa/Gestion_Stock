@@ -1,4 +1,3 @@
-// File: ../../pages/gestion_stock.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
@@ -64,15 +63,7 @@ const GestionStockMagasinier = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-          <Button
-            size="medium"
-            hovered={hoveredButton === 'home' || activeButton === 'home'}
-            onMouseEnter={() => handleMouseEnter('home')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/', 'home')}
-          >
-            Accueil
-          </Button>
+          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -133,7 +124,7 @@ const GestionStockMagasinier = () => {
             </button>
           </div>
           <StockMagasinier />
-          {/* Display the modal if isModalOpen is true */}
+          
           <ProductFormModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
       </div>
@@ -152,7 +143,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', 
+    top: '180px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

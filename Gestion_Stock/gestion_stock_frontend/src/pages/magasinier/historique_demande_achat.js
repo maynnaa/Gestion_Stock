@@ -58,15 +58,7 @@ const HistoriqueDemandeAchat = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-          <Button
-            size="medium"
-            hovered={hoveredButton === 'home' || activeButton === 'home'}
-            onMouseEnter={() => handleMouseEnter('home')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/', 'home')}
-          >
-            Accueil
-          </Button>
+         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -138,7 +130,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', 
+    top: '180px', 
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
