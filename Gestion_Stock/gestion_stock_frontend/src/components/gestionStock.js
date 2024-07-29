@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Search from './search';
+import EditModal from './modifier_produit';
 
 const initialData = [
   { id: '1', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
@@ -19,8 +20,6 @@ const initialData = [
   { id: '31', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
   { id: '32', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
   { id: '33', numSerie: 'C789', dateLivraison: '2024-07-27', nom: 'Matériel C', marque: 'Marque C', quantite: 5, beneficiary: 'User 3' },
-
- 
 ];
 
 const ITEMS_PER_PAGE = 9;
@@ -29,9 +28,12 @@ const StockMagasinier = () => {
   const [data, setData] = useState(initialData);
   const [filteredData, setFilteredData] = useState(initialData);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
 
-  const handleEdit = (id) => {
-    console.log('Edit item with id:', id);
+  const handleEdit = (item) => {
+    setCurrentItem(item);
+    setShowEditModal(true);
   };
 
   const handleDelete = (id) => {
@@ -61,10 +63,10 @@ const StockMagasinier = () => {
 
   return (
     <div className="container mt-4">
-      <div className="d-flex justify-content-center mb-3" >
-         <Search onSearch={handleSearch} />
+      <div className="d-flex justify-content-center mb-3">
+        <Search onSearch={handleSearch} />
       </div>
-    <div className="table-responsive" style={{ ...styles.tableWrapper, marginTop: '35px' }}>
+      <div className="table-responsive" style={{ ...styles.tableWrapper, marginTop: '35px' }}>
         <table className="table table-bordered">
           <thead>
             <tr>
@@ -89,14 +91,14 @@ const StockMagasinier = () => {
                 <td>{item.quantite}</td>
                 <td>{item.beneficiary}</td>
                 <td>
-                  <button 
-                    className="btn btn-primary btn-sm me-2" 
-                    onClick={() => handleEdit(item.id)}
+                  <button
+                    className="btn btn-primary btn-sm me-2"
+                    onClick={() => handleEdit(item)}
                   >
                     <FaEdit />
                   </button>
-                  <button 
-                    className="btn btn-danger btn-sm" 
+                  <button
+                    className="btn btn-danger btn-sm"
                     onClick={() => handleDelete(item.id)}
                   >
                     <FaTrash />
@@ -110,8 +112,8 @@ const StockMagasinier = () => {
       <nav>
         <ul className="pagination justify-content-center">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
+            <button
+              className="page-link"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
@@ -119,12 +121,12 @@ const StockMagasinier = () => {
             </button>
           </li>
           {[...Array(totalPages).keys()].map(pageNumber => (
-            <li 
-              key={pageNumber + 1} 
+            <li
+              key={pageNumber + 1}
               className={`page-item ${currentPage === pageNumber + 1 ? 'active' : ''}`}
             >
-              <button 
-                className="page-link" 
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(pageNumber + 1)}
               >
                 {pageNumber + 1}
@@ -132,8 +134,8 @@ const StockMagasinier = () => {
             </li>
           ))}
           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
+            <button
+              className="page-link"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
@@ -142,6 +144,13 @@ const StockMagasinier = () => {
           </li>
         </ul>
       </nav>
+      {showEditModal && currentItem && (
+        <EditModal
+          show={showEditModal}
+          onHide={() => setShowEditModal(false)}
+          item={currentItem}
+        />
+      )}
     </div>
   );
 };
