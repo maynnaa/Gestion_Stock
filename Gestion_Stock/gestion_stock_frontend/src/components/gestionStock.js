@@ -70,9 +70,9 @@ const StockMagasinier = () => {
       </div>
       <div className="table-responsive" style={{ ...styles.tableWrapper, marginTop: '35px' }}>
         <table className="table table-bordered">
-          <thead>
+          <thead className="text-center">
             <tr>
-              <th>Id produit</th>
+              <th >Id produit</th>
               <th>Num serie</th>
               <th>Date livraison</th>
               <th>Nom</th>
@@ -85,14 +85,14 @@ const StockMagasinier = () => {
           <tbody>
             {currentData.map((item) => (
               <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.numSerie}</td>
-                <td>{item.dateLivraison}</td>
-                <td>{item.nom}</td>
-                <td>{item.marque}</td>
-                <td>{item.quantite}</td>
-                <td>{item.beneficiary}</td>
-                <td>
+                <td className="text-center">{item.id}</td>
+                <td className="text-center">{item.numSerie}</td>
+                <td className="text-center">{item.dateLivraison}</td>
+                <td className="text-center">{item.nom}</td>
+                <td className="text-center">{item.marque}</td>
+                <td className="text-center">{item.quantite}</td>
+                <td className="text-center">{item.beneficiary}</td>
+                <td className="text-center">
                   <button 
                     className="btn btn-primary btn-sm me-2" 
                     onClick={() => handleEdit(item)}
@@ -160,7 +160,7 @@ const StockMagasinier = () => {
 
 const styles = {
   tableWrapper: {
-    maxWidth: '800px',
+    maxWidth: '1300px',
     margin: '0 auto',
     height: '550px',
     overflowY: 'auto',
