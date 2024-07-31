@@ -48,11 +48,6 @@ const AffectationForm = () => {
               <Form.Control type="text" style={{ width: '100%' }} />
             </Form.Group>
 
-            <Form.Group controlId="quantite">
-              <Form.Label>Quantité</Form.Label>
-              <Form.Control type="number" style={{ width: '100%' }} />
-            </Form.Group>
-
             <Form.Group controlId="nomBeneficiaire">
               <Form.Label>Nom du bénéficiaire</Form.Label>
               <Form.Control as="select" style={{ width: '100%' }}>
