@@ -17,6 +17,8 @@ public interface PersonnelRepository extends JpaRepository<Personnel, Integer> {
     Personnel save(Personnel personnel);
 
     Optional<Personnel> findByUsername(String username);
+    Optional<Personnel> findByEmail(String email);
+
 
     List<Personnel> findAll();
 }

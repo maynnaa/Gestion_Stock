@@ -33,4 +33,8 @@ public class PersonnelService {
     public Personnel save(Personnel personnel) {
         return personnelRepository.save(personnel);
     }
+
+    public Optional<Personnel> findByEmail(String email) {
+        return personnelRepository.findByEmail(email);
+    }
 }

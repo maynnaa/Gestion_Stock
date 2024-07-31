@@ -52,4 +52,22 @@ public class PersonnelController {
         personnelService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+        // Implémentez la logique d'authentification ici
+        Optional<Personnel> personnelOptional = personnelService.findByEmail(email);
+        if (personnelOptional.isPresent()) {
+            Personnel personnel = personnelOptional.get();
+            if (personnel.getPassword().equals(password)) {
+                return new ResponseEntity<>("Login successful", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Utilisateur introuvable", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
