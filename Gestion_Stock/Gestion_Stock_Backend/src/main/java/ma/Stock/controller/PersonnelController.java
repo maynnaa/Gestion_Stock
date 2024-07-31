@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -54,20 +56,26 @@ public class PersonnelController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
-        // Implémentez la logique d'authentification ici
+    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password) {
         Optional<Personnel> personnelOptional = personnelService.findByEmail(email);
         if (personnelOptional.isPresent()) {
             Personnel personnel = personnelOptional.get();
+            System.out.println("Personnel: " + personnel); // Log the personnel object
             if (personnel.getPassword().equals(password)) {
-                return new ResponseEntity<>("Login successful", HttpStatus.OK);
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "Login successful");
+                Integer functionId = personnel.getFonction().getId_fonction();
+                System.out.println("Function ID: " + functionId); // Log the function ID
+                response.put("functionId", functionId);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(Map.of("message", "Mot de passe incorrect"), HttpStatus.UNAUTHORIZED);
             }
         } else {
-            return new ResponseEntity<>("Utilisateur introuvable", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("message", "Utilisateur introuvable"), HttpStatus.NOT_FOUND);
         }
     }
+
 
 
 }

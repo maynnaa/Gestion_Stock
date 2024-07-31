@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -15,10 +17,28 @@ const Login = () => {
           password: password
         }
       });
-      setMessage(response.data); // Affiche le message de succès
+      const { message, functionId } = response.data;
+      console.log("Function ID:", functionId);
+      setMessage(message);
+      switch (functionId) {
+        case 1:
+          navigate('/stockDirecteur');
+          break;
+        case 2: 
+          navigate('/stockDivision');
+          break;
+        case 3:
+          navigate('/stock');
+          break;
+        case 4:
+          navigate('/stockMagasinier');
+          break;
+        default:
+          setMessage('Unknown function ID');
+      }
     } catch (error) {
       if (error.response) {
-        setMessage(error.response.data); // Affiche le message d'erreur
+        setMessage(error.response.data.message);
       } else {
         setMessage('Erreur de connexion');
       }
@@ -34,7 +54,7 @@ const Login = () => {
         </div>
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email"></label>
             <input 
               type="email" 
               className="form-control" 
@@ -46,7 +66,7 @@ const Login = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password"></label>
             <input 
               type="password" 
               className="form-control" 
