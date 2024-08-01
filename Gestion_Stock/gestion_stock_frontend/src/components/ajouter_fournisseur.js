@@ -1,6 +1,7 @@
 // File: ../../components/ajouter_fournisseur.js
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Set the root element for accessibility
@@ -11,17 +12,35 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
   const [cin, setCin] = useState('');
   const [numIMM, setNumIMM] = useState('');
   const [numRC, setNumRC] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Process form data here
-    console.log({
+
+    const newFournisseur = {
       nom,
       cin,
-      numIMM,
-      numRC
-    });
-    onClose(); // Close the modal after submission
+      num_imm: numIMM,
+      num_rc: numRC,
+    };
+
+    try {
+      await axios.post('http://localhost:9091/api/fournisseur', newFournisseur, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      alert('Fournisseur ajouté avec succès !');
+      // Réinitialiser le formulaire
+      setNom('');
+      setCin('');
+      setNumIMM('');
+      setNumRC('');
+      onClose(); // Fermer la modal après la soumission
+    } catch (err) {
+      setError('Erreur lors de l\'ajout du fournisseur.');
+      console.error(err);
+    }
   };
 
   return (
@@ -78,6 +97,7 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
               required
             />
           </div>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <div className="d-flex justify-content-between">
             <button type="submit" className="btn btn-primary">Enregistrer</button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>

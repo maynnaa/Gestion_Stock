@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/fournisseur")
+@CrossOrigin(origins = "http://localhost:3000")
 public class FournisseurController {
 
     private final FournisseurService fournisseurService;
