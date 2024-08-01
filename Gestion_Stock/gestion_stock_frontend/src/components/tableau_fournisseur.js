@@ -33,9 +33,21 @@ const TableauFournisseur = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'entrée avec ID: ${id}?`)) {
-      alert(`Supprimer l'entrée avec ID: ${id}`);
+  const handleDelete = async (id) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce fournisseur?`)) {
+      try {
+        const response = await axios.delete(`http://localhost:9091/api/fournisseur/${id}`);
+        if (response.status === 204) {
+          // Mise à jour des données locales en supprimant l'élément avec l'ID donné
+          setData(data.filter(item => item.fournisseur_id !== id));
+          alert('Fournisseur supprimé avec succès.');
+        } else {
+          alert('Erreur lors de la suppression du fournisseur.');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression du fournisseur:', error);
+        alert('Erreur lors de la suppression du fournisseur.');
+      }
     }
   };
 
@@ -44,11 +56,44 @@ const TableauFournisseur = () => {
     setSelectedItem(null);
   };
 
-  const handleFormSubmit = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
-    // Handle form submission logic here
-    alert(`Form submitted for item: ${selectedItem.nom_gerant}`);
-    handleModalClose();
+
+    const formData = new FormData(event.target);
+
+    const updatedSupplier = {
+        nom_gerant: formData.get('nom_gerant'),
+        cin: formData.get('cin'),
+        num_imm: formData.get('num_imm'),
+        num_rc: formData.get('num_rc'),
+    };
+
+    try {
+        const response = await axios.put(
+            `http://localhost:9091/api/fournisseur/${selectedItem.fournisseur_id}`,
+            updatedSupplier,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (response.status === 200) {
+            // Mettre à jour les données locales
+            setData(data.map(item =>
+                item.fournisseur_id === selectedItem.fournisseur_id ? { ...item, ...updatedSupplier } : item
+            ));
+            alert('Fournisseur mis à jour avec succès !');
+        } else {
+            alert('Erreur lors de la mise à jour du fournisseur.');
+        }
+
+        handleModalClose();
+    } catch (err) {
+        console.error('Erreur lors de la mise à jour du fournisseur:', err);
+        alert('Erreur lors de la mise à jour du fournisseur.');
+    }
   };
 
   const filteredData = data.filter((item) =>
@@ -171,11 +216,12 @@ const TableauFournisseur = () => {
         </Modal.Header>
         <Modal.Body>
           {selectedItem && (
-            <Form onSubmit={handleFormSubmit}>
+            <Form onSubmit={handleSave}>
               <Form.Group controlId="formNomGerant">
                 <Form.Label>Nom du gérant</Form.Label>
                 <Form.Control
                   type="text"
+                  name="nom_gerant"
                   defaultValue={selectedItem.nom_gerant}
                 />
               </Form.Group>
@@ -183,6 +229,7 @@ const TableauFournisseur = () => {
                 <Form.Label>CIN</Form.Label>
                 <Form.Control
                   type="text"
+                  name="cin"
                   defaultValue={selectedItem.cin}
                 />
               </Form.Group>
@@ -190,6 +237,7 @@ const TableauFournisseur = () => {
                 <Form.Label>Num_IMM</Form.Label>
                 <Form.Control
                   type="text"
+                  name="num_imm"
                   defaultValue={selectedItem.num_imm}
                 />
               </Form.Group>
@@ -197,6 +245,7 @@ const TableauFournisseur = () => {
                 <Form.Label>Num_RC</Form.Label>
                 <Form.Control
                   type="text"
+                  name="num_rc"
                   defaultValue={selectedItem.num_rc}
                 />
               </Form.Group>

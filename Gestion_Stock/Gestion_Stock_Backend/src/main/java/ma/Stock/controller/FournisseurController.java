@@ -43,8 +43,14 @@ public class FournisseurController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Fournisseur> updateFournisseur(@PathVariable("id") int id, @RequestBody Fournisseur updatedFournisseur) {
-        Fournisseur updated = fournisseurService.save(updatedFournisseur);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        Optional<Fournisseur> existingFournisseur = fournisseurService.findById(id);
+        if (existingFournisseur.isPresent()) {
+            updatedFournisseur.setFournisseur_id(id);
+            Fournisseur updated = fournisseurService.save(updatedFournisseur);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
