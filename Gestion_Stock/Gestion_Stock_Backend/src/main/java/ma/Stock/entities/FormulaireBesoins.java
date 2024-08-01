@@ -18,7 +18,11 @@ public class FormulaireBesoins {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_formulaire;
+
+    @Column(name = "date_creation")
     private Date date_creation;
+
+    @Column(name = "validation")
     private String validation;
 
     @ManyToOne
@@ -31,5 +35,4 @@ public class FormulaireBesoins {
 
     @OneToMany(mappedBy = "formulaireBesoins")
     private Set<FormulaireMateriel> formulaireMateriels = new HashSet<>();
-
 }
