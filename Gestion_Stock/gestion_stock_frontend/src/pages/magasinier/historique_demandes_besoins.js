@@ -58,7 +58,6 @@ const HistoriqueBesoins = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar activeButton={activeButton} onNavigate={handleNavigation} />
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -120,7 +119,15 @@ const HistoriqueBesoins = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <a 
+            href="#"
+            onClick={() => handleNavigation('/accueilMagasinier', 'home')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </a>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -155,7 +162,7 @@ const styles = {
     padding: '20px',
     backgroundColor: '#f8f9fa',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   contentContainer: {
@@ -171,6 +178,13 @@ const styles = {
     width: '80%',
     maxWidth: '800px',
     margin: '20px auto',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

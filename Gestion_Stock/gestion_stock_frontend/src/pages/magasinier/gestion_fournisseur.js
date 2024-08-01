@@ -123,7 +123,15 @@ const GestionFournisseur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <a 
+            href="#"
+            onClick={() => handleNavigation('/accueilMagasinier', 'home')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </a>
+        </NavBar>
         <div style={styles.controlsContainer}>
           <div style={styles.searchContainer}>
             {/* Ajoutez ici votre composant de barre de recherche */}
@@ -177,34 +185,18 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '20px',
-    position: 'relative',
+    paddingTop: '25px', // Ajout d'espace au-dessus
   },
   searchContainer: {
     flex: 1,
-
-    justifyContent: 'flex-end',
-    marginBottom: '10px', // Reduce bottom margin
-    marginTop: '20px', // Reduce top margin to lift the button
-
-    justifyContent: 'flex-end',
-    marginBottom: '10px',
-    marginTop: '10px', // Adjusted marginTop
-
   },
   addButton: {
     backgroundColor: '#007bff',
     color: 'white',
     border: 'none',
-
-    position: 'absolute',
-    right: 0,
-    marginTop: '100px', // Ajustez cette valeur pour déplacer le bouton verticalement
-
-    marginTop: '100px', 
-
     display: 'flex',
     alignItems: 'center',
-
+    marginLeft: '20px', // Ajuster l'espacement si nécessaire
   },
   icon: {
     marginRight: '5px',
@@ -212,15 +204,15 @@ const styles = {
   tableContainer: {
     width: '100%',
     display: 'flex',
-
     flexDirection: 'column',
     alignItems: 'center',
-
-    justifyContent: 'center',
-    marginTop: '5px', 
-    
-    justifyContent: 'center',
-
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%',
+    textDecoration: 'none',
   },
 };
 

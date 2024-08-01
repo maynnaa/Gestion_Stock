@@ -1,36 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Sidebar from '../../layout/sidebar'; 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/navbar';
-import ScrollableTable from '../../components/tableauStock'; 
-import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import Sidebar from '../../layout/sidebar';
+import Accueil from '../../components/accueil';
+import Button from '../../components/button';
+import { Nav } from 'react-bootstrap';
 
-const StockChefService = () => {
+const AccueilService = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState('accueil'); // Default to 'accueil'
   const navigate = useNavigate(); 
-  const location = useLocation();
-
-  useEffect(() => {
-    const path = location.pathname;
-    switch (path) {
-      case '/':
-        setActiveButton('home');
-        break;
-      case '/stock':
-        setActiveButton('stock');
-        break;
-      case '/formulaire':
-        setActiveButton('request');
-        break;
-      case '/historique':
-        setActiveButton('history');
-        break;
-      default:
-        setActiveButton(null);
-    }
-  }, [location.pathname]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -48,9 +27,9 @@ const StockChefService = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-        <Sidebar />
         <div style={styles.additionalButtons}>
-          <Button
+         
+        <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
@@ -78,7 +57,8 @@ const StockChefService = () => {
             Historique des demandes
           </Button>
         </div>
-      </div>
+        <Sidebar />
+        </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
@@ -89,8 +69,8 @@ const StockChefService = () => {
             Accueil
           </Nav.Link>
         </NavBar>
-        <div style={styles.tableContainer}>
-          <ScrollableTable />
+        <div style={styles.contentContainer}>
+          <Accueil /> 
         </div>
       </div>
     </div>
@@ -108,7 +88,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', // Adjusted this value to move buttons higher
+    top: '200px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -119,23 +99,31 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: 'flex',           // Ajoute Flexbox pour centrer
+    flexDirection: 'column',   // Colonne pour centrer verticalement
+    justifyContent: 'center',  // Centre verticalement
+    alignItems: 'center',      // Centre horizontalement
   },
-  tableContainer: {
-    marginTop: '60px',
-    width: '100%',
+  contentContainer: {
+    marginTop: '20px',
+    width: '100%',             // Assure que le container prend toute la largeur disponible
+    display: 'flex',           // Utilise Flexbox dans le container
+    justifyContent: 'center',  // Centre le contenu à l'intérieur
+  },
+  header: {
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
+    paddingBottom: '10px', // Ajuster l'espace sous le header si nécessaire
   },
   accueilLink: {
     fontWeight: 'bold',
-    color: '#6c757d',
+    color: '#6c757d', // Couleur gris
     fontSize: '18px',
-    marginRight: '83%', 
-    textDecoration: 'none',
+    marginRight: '83%', // Ajuster l'espacement si nécessaire
+    textDecoration: 'none', // Retirer le soulignement par défaut des liens
   },
 };
 
-export default StockChefService;
+export default AccueilService;

@@ -1,45 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Sidebar from '../../layout/sidebar'; 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/navbar';
+import Sidebar from '../../layout/sidebar';
+import Accueil from '../../components/accueil';
 import Button from '../../components/button';
-import AffectationForm from '../../components/affectation_form';
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import { Nav } from 'react-bootstrap';
 
-const AffectationMateriel = () => {
+const AccueilMagasinier = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [activeButton, setActiveButton] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const path = location.pathname;
-    switch (path) {
-      case '/':
-        setActiveButton('home');
-        break;
-      case '/gestionStock':
-        setActiveButton('stock');
-        break;
-      case '/demandeAchat':
-        setActiveButton('request');
-        break;
-      case '/historiqueDemandeAchat':
-        setActiveButton('history');
-        break;
-      case '/historiqueBesoins':
-        setActiveButton('historyBesoins');
-        break;
-      case '/gestionFournisseur':
-        setActiveButton('gestionFournisseur');
-        break;
-      case '/affectationMateriel':
-        setActiveButton('affectationMateriel');
-        break;
-      default:
-        setActiveButton(null);
-    }
-  }, [location.pathname]);
+  const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
+  const navigate = useNavigate(); 
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -125,7 +95,9 @@ const AffectationMateriel = () => {
             Accueil
           </Nav.Link>
         </NavBar>
-        <AffectationForm />
+        <div style={styles.contentContainer}>
+          <Accueil /> 
+        </div>
       </div>
     </div>
   );
@@ -142,7 +114,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '180px', 
+    top: '180px', // Aligner le positionnement avec FormDemandeAchat
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -153,18 +125,20 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center', 
   },
   accueilLink: {
     fontWeight: 'bold',
     color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%', 
+    marginRight: '83%',
     textDecoration: 'none',
+  },
+  contentContainer: {
+    marginTop: '20px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   },
 };
 
-export default AffectationMateriel;
+export default AccueilMagasinier;

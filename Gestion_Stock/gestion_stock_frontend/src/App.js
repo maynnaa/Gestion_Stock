@@ -17,9 +17,10 @@ import FormDemandeAchat from './pages/magasinier/demande_achat';
 import GestionStockMagasinier from './pages/magasinier/gestion_stock';
 import GestionFournisseur from './pages/magasinier/gestion_fournisseur';
 import AffectationMateriel from './pages/magasinier/affectation_materiel';
-
-
-
+import AccueilDivision from './pages/chef_de_division/accueil_division';
+import AccueilService from './pages/chef_de_service/acceuil_service';
+import AccueilDirecteur from './pages/directeur/accueil_directeur';
+import AccueilMagasinier from './pages/magasinier/accueil_magasinier';
 
 function App() {
   return (
@@ -46,8 +47,10 @@ function App() {
           <Route path="/stockMagasinier" element={<GestionStockMagasinier />} />
           <Route path="/gestionFournisseur" element={<GestionFournisseur />} />
           <Route path="/affectationMateriel" element={<AffectationMateriel />} />
-
-
+          <Route path="/accueilDivision" element={<AccueilDivision />} />
+          <Route path="/accueilService" element={<AccueilService />} />
+          <Route path="/accueilDirecteur" element={<AccueilDirecteur />} />
+          <Route path="/accueilMagasinier" element={<AccueilMagasinier />} />
 
 
 

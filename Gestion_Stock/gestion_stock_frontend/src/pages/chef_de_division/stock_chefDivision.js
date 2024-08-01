@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
-import Button from '../../components/button'; // Assurez-vous que le chemin est correct
+import Button from '../../components/button'; 
+import { Nav } from 'react-bootstrap'; 
 
 const StockDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -51,7 +52,6 @@ const StockDivision = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -92,9 +92,17 @@ const StockDivision = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar />
-        <div style={styles.tableContainer}>
-          <ScrollableTable />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDivision')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
+        <div style={styles.contentContainer}>
+          <ScrollableTable /> 
         </div>
       </div>
     </div>
@@ -127,11 +135,21 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  tableContainer: {
-    marginTop: '60px',
+  contentContainer: {
     width: '100%',
+    height: '100%',
+    overflowY: 'auto',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: '55px',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d', 
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none', 
   },
 };
 

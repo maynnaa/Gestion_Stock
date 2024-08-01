@@ -6,6 +6,7 @@ import Button from '../../components/button';
 import StockMagasinier from '../../components/gestionStock';
 import { FaPlus } from 'react-icons/fa';
 import ProductFormModal from '../../components/ajouter_produit'; 
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const GestionStockMagasinier = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -63,7 +64,6 @@ const GestionStockMagasinier = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -121,7 +121,15 @@ const GestionStockMagasinier = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilMagasinier')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.tableContainer}>
           <div style={styles.controlsContainer}>
             <button 
@@ -133,7 +141,6 @@ const GestionStockMagasinier = () => {
             </button>
           </div>
           <StockMagasinier />
-          
           <ProductFormModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>
       </div>
@@ -190,6 +197,13 @@ const styles = {
   },
   icon: {
     marginRight: '5px',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

@@ -3,7 +3,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const NavBar = () => {
+const NavBar = ({ children }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
@@ -27,32 +27,25 @@ const NavBar = () => {
           .navbar-custom .navbar-nav {
             flex: 1;
             display: flex;
+            align-items: center;
             justify-content: space-between;
           }
 
           .navbar-custom .nav-link {
-            margin-left: 45px;
             display: flex;
             align-items: center;
           }
 
           .navbar-custom .nav-right {
-            margin-left: 1100px;
             display: flex;
             align-items: center;
-            margin-right:30px;
+            margin-right: 30px;
           }
         `}
       </style>
       <Navbar className="navbar-custom" expand="lg">
         <Nav className="navbar-nav">
-          <Nav.Link
-            href="#"
-            onClick={() => handleNavigation('/')}
-            style={{ fontWeight: 'bold' }}
-          >
-            Accueil
-          </Nav.Link>
+          {children}
           <Nav className="nav-right">
             <Nav.Link href="#notifications">
               <FaBell size={25} />

@@ -4,6 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import FormulaireDemandeAchat from '../../components/demandeAchat';
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const FormDemandeAchat = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -52,7 +53,6 @@ const FormDemandeAchat = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -110,7 +110,15 @@ const FormDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilMagasinier')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <FormulaireDemandeAchat />
       </div>
     </div>
@@ -139,6 +147,13 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

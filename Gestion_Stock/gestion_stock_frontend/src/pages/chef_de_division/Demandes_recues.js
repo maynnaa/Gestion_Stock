@@ -5,6 +5,8 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
+import { Nav } from 'react-bootstrap';
+
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -57,7 +59,6 @@ const DemandesRecues = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -98,7 +99,15 @@ const DemandesRecues = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDivision')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -149,6 +158,13 @@ const styles = {
     width: '80%', 
     maxWidth: '800px', 
     margin: '20px auto', 
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d', // Couleur gris
+    fontSize: '18px',
+    marginRight: '83%', // Ajuster l'espacement si nécessaire
+    textDecoration: 'none', // Retirer le soulignement par défaut des liens
   },
 };
 

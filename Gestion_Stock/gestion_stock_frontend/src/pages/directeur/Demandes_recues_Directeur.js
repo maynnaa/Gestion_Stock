@@ -5,6 +5,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const DemandesRecuesDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -51,7 +52,6 @@ const DemandesRecuesDirecteur = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -74,7 +74,15 @@ const DemandesRecuesDirecteur = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDirecteur')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -125,6 +133,13 @@ const styles = {
     width: '80%', 
     maxWidth: '800px', 
     margin: '20px auto', 
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

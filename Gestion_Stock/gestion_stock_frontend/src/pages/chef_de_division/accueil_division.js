@@ -1,36 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Sidebar from '../../layout/sidebar'; 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/navbar';
-import ScrollableTable from '../../components/tableauStock'; 
-import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import Sidebar from '../../layout/sidebar';
+import Accueil from '../../components/accueil';
+import Button from '../../components/button';
+import { Nav } from 'react-bootstrap';
 
-const StockChefService = () => {
+const AccueilDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
   const navigate = useNavigate(); 
-  const location = useLocation();
-
-  useEffect(() => {
-    const path = location.pathname;
-    switch (path) {
-      case '/':
-        setActiveButton('home');
-        break;
-      case '/stock':
-        setActiveButton('stock');
-        break;
-      case '/formulaire':
-        setActiveButton('request');
-        break;
-      case '/historique':
-        setActiveButton('history');
-        break;
-      default:
-        setActiveButton(null);
-    }
-  }, [location.pathname]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -48,14 +27,13 @@ const StockChefService = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
-        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stock', 'stock')}
+            onClick={() => handleNavigation('/stockDivision', 'stock')}
           >
             Stock
           </Button>
@@ -64,7 +42,7 @@ const StockChefService = () => {
             hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/formulaire', 'request')}
+            onClick={() => handleNavigation('/formulaireDivision', 'request')}
           >
             Demande de besoins
           </Button>
@@ -73,24 +51,34 @@ const StockChefService = () => {
             hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historique', 'history')}
+            onClick={() => handleNavigation('/historiqueDivision', 'history')}
           >
             Historique des demandes
           </Button>
+          <Button
+            size="medium"
+            hovered={hoveredButton === 'received' || activeButton === 'received'}
+            onMouseEnter={() => handleMouseEnter('received')}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => handleNavigation('/demandesRecues', 'received')}
+          >
+            Demandes reçues
+          </Button>
         </div>
+        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilService')}
+            onClick={() => navigate('/accueilDivision')}
             style={styles.accueilLink}
           >
             Accueil
           </Nav.Link>
         </NavBar>
-        <div style={styles.tableContainer}>
-          <ScrollableTable />
+        <div style={styles.contentContainer}>
+          <Accueil /> 
         </div>
       </div>
     </div>
@@ -108,7 +96,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', // Adjusted this value to move buttons higher
+    top: '200px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -123,19 +111,26 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  tableContainer: {
-    marginTop: '60px',
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
+    paddingBottom: '10px', // Ajuster l'espace sous le header si nécessaire
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d', // Couleur gris
+    fontSize: '18px',
+    marginRight: '83%', // Ajuster l'espacement si nécessaire
+    textDecoration: 'none', // Retirer le soulignement par défaut des liens
+  },
+  contentContainer: {
+    marginTop: '20px',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
   },
-  accueilLink: {
-    fontWeight: 'bold',
-    color: '#6c757d',
-    fontSize: '18px',
-    marginRight: '83%', 
-    textDecoration: 'none',
-  },
 };
 
-export default StockChefService;
+export default AccueilDivision;

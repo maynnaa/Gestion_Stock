@@ -5,6 +5,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const HistoriquePage = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -55,7 +56,6 @@ const HistoriquePage = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -86,7 +86,15 @@ const HistoriquePage = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilService')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -120,9 +128,6 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   contentContainer: {
     width: '100%',
@@ -137,6 +142,13 @@ const styles = {
     width: '80%',
     maxWidth: '800px',
     margin: '20px auto',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

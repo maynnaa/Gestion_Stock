@@ -4,6 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import Formulaire from '../../components/formulaire';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button';
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const FormulaireDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -51,7 +52,6 @@ const FormulaireDivision = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-          
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -92,7 +92,15 @@ const FormulaireDivision = () => {
         <Sidebar />
       </div>
       <div style={styles.mainContent}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDivision')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <Formulaire />
       </div>
     </div>
@@ -123,6 +131,13 @@ const styles = {
     backgroundColor: '#f8f9fa',
     display: 'flex',
     flexDirection: 'column',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%',
+    textDecoration: 'none',
   },
 };
 

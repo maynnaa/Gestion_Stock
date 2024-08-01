@@ -5,6 +5,7 @@ import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import DemandeAchat from '../../components/historiqueAchat';
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const HistoriqueDemandeAchat = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -58,7 +59,6 @@ const HistoriqueDemandeAchat = () => {
       <div style={styles.sidebarWrapper}>
         <Sidebar />
         <div style={styles.additionalButtons}>
-         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -116,7 +116,15 @@ const HistoriqueDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilMagasinier')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -151,7 +159,7 @@ const styles = {
     padding: '20px',
     backgroundColor: '#f8f9fa',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   contentContainer: {
@@ -167,6 +175,13 @@ const styles = {
     width: '80%',
     maxWidth: '800px',
     margin: '20px auto',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

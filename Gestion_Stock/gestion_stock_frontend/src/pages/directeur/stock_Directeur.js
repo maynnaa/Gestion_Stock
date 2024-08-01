@@ -4,6 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
 import Button from '../../components/button'; // Assurez-vous que le chemin est correct
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const StockDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -45,7 +46,6 @@ const StockDirecteur = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -68,7 +68,15 @@ const StockDirecteur = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDirecteur')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.tableContainer}>
           <ScrollableTable />
         </div>
@@ -108,6 +116,13 @@ const styles = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
 };
 

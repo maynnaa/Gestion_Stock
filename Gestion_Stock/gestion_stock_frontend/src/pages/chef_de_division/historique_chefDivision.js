@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import DefaultExample from '../../components/historique';
+import DefaultExample from '../../components/historique'; // Assurez-vous que le chemin est correct
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
+import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const HistoriqueDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -57,7 +58,6 @@ const HistoriqueDivision = () => {
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-         
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
@@ -98,7 +98,15 @@ const HistoriqueDivision = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar />
+        <NavBar>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate('/accueilDivision')}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
@@ -133,7 +141,7 @@ const styles = {
     padding: '20px',
     backgroundColor: '#f8f9fa',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   contentContainer: {
@@ -143,12 +151,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: '55px', // Adjust this value to add more space at the top
+    marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%', // Adjust this value to reduce the table size
-    maxWidth: '800px', // Max width to ensure the table doesn't get too wide
-    margin: '20px auto', // Center the table horizontally and add some margin-top
+    width: '80%', 
+    maxWidth: '800px', 
+    margin: '20px auto', 
+  },
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d', 
+    fontSize: '18px',
+    marginRight: '83%', 
+    textDecoration: 'none', 
   },
 };
 
