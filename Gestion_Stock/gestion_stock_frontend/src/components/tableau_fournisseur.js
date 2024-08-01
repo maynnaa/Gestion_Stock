@@ -1,161 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Modal, Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 import Search from './search';
 
-const data = [
-  { nomGerant: 'Gerant A', cin: 'CIN111111', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant A', cin: 'CIN123456', numImm: 'IM001', numRc: 'RC001' },
-  { nomGerant: 'Gerant B', cin: 'CIN654321', numImm: 'IM002', numRc: 'RC002' },
-  { nomGerant: 'Gerant C', cin: 'CIN789012', numImm: 'IM003', numRc: 'RC003' },
-  { nomGerant: 'Gerant D', cin: 'CIN345678', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant E', cin: 'CIN901234', numImm: 'IM005', numRc: 'RC005' },
-  { nomGerant: 'Gerant F', cin: 'CIN345608', numImm: 'IM004', numRc: 'RC004' },
-  { nomGerant: 'Gerant G', cin: 'CIN907234', numImm: 'IM005', numRc: 'RC005' },
-
-];
-
 const TableauFournisseur = () => {
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const itemsPerPage = 9;
+
+  useEffect(() => {
+    axios.get('http://localhost:9091/api/fournisseur')
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -167,9 +33,9 @@ const TableauFournisseur = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (index) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'entrée avec ID: ${index}?`)) {
-      alert(`Supprimer l'entrée avec ID: ${index}`);
+  const handleDelete = (id) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'entrée avec ID: ${id}?`)) {
+      alert(`Supprimer l'entrée avec ID: ${id}`);
     }
   };
 
@@ -181,16 +47,15 @@ const TableauFournisseur = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     // Handle form submission logic here
-    alert(`Form submitted for item: ${selectedItem.nomGerant}`);
+    alert(`Form submitted for item: ${selectedItem.nom_gerant}`);
     handleModalClose();
   };
 
-  // Filtrage des données par nomGerant, CIN, numImm, ou numRc
   const filteredData = data.filter((item) =>
-    item.nomGerant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.cin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.numImm.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.numRc.toLowerCase().includes(searchTerm.toLowerCase())
+    (item.nom_gerant || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.cin || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.num_imm || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.num_rc || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -236,22 +101,22 @@ const TableauFournisseur = () => {
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.nomGerant}</td>
+            {currentData.map((item) => (
+              <tr key={item.fournisseur_id}>
+                <td>{item.nom_gerant}</td>
                 <td>{item.cin}</td>
-                <td>{item.numImm}</td>
-                <td>{item.numRc}</td>
+                <td>{item.num_imm}</td>
+                <td>{item.num_rc}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-primary me-2"
-                    onClick={() => handleEdit(item)}
+                    onClick={() => handleEdit(item)} 
                   >
                     <FaEdit />
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDelete(item.fournisseur_id)}
                   >
                     <FaTrash />
                   </button>
@@ -311,7 +176,7 @@ const TableauFournisseur = () => {
                 <Form.Label>Nom du gérant</Form.Label>
                 <Form.Control
                   type="text"
-                  defaultValue={selectedItem.nomGerant}
+                  defaultValue={selectedItem.nom_gerant}
                 />
               </Form.Group>
               <Form.Group controlId="formCin">
@@ -325,14 +190,14 @@ const TableauFournisseur = () => {
                 <Form.Label>Num_IMM</Form.Label>
                 <Form.Control
                   type="text"
-                  defaultValue={selectedItem.numImm}
+                  defaultValue={selectedItem.num_imm}
                 />
               </Form.Group>
               <Form.Group controlId="formNumRc">
                 <Form.Label>Num_RC</Form.Label>
                 <Form.Control
                   type="text"
-                  defaultValue={selectedItem.numRc}
+                  defaultValue={selectedItem.num_rc}
                 />
               </Form.Group>
               <div className="d-flex justify-content-end mt-3">

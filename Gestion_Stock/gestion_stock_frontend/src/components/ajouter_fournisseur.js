@@ -1,4 +1,3 @@
-// File: ../../components/ajouter_fournisseur.js
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
@@ -8,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 Modal.setAppElement('#root');
 
 const SupplierFormModal = ({ isOpen, onClose }) => {
-  const [nom, setNom] = useState('');
+  const [nomGerant, setNomGerant] = useState('');
   const [cin, setCin] = useState('');
   const [numIMM, setNumIMM] = useState('');
   const [numRC, setNumRC] = useState('');
@@ -18,7 +17,7 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
     e.preventDefault();
 
     const newFournisseur = {
-      nom,
+      nom_gerant: nomGerant, // Correspond au nom du champ retourné par l'API
       cin,
       num_imm: numIMM,
       num_rc: numRC,
@@ -32,7 +31,7 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
       });
       alert('Fournisseur ajouté avec succès !');
       // Réinitialiser le formulaire
-      setNom('');
+      setNomGerant('');
       setCin('');
       setNumIMM('');
       setNumRC('');
@@ -54,13 +53,13 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
         <h2 className="my-4">Ajouter un fournisseur</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="nom" className="form-label">Nom:</label>
+            <label htmlFor="nomGerant" className="form-label">Nom du gérant:</label>
             <input
               type="text"
-              id="nom"
+              id="nomGerant"
               className="form-control"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
+              value={nomGerant}
+              onChange={(e) => setNomGerant(e.target.value)}
               required
             />
           </div>
