@@ -21,12 +21,15 @@ public class Produit_Stocke {
     private Date date_livraison_personnel;
     private String nom;
     private String marque;
+
     @ManyToOne
     @JoinColumn(name = "id_materiel")
     private Materiel materiel;
+
     @ManyToOne
     @JoinColumn(name = "fournisseur_id")
     private Fournisseur fournisseur;
+
     @OneToOne
     @JoinColumn(name = "id_produit")
     private Article article;
