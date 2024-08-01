@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +28,8 @@ public class FormulaireBesoins {
     @OneToOne
     @JoinColumn(name = "id_notification")
     private Notification notification;
+
+    @OneToMany(mappedBy = "formulaireBesoins")
+    private Set<FormulaireMateriel> formulaireMateriels = new HashSet<>();
+
 }
