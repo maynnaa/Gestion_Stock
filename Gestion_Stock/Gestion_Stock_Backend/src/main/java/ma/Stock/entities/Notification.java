@@ -15,9 +15,9 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_notification;
-    private String message;
+    private String type;
+    private boolean isSeen;
 
-    @ManyToOne
-    @JoinColumn(name = "id_demande")
-    private Demande demande ;
+    @OneToOne(mappedBy = "notification")
+    private FormulaireBesoins formulaireBesoins;
 }
