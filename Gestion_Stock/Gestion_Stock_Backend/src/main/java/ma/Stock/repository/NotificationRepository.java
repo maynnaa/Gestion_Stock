@@ -1,6 +1,5 @@
 package ma.Stock.repository;
 
-import ma.Stock.entities.Article;
 import ma.Stock.entities.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

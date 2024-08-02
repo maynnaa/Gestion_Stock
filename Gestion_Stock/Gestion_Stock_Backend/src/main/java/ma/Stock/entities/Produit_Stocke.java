@@ -31,5 +31,5 @@ public class Produit_Stocke {
 
     @OneToOne
     @JoinColumn(name = "id_produit")
-    private Article article;
+    private ArticleDemande article;
 }

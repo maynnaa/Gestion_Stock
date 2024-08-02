@@ -1,6 +1,7 @@
 package ma.Stock.controller;
 
-import ma.Stock.entities.Article;
+import ma.Stock.entities.ArticleDemande;
+import ma.Stock.entities.ArticleDemande;
 import ma.Stock.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +19,25 @@ public class ArticleController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable int id) {
-        Optional<Article> article = articleService.findById(id);
+    public ResponseEntity<ArticleDemande> getArticleById(@PathVariable int id) {
+        Optional<ArticleDemande> article = articleService.findById(id);
         return article.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        Article savedArticle = articleService.save(article);
+    public ResponseEntity<ArticleDemande> createArticle(@RequestBody ArticleDemande article) {
+        ArticleDemande savedArticle = articleService.save(article);
         return ResponseEntity.ok(savedArticle);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable int id, @RequestBody Article articleDetails) {
-        Optional<Article> article = articleService.findById(id);
+    public ResponseEntity<ArticleDemande> updateArticle(@PathVariable int id, @RequestBody ArticleDemande articleDetails) {
+        Optional<ArticleDemande> article = articleService.findById(id);
         if (article.isPresent()) {
-            Article existingArticle = article.get();
+            ArticleDemande existingArticle = article.get();
             existingArticle.setQuantite(articleDetails.getQuantite());
             existingArticle.setMateriel(articleDetails.getMateriel());
-            Article updatedArticle = articleService.save(existingArticle);
+            ArticleDemande updatedArticle = articleService.save(existingArticle);
             return ResponseEntity.ok(updatedArticle);
         } else {
             return ResponseEntity.notFound().build();
@@ -50,8 +51,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = articleService.findAll();
+    public ResponseEntity<List<ArticleDemande>> getAllArticles() {
+        List<ArticleDemande> articles = articleService.findAll();
         return ResponseEntity.ok(articles);
     }
 }

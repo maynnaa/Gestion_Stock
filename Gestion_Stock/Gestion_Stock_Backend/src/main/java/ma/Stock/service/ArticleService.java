@@ -1,6 +1,6 @@
 package ma.Stock.service;
 
-import ma.Stock.entities.Article;
+import ma.Stock.entities.ArticleDemande;
 
 import ma.Stock.repository.ArticleRepository;
 
@@ -15,11 +15,11 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public Optional<Article> findById(int id) {
+    public Optional<ArticleDemande> findById(int id) {
         return articleRepository.findById(id);
     }
 
-    public Article save(Article article) {
+    public ArticleDemande save(ArticleDemande article) {
         return articleRepository.save(article);
     }
 
@@ -27,7 +27,7 @@ public class ArticleService {
         articleRepository.deleteById(id);
     }
 
-    public List<Article> findAll() {
+    public List<ArticleDemande> findAll() {
         return articleRepository.findAll();
     }
 

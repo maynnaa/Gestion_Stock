@@ -1,6 +1,6 @@
 package ma.Stock.service;
 
-import ma.Stock.entities.Article;
+import ma.Stock.entities.ArticleDemande;
 
 import ma.Stock.entities.DemandeAchat;
 import ma.Stock.repository.ArticleRepository;

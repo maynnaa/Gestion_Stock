@@ -1,6 +1,5 @@
 package ma.Stock.repository;
 
-import ma.Stock.entities.Article;
 import ma.Stock.entities.Entite;
 import ma.Stock.entities.Fonction;
 import ma.Stock.entities.Fournisseur;
