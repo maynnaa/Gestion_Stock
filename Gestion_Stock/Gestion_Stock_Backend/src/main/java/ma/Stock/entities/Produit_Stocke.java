@@ -19,7 +19,6 @@ public class Produit_Stocke {
     private Boolean perissable;
     private Date date_livraison;
     private Date date_livraison_personnel;
-    private String nom;
     private String marque;
 
     @ManyToOne

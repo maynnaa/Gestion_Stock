@@ -35,7 +35,6 @@ public class ArticleController {
         if (article.isPresent()) {
             Article existingArticle = article.get();
             existingArticle.setQuantite(articleDetails.getQuantite());
-            existingArticle.setPersonnel(articleDetails.getPersonnel());
             existingArticle.setMateriel(articleDetails.getMateriel());
             Article updatedArticle = articleService.save(existingArticle);
             return ResponseEntity.ok(updatedArticle);

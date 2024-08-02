@@ -26,9 +26,7 @@ public class ProduitStockeService {
         produitStockeRepository.deleteById(id);
     }
 
-    public Optional<Produit_Stocke> findByNom(String nom) {
-        return produitStockeRepository.findByNom(nom);
-    }
+
 
     public Produit_Stocke save(Produit_Stocke produitStocke) {
         return produitStockeRepository.save(produitStocke);

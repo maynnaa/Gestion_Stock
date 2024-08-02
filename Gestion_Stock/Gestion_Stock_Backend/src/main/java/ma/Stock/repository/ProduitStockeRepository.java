@@ -16,6 +16,6 @@ public interface ProduitStockeRepository extends JpaRepository<Produit_Stocke, I
 
     Produit_Stocke save(Produit_Stocke produitStocke);
 
-    Optional<Produit_Stocke> findByNom(String nom);
+
     List<Produit_Stocke> findAll();
 }

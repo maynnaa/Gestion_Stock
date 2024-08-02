@@ -16,10 +16,7 @@ public class Article {
 
     @OneToOne(mappedBy = "article")
     private Produit_Stocke produitStocke;
-
-    @ManyToOne
-    @JoinColumn(name = "id_personne")
-    private Personnel personnel;
+    
 
     @ManyToOne
     @JoinColumn(name = "id_materiel")
