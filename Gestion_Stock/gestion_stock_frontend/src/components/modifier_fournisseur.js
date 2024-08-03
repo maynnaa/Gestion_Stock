@@ -18,8 +18,8 @@ const EditSupplierModal = ({ show, onHide, supplier, onSave }) => {
             <Form.Label>Nom du gérant</Form.Label>
             <Form.Control
               type="text"
-              name="nom_gerant"
-              defaultValue={supplier.nom_gerant || ''}
+              name="nom"
+              defaultValue={supplier.nom || ''}
               required
             />
           </Form.Group>

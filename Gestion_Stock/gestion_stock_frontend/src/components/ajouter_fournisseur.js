@@ -43,7 +43,7 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
     }
 
     const newFournisseur = {
-      nom_gerant: nomGerant,
+      nom: nomGerant,
       cin,
       num_imm: numIMM,
       num_rc: numRC,
