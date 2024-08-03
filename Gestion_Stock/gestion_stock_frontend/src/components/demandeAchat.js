@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const materialTypes = ['Type 1', 'Type 2', 'Type 3'];
-const materialsByType = {
-  'Type 1': ['Material 1', 'Material 2'],
-  'Type 2': ['Material 3', 'Material 4'],
-  'Type 3': ['Material 5', 'Material 6']
-};
-const fournisseurs = ['Fournisseur 1', 'Fournisseur 2', 'Fournisseur 3'];
-
 const FormulaireDemandeAchat = () => {
-  const [selectedFournisseur, setSelectedFournisseur] = useState(fournisseurs[0]);
+  const [fournisseurs, setFournisseurs] = useState([]);
+  const [materialTypes, setMaterialTypes] = useState([]);
+  const [selectedFournisseur, setSelectedFournisseur] = useState('');
   const [selectedMaterialType, setSelectedMaterialType] = useState('');
+  const [materials, setMaterials] = useState([]);
   const [tableRows, setTableRows] = useState([]);
+
+  // Fetch fournisseurs and material types on component mount
+  useEffect(() => {
+    axios.get('http://localhost:9091/api/fournisseur')
+      .then(response => {
+        setFournisseurs(response.data); // Directly set the response data
+      })
+      .catch(error => console.error('Error fetching fournisseurs:', error));
+  
+    axios.get('http://localhost:9091/api/type-materiel')
+      .then(response => {
+        setMaterialTypes(response.data);
+      })
+      .catch(error => console.error('Error fetching material types:', error));
+  }, []);
+
+  // Fetch materials based on selected material type
+  useEffect(() => {
+    if (selectedMaterialType) {
+      axios.get(`http://localhost:9091/api/materiel?typeMaterielId=${selectedMaterialType}`)
+        .then(response => {
+          setMaterials(response.data);
+        })
+        .catch(error => console.error('Error fetching materials:', error));
+    }
+  }, [selectedMaterialType]);
 
   const addRow = () => {
     setTableRows([...tableRows, { material: '', quantity: 1 }]);
@@ -28,12 +50,47 @@ const FormulaireDemandeAchat = () => {
     setTableRows(newTableRows);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
+  const handleQuantityChange = (index, value) => {
+    const newQuantity = Math.max(1, value); // Ensure quantity is at least 1
+    handleRowChange(index, 'quantity', newQuantity);
   };
 
-  const materials = selectedMaterialType ? materialsByType[selectedMaterialType] : [];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Step 1: Create a new demande_achat
+      const demandeResponse = await axios.post('http://localhost:9091/api/demandeAchat', {
+        date_demande: new Date().toISOString(), // or another date format your backend expects
+        id_personne: 1, // replace with actual id_personne
+        id_fournisseur: selectedFournisseur // assuming you want to save this as well
+      });
+      
+      const idDemande = demandeResponse.data.id_demande;
+
+      // Step 2: Create entries in article_demande for each row in the table
+      for (let row of tableRows) {
+        await axios.post('http://localhost:9091/api/article', {
+          quantite: row.quantity,
+          demandeAchat: { id_demande: idDemande }, // Send demandeAchat as an object with id
+          materiel: { id_materiel: row.material } // Send materiel as an object with id
+        });
+      }
+
+      // Optionally, show a success message
+      alert('Demande d\'achat enregistrée avec succès');
+      
+      // Reset the form fields
+      setSelectedFournisseur('');
+      setSelectedMaterialType('');
+      setMaterials([]);
+      setTableRows([]);
+
+    } catch (error) {
+      console.error('Error submitting demande d\'achat:', error);
+      alert('Une erreur s\'est produite lors de l\'enregistrement de la demande');
+    }
+  };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -49,9 +106,10 @@ const FormulaireDemandeAchat = () => {
                 value={selectedFournisseur}
                 onChange={(e) => setSelectedFournisseur(e.target.value)}
               >
-                {fournisseurs.map((fournisseur, index) => (
-                  <option key={index} value={fournisseur}>
-                    {fournisseur}
+                <option value="">Choisissez un fournisseur</option>
+                {fournisseurs.map((fournisseur) => (
+                  <option key={fournisseur.id_fournisseur} value={fournisseur.id_fournisseur}>
+                    {fournisseur.nom_gerant}
                   </option>
                 ))}
               </select>
@@ -67,9 +125,9 @@ const FormulaireDemandeAchat = () => {
                 onChange={(e) => setSelectedMaterialType(e.target.value)}
               >
                 <option value="">Choisissez un type</option>
-                {materialTypes.map((type, index) => (
-                  <option key={index} value={type}>
-                    {type}
+                {materialTypes.map((type) => (
+                  <option key={type.type_materiel_id} value={type.type_materiel_id}>
+                    {type.libelle}
                   </option>
                 ))}
               </select>
@@ -100,21 +158,35 @@ const FormulaireDemandeAchat = () => {
                         disabled={!selectedMaterialType}
                       >
                         <option value="">Choisissez un matériel</option>
-                        {materials.map((material, idx) => (
-                          <option key={idx} value={material}>
-                            {material}
+                        {materials.map((material) => (
+                          <option key={material.id_materiel} value={material.id_materiel}>
+                            {material.libelle}
                           </option>
                         ))}
                       </select>
                     </td>
                     <td>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={row.quantity}
-                        onChange={(e) => handleRowChange(index, 'quantity', e.target.value)}
-                        min="1"
-                      />
+                      <div className="d-flex align-items-center">
+                        <button
+                          className="btn btn-outline-secondary btn-sm"
+                          onClick={() => handleQuantityChange(index, tableRows[index].quantity - 1)}
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="form-control mx-2"
+                          value={row.quantity}
+                          onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
+                          min="1"
+                        />
+                        <button
+                          className="btn btn-outline-secondary btn-sm"
+                          onClick={() => handleQuantityChange(index, tableRows[index].quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
                     </td>
                     <td>
                       <button className="btn btn-danger" onClick={() => removeRow(index)}>🗑️</button>

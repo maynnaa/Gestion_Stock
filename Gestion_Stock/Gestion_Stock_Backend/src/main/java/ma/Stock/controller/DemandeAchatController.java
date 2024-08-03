@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/demandeAchat")
 public class DemandeAchatController {
 
@@ -18,6 +19,7 @@ public class DemandeAchatController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DemandeAchat> getDemandeAchatById(@PathVariable int id) {
+        System.out.println("Fetching DemandeAchat with ID: " + id);
         Optional<DemandeAchat> demandeAchat = demandeAchatService.findById(id);
         return demandeAchat.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -29,8 +31,10 @@ public class DemandeAchatController {
     }
 
     @PostMapping
-    public DemandeAchat createDemandeAchat(@RequestBody DemandeAchat demandeAchat) {
-        return demandeAchatService.save(demandeAchat);
+    public ResponseEntity<DemandeAchat> createDemandeAchat(@RequestBody DemandeAchat demandeAchat) {
+        System.out.println("Creating DemandeAchat: " + demandeAchat);
+        DemandeAchat savedDemandeAchat = demandeAchatService.save(demandeAchat);
+        return ResponseEntity.ok(savedDemandeAchat);
     }
 
     @PutMapping("/{id}")
