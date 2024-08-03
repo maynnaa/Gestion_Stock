@@ -13,11 +13,37 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
   const [numRC, setNumRC] = useState('');
   const [error, setError] = useState('');
 
+  const validateInputs = () => {
+    // Validation du CIN
+    if (cin.length !== 8 || !/^[a-zA-Z]{2}\d{6}$/.test(cin)) {
+      return 'Le CIN doit comporter 2 lettres suivies de 6 chiffres.';
+    }
+    // Validation du Numéro d'immatriculation
+    if (numIMM.length !== 8 || !/^\d{8}$/.test(numIMM)) {
+      return 'Le numéro d\'immatriculation doit comporter 8 chiffres.';
+    }
+    // Validation du Numéro de Registre de Commerce
+    if (numRC.length < 5 || numRC.length > 7 || !/^\d{5,7}$/.test(numRC)) {
+      return 'Le numéro de Registre de Commerce doit comporter entre 5 et 7 chiffres.';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Reset error state before each submission
+    setError('');
+
+    // Validate inputs
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     const newFournisseur = {
-      nom_gerant: nomGerant, // Correspond au nom du champ retourné par l'API
+      nom_gerant: nomGerant,
       cin,
       num_imm: numIMM,
       num_rc: numRC,
@@ -37,7 +63,12 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
       setNumRC('');
       onClose(); // Fermer la modal après la soumission
     } catch (err) {
-      setError('Erreur lors de l\'ajout du fournisseur.');
+      // Gestion des erreurs API
+      if (err.response && err.response.status === 409) {
+        setError('Le fournisseur existe déjà avec ce CIN, ce numéro de RC, ou ce numéro d\'immatriculation.');
+      } else {
+        setError('Erreur lors de l\'ajout du fournisseur.');
+      }
       console.error(err);
     }
   };
@@ -47,7 +78,7 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       ariaHideApp={false}
-      style={customStyles} // Apply custom styles here
+      style={customStyles}
     >
       <div className="container">
         <h2 className="my-4">Ajouter un fournisseur</h2>
