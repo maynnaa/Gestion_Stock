@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 public class Fournisseur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fournisseur_id;
+    private Integer fournisseur_id;
     private String cin;
-    private String nom_gerant;
+    private String nom;
     private String num_rc;
     private String num_imm;
 

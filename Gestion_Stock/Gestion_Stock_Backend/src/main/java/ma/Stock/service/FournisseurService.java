@@ -33,4 +33,8 @@ public class FournisseurService {
     public Fournisseur save(Fournisseur fournisseur) {
         return fournisseurRepository.save(fournisseur);
     }
+
+    public Optional<Fournisseur> findByNom(String nom) {
+        return fournisseurRepository.findByNom(nom);
+    }
 }

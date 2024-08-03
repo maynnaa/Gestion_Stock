@@ -19,5 +19,8 @@ public interface FournisseurRepository extends JpaRepository<Fournisseur,Integer
     Fournisseur save(Fournisseur fournisseur);
     List<Fournisseur> findAll();
 
+    Optional<Fournisseur> findByNom(String nom);
+
+
 
 }

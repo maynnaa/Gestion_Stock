@@ -7,7 +7,6 @@ import axios from 'axios';
 Modal.setAppElement('#root');
 
 const ProductFormModal = ({ isOpen, onClose }) => {
-  const [productName, setProductName] = useState('');
   const [brand, setBrand] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [deliveryDate, setDeliveryDate] = useState('');
@@ -16,7 +15,9 @@ const ProductFormModal = ({ isOpen, onClose }) => {
   const [stockable, setStockable] = useState(false);
   const [types, setTypes] = useState([]);
   const [materiels, setMateriels] = useState([]);
+  const [fournisseurs, setFournisseurs] = useState([]);
   const [selectedMateriel, setSelectedMateriel] = useState('');
+  const [selectedFournisseur, setSelectedFournisseur] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -24,11 +25,16 @@ const ProductFormModal = ({ isOpen, onClose }) => {
       axios.get('/api/type-materiel')
         .then(response => setTypes(response.data))
         .catch(error => console.error('Error fetching types:', error));
-
+      
       // Fetch materiels
-      axios.get('/api/materiel') // Ensure you have the correct endpoint
+      axios.get('/api/materiel')
         .then(response => setMateriels(response.data))
         .catch(error => console.error('Error fetching materiels:', error));
+
+      // Fetch fournisseurs
+      axios.get('/api/fournisseur')
+        .then(response => setFournisseurs(response.data))
+        .catch(error => console.error('Error fetching fournisseurs:', error));
     }
   }, [isOpen]);
 
@@ -41,25 +47,34 @@ const ProductFormModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!selectedFournisseur) {
+      console.error('Le fournisseur doit être sélectionné.');
+      return;
+    }
+  
     const productData = {
       num_serie: serialNumber,
       stockable,
       perissable: perishable,
       date_livraison: deliveryDate,
       marque: brand,
-      type: { id: selectedType }, // Assuming you need to send type ID
-      materiel: { id_materiel: selectedMateriel } // Use selected materiel ID
+      type: { id: selectedType },
+      materiel: { id_materiel: selectedMateriel },
+      fournisseur: { fournisseur_id: selectedFournisseur } // Assurez-vous que ceci est bien l'ID
     };
-
+  
+    console.log('Données envoyées:', productData); // Vérifiez les données envoyées
+  
     try {
       const response = await axios.post('/api/produit', productData);
       console.log('Product added successfully:', response.data);
       onClose();
     } catch (error) {
-      console.error('There was an error adding the product!', error);
+      console.error('There was an error adding the product!', error.response ? error.response.data : error.message);
     }
   };
+  
 
   return (
     <Modal
@@ -82,7 +97,7 @@ const ProductFormModal = ({ isOpen, onClose }) => {
             >
               <option value="">Sélectionner un type</option>
               {types.map(type => (
-                <option key={type.id} value={type.id}>
+                <option key={type.type_materiel_id} value={type.type_materiel_id}>
                   {type.libelle}
                 </option>
               ))}
@@ -100,12 +115,11 @@ const ProductFormModal = ({ isOpen, onClose }) => {
               <option value="">Sélectionner un materiel</option>
               {materiels.map(materiel => (
                 <option key={materiel.id_materiel} value={materiel.id_materiel}>
-                  {materiel.libelle} {/* Ensure this is the correct field */}
+                  {materiel.libelle}
                 </option>
               ))}
             </select>
           </div>
-         
           <div className="mb-3">
             <label htmlFor="brand" className="form-label">Marque:</label>
             <input
@@ -127,6 +141,23 @@ const ProductFormModal = ({ isOpen, onClose }) => {
               onChange={(e) => setSerialNumber(e.target.value)}
               required
             />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="fournisseur" className="form-label">Fournisseur:</label>
+            <select
+              id="fournisseur"
+              className="form-select"
+              value={selectedFournisseur}
+              onChange={(e) => setSelectedFournisseur(e.target.value)}
+              required
+            >
+              <option value="">Sélectionner un fournisseur</option>
+              {fournisseurs.map(fournisseur => (
+                <option key={fournisseur.fournisseur_id} value={fournisseur.fournisseur_id}>
+                  {fournisseur.nom}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-3">
             <label htmlFor="deliveryDate" className="form-label">Date de livraison:</label>

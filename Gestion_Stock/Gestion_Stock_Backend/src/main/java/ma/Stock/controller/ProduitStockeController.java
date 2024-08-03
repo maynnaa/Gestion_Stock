@@ -1,6 +1,8 @@
 package ma.Stock.controller;
 
+import ma.Stock.entities.Fournisseur;
 import ma.Stock.entities.Produit_Stocke;
+import ma.Stock.service.FournisseurService;
 import ma.Stock.service.ProduitStockeService;
 import ma.Stock.service.MaterielService;
 import ma.Stock.entities.Materiel;
@@ -18,11 +20,13 @@ public class ProduitStockeController {
 
     private final ProduitStockeService produitStockeService;
     private final MaterielService materielService;
+    private final FournisseurService fournisseurService;
 
     @Autowired
-    public ProduitStockeController(ProduitStockeService produitStockeService, MaterielService materielService) {
+    public ProduitStockeController(ProduitStockeService produitStockeService, MaterielService materielService, FournisseurService fournisseurService) {
         this.produitStockeService = produitStockeService;
         this.materielService = materielService;
+        this.fournisseurService = fournisseurService;
     }
 
     @GetMapping
@@ -42,6 +46,8 @@ public class ProduitStockeController {
     @PostMapping
     public ResponseEntity<?> createProduitStocke(@RequestBody Produit_Stocke produitStocke) {
         try {
+            System.out.println("Données reçues: " + produitStocke);
+
             if (produitStocke.getMateriel() == null || produitStocke.getMateriel().getId_materiel() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID du matériel manquant.");
             }
@@ -53,6 +59,17 @@ public class ProduitStockeController {
 
             produitStocke.setMateriel(materielOptional.get());
 
+            if (produitStocke.getFournisseur() == null || produitStocke.getFournisseur().getFournisseur_id() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID du fournisseur manquant.");
+            }
+
+            Optional<Fournisseur> fournisseurOptional = fournisseurService.findById(produitStocke.getFournisseur().getFournisseur_id());
+            if (!fournisseurOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fournisseur non trouvé.");
+            }
+
+            produitStocke.setFournisseur(fournisseurOptional.get());
+
             Produit_Stocke createdProduitStocke = produitStockeService.save(produitStocke);
             return new ResponseEntity<>(createdProduitStocke, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -60,6 +77,8 @@ public class ProduitStockeController {
                     .body("Erreur lors de la création du produit: " + e.getMessage());
         }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Produit_Stocke> updateProduitStocke(@PathVariable("id") int id, @RequestBody Produit_Stocke updatedProduitStocke) {
@@ -70,6 +89,5 @@ public class ProduitStockeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduitStocke(@PathVariable("id") int id) {
         produitStockeService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);}
 }

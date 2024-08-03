@@ -58,4 +58,12 @@ public class FournisseurController {
         fournisseurService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/nom/{nom}")
+    public ResponseEntity<Fournisseur> getFournisseurByNom(@PathVariable("nom") String nom) {
+        Optional<Fournisseur> fournisseurOptional = fournisseurService.findByNom(nom);
+        return fournisseurOptional
+                .map(fournisseur -> new ResponseEntity<>(fournisseur, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
