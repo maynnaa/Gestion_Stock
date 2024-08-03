@@ -109,7 +109,7 @@ const FormulaireDemandeAchat = () => {
                 <option value="">Choisissez un fournisseur</option>
                 {fournisseurs.map((fournisseur) => (
                   <option key={fournisseur.id_fournisseur} value={fournisseur.id_fournisseur}>
-                    {fournisseur.nom_gerant}
+                    {fournisseur.nom}
                   </option>
                 ))}
               </select>

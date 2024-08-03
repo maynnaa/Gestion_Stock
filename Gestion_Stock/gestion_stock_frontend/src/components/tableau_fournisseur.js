@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
-import Search from './search';
+import Search from './search'; // Assurez-vous que ce composant de recherche existe et est correctement implémenté
 
 const TableauFournisseur = () => {
   const [data, setData] = useState([]);
@@ -38,7 +38,6 @@ const TableauFournisseur = () => {
       try {
         const response = await axios.delete(`http://localhost:9091/api/fournisseur/${id}`);
         if (response.status === 204) {
-          // Mise à jour des données locales en supprimant l'élément avec l'ID donné
           setData(data.filter(item => item.fournisseur_id !== id));
           alert('Fournisseur supprimé avec succès.');
         } else {
@@ -62,42 +61,41 @@ const TableauFournisseur = () => {
     const formData = new FormData(event.target);
 
     const updatedSupplier = {
-        nom_gerant: formData.get('nom_gerant'),
-        cin: formData.get('cin'),
-        num_imm: formData.get('num_imm'),
-        num_rc: formData.get('num_rc'),
+      nom: formData.get('nom'),
+      cin: formData.get('cin'),
+      num_imm: formData.get('num_imm'),
+      num_rc: formData.get('num_rc'),
     };
 
     try {
-        const response = await axios.put(
-            `http://localhost:9091/api/fournisseur/${selectedItem.fournisseur_id}`,
-            updatedSupplier,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-
-        if (response.status === 200) {
-            // Mettre à jour les données locales
-            setData(data.map(item =>
-                item.fournisseur_id === selectedItem.fournisseur_id ? { ...item, ...updatedSupplier } : item
-            ));
-            alert('Fournisseur mis à jour avec succès !');
-        } else {
-            alert('Erreur lors de la mise à jour du fournisseur.');
+      const response = await axios.put(
+        `http://localhost:9091/api/fournisseur/${selectedItem.fournisseur_id}`,
+        updatedSupplier,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
+      );
 
-        handleModalClose();
-    } catch (err) {
-        console.error('Erreur lors de la mise à jour du fournisseur:', err);
+      if (response.status === 200) {
+        setData(data.map(item =>
+          item.fournisseur_id === selectedItem.fournisseur_id ? { ...item, ...updatedSupplier } : item
+        ));
+        alert('Fournisseur mis à jour avec succès !');
+      } else {
         alert('Erreur lors de la mise à jour du fournisseur.');
+      }
+
+      handleModalClose();
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour du fournisseur:', err);
+      alert('Erreur lors de la mise à jour du fournisseur.');
     }
   };
 
   const filteredData = data.filter((item) =>
-    (item.nom_gerant || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.nom || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (item.cin || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (item.num_imm || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (item.num_rc || '').toLowerCase().includes(searchTerm.toLowerCase())
@@ -148,14 +146,14 @@ const TableauFournisseur = () => {
           <tbody>
             {currentData.map((item) => (
               <tr key={item.fournisseur_id}>
-                <td>{item.nom_gerant}</td>
+                <td>{item.nom}</td>
                 <td>{item.cin}</td>
                 <td>{item.num_imm}</td>
                 <td>{item.num_rc}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-primary me-2"
-                    onClick={() => handleEdit(item)} 
+                    onClick={() => handleEdit(item)}
                   >
                     <FaEdit />
                   </button>
@@ -221,8 +219,8 @@ const TableauFournisseur = () => {
                 <Form.Label>Nom du gérant</Form.Label>
                 <Form.Control
                   type="text"
-                  name="nom_gerant"
-                  defaultValue={selectedItem.nom_gerant}
+                  name="nom"
+                  defaultValue={selectedItem.nom}
                 />
               </Form.Group>
               <Form.Group controlId="formCin">
