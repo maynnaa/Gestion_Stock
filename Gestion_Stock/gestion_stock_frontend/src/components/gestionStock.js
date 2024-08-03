@@ -1,154 +1,138 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { Modal, Button, Form } from 'react-bootstrap';
+import axios from 'axios';
 import Search from './search';
-import EditModal from './modifier_produit'; // Import the EditModal component
-
-const initialData = [
-  { id: '1', numSerie: 'B456', dateLivraison: '2024-07-26', nom: 'Matériel B', marque: 'Marque B', quantite: 15, beneficiary: 'User 2' },
-  { id: '2', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '3', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '4', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '5', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '6', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '7', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '8', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '9', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '10', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '12', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '13', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '14', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '15', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '16', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '17', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '18', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '19', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '20', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' }, { id: '1', numSerie: 'B456', dateLivraison: '2024-07-26', nom: 'Matériel B', marque: 'Marque B', quantite: 15, beneficiary: 'User 2' },
-  { id: '2', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '3', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '4', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '5', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '6', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '7', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '8', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '9', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '10', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '12', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '13', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '14', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '15', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '16', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '17', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '18', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '19', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '20', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' }, { id: '1', numSerie: 'B456', dateLivraison: '2024-07-26', nom: 'Matériel B', marque: 'Marque B', quantite: 15, beneficiary: 'User 2' },
-  { id: '2', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '3', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '4', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '5', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '6', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '7', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '8', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '9', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '10', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '11', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '12', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '13', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '14', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '15', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '16', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '17', numSerie: 'A123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '18', numSerie: 'C123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '19', numSerie: 'C123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },
-  { id: '20', numSerie: 'C123', dateLivraison: '2024-07-25', nom: 'Matériel A', marque: 'Marque A', quantite: 10, beneficiary: 'User 1' },];
-
-
-const ITEMS_PER_PAGE = 7; 
-const PAGE_RANGE = 7;
 
 const StockMagasinier = () => {
-  const [data, setData] = useState(initialData);
-  const [filteredData, setFilteredData] = useState(initialData);
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
-  const [currentItem, setCurrentItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const itemsPerPage = 9;
+
+  useEffect(() => {
+    axios.get('http://localhost:9091/api/produit')
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+  }, []);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
 
   const handleEdit = (item) => {
-    setCurrentItem(item);
+    setSelectedItem(item);
     setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    const newData = data.filter(item => item.id !== id);
-    setData(newData);
-    setFilteredData(newData);
+  const handleModalClose = () => {
+    setShowModal(false);
+    setSelectedItem(null);
   };
 
-  const handleSearch = (searchTerm) => {
-    const newFilteredData = data.filter(item =>
-      item.numSerie.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(newFilteredData);
-    setCurrentPage(1); // Reset to first page on search
-  };
+  const handleSave = async (event) => {
+    event.preventDefault();
 
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+    const updatedItem = {
+      ...selectedItem,
+      num_serie: event.target.formNumSerie.value,
+      date_livraison: event.target.formDateLivraison.value,
+      marque: event.target.formMarque.value,
+    };
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+    console.log('Données envoyées:', updatedItem);
+
+    try {
+      const response = await axios.put(`http://localhost:9091/api/produit/${updatedItem.id_produit}`, updatedItem);
+      console.log('Réponse reçue:', response);
+
+      if (response.status === 200) {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.id_produit === updatedItem.id_produit ? updatedItem : item
+          )
+        );
+        handleModalClose();
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des données:', error);
     }
   };
 
-  const currentData = filteredData.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+  const filteredData = data.filter((item) =>
+    (item.num_serie || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.date_livraison || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.marque || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Calculate the start and end page numbers for pagination
-  const startPage = Math.floor((currentPage - 1) / PAGE_RANGE) * PAGE_RANGE + 1;
-  const endPage = Math.min(startPage + PAGE_RANGE - 1, totalPages);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  
+  const currentData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const getPageNumbers = () => {
+    const range = 7;
+    const start = Math.floor((currentPage - 1) / range) * range + 1;
+    const end = Math.min(start + range - 1, totalPages);
+
+    let pageNumbers = [];
+    for (let i = start; i <= end; i++) {
+      pageNumbers.push(i);
+    }
+
+    return pageNumbers;
+  };
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex justify-content-center mb-3">
+    <div className="container mt-2">
+      <div style={styles.searchWrapper}>
         <Search onSearch={handleSearch} />
       </div>
-      <div className="table-responsive" style={{ ...styles.tableWrapper, marginTop: '35px' }}>
+      <div className="table-responsive" style={styles.tableWrapper}>
         <table className="table table-bordered">
-          <thead className="text-center">
-            <tr>
-              <th>Id produit</th>
-              <th>Num serie</th>
-              <th>Date livraison</th>
+          <thead>
+            <tr className="text-center">
+              <th>Numéro de série</th>
+              <th>Date de livraison</th>
               <th>Marque</th>
-              <th>Actions</th>
+              <th>Matériel</th>
+              <th>Fournisseur</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((item) => (
-              <tr key={item.id}>
-                <td className="text-center">{item.id}</td>
-                <td className="text-center">{item.numSerie}</td>
-                <td className="text-center">{item.dateLivraison}</td>
-                <td className="text-center">{item.marque}</td>
-                <td className="text-center">
-                  <button 
-                    className="btn btn-primary btn-sm me-2" 
-                    onClick={() => handleEdit(item)}
+              <tr key={item.id_produit} className="text-center">
+                <td>{item.num_serie}</td>
+                <td>{item.date_livraison}</td>
+                <td>{item.marque}</td>
+                <td>{item.materiel ? item.materiel.libelle : ''}</td>
+                <td>{item.fournisseur ? item.fournisseur.nom : ''}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => handleEdit(item)} 
                   >
                     <FaEdit />
                   </button>
-                  <button 
-                    className="btn btn-danger btn-sm" 
-                    onClick={() => handleDelete(item.id)}
+                  <button
+                    className="btn btn-sm btn-danger"
                   >
                     <FaTrash />
                   </button>
@@ -158,83 +142,109 @@ const StockMagasinier = () => {
           </tbody>
         </table>
       </div>
-      <nav className="mt-4">
-        <ul className="pagination justify-content-center">
-          {currentPage > 1 && (
-            <li className="page-item">
-              <button 
-                className="page-link" 
+      <div style={styles.paginationWrapper}>
+        <nav>
+          <ul className="pagination justify-content-center" style={styles.pagination}>
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
               >
-                &laquo; Précédent
+                Précédent
               </button>
             </li>
-          )}
-          {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map(pageNumber => (
-            <li 
-              key={pageNumber} 
-              className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
-            >
-              <button 
-                className="page-link" 
-                onClick={() => handlePageChange(pageNumber)}
+            {getPageNumbers().map(pageNumber => (
+              <li
+                key={pageNumber}
+                className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
               >
-                {pageNumber}
-              </button>
-            </li>
-          ))}
-          {currentPage < totalPages && (
-            <li className="page-item">
-              <button 
-                className="page-link" 
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(pageNumber)}
+                >
+                  {pageNumber}
+                </button>
+              </li>
+            ))}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
               >
-                Suivant &raquo;
+                Suivant
               </button>
             </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Modal for editing */}
+      <Modal show={showModal} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modifier les informations du produit</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedItem && (
+            <Form onSubmit={handleSave}>
+              <Form.Group controlId="formNumSerie">
+                <Form.Label>Numéro de série</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="num_serie"
+                  defaultValue={selectedItem.num_serie}
+                />
+              </Form.Group>
+              <Form.Group controlId="formDateLivraison">
+                <Form.Label>Date de livraison</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="date_livraison"
+                  defaultValue={selectedItem.date_livraison}
+                />
+              </Form.Group>
+              <Form.Group controlId="formMarque">
+                <Form.Label>Marque</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="marque"
+                  defaultValue={selectedItem.marque}
+                />
+              </Form.Group>
+              {/* Add other fields here */}
+              <div className="d-flex justify-content-end mt-3">
+                <Button variant="secondary" onClick={handleModalClose} className="me-2">
+                  Annuler
+                </Button>
+                <Button type="submit" variant="primary">
+                  Enregistrer
+                </Button>
+              </div>
+            </Form>
           )}
-        </ul>
-      </nav>
-      {currentItem && (
-        <EditModal
-          show={showModal}
-          onHide={() => setShowModal(false)}
-          item={currentItem}
-        />
-      )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
 
 const styles = {
+  searchWrapper: {
+    marginBottom: '1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '0 1rem',
+  },
   tableWrapper: {
-    maxWidth: '1300px',
-    margin: '0 auto',
-    height: '550px',
-    overflowY: 'auto',
-    scrollbarWidth: 'thin',
+    marginTop: '1rem',
+  },
+  paginationWrapper: {
+    marginTop: '1rem',
+  },
+  pagination: {
+    marginBottom: '0',
   },
 };
-
-const customScrollbarStyles = `
-  .table-responsive::-webkit-scrollbar {
-    width: 8px;
-  }
-  .table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  .table-responsive::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
-  .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-`;
-
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = customScrollbarStyles;
-document.head.appendChild(styleSheet);
 
 export default StockMagasinier;

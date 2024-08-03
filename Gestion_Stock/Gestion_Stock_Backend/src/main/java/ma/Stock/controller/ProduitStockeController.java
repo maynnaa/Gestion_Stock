@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/produit")
 public class ProduitStockeController {
@@ -81,10 +82,45 @@ public class ProduitStockeController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produit_Stocke> updateProduitStocke(@PathVariable("id") int id, @RequestBody Produit_Stocke updatedProduitStocke) {
-        Produit_Stocke updated = produitStockeService.save(updatedProduitStocke);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+    public ResponseEntity<?> updateProduitStocke(@PathVariable("id") int id, @RequestBody Produit_Stocke updatedProduitStocke) {
+        try {
+            // Vérifiez si le produit existe
+            Optional<Produit_Stocke> produitOptional = produitStockeService.findById(id);
+            if (!produitOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produit non trouvé.");
+            }
+
+            // Vérifiez si le matériel existe
+            if (updatedProduitStocke.getMateriel() == null || updatedProduitStocke.getMateriel().getId_materiel() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID du matériel manquant.");
+            }
+
+            Optional<Materiel> materielOptional = materielService.findById(updatedProduitStocke.getMateriel().getId_materiel());
+            if (!materielOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Materiel non trouvé.");
+            }
+
+            // Vérifiez si le fournisseur existe
+            if (updatedProduitStocke.getFournisseur() == null || updatedProduitStocke.getFournisseur().getFournisseur_id() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID du fournisseur manquant.");
+            }
+
+            Optional<Fournisseur> fournisseurOptional = fournisseurService.findById(updatedProduitStocke.getFournisseur().getFournisseur_id());
+            if (!fournisseurOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fournisseur non trouvé.");
+            }
+
+            // Mettez à jour le produit
+            updatedProduitStocke.setId_produit(id);
+            Produit_Stocke updated = produitStockeService.save(updatedProduitStocke);
+
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la mise à jour du produit: " + e.getMessage());
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduitStocke(@PathVariable("id") int id) {
