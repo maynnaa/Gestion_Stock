@@ -27,6 +27,14 @@ const EditModal = ({ show, onHide, item }) => {
             <Form.Label>Date de livraison</Form.Label>
             <Form.Control type="date" defaultValue={item.dateLivraison} />
           </Form.Group>
+          <Form.Group controlId="formProductMateriel">
+            <Form.Label>Materiel</Form.Label>
+            <Form.Control type="text" defaultValue={item.materiel} />
+          </Form.Group>
+          <Form.Group controlId="formProductFournisseur">
+            <Form.Label>Fournisseur</Form.Label>
+            <Form.Control type="text" defaultValue={item.fournisseur} />
+          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>

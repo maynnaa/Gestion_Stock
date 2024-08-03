@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTag } from 'react-icons/fa';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import Search from './search';
@@ -11,6 +11,8 @@ const StockMagasinier = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [materielList, setMaterielList] = useState([]);
+  const [fournisseurList, setFournisseurList] = useState([]);
   const itemsPerPage = 9;
 
   useEffect(() => {
@@ -20,6 +22,22 @@ const StockMagasinier = () => {
       })
       .catch(error => {
         console.error('Erreur lors de la récupération des données:', error);
+      });
+
+    axios.get('http://localhost:9091/api/materiel')
+      .then(response => {
+        setMaterielList(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des matériaux:', error);
+      });
+
+    axios.get('http://localhost:9091/api/fournisseur')
+      .then(response => {
+        setFournisseurList(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des fournisseurs:', error);
       });
   }, []);
 
@@ -46,14 +64,12 @@ const StockMagasinier = () => {
       num_serie: event.target.formNumSerie.value,
       date_livraison: event.target.formDateLivraison.value,
       marque: event.target.formMarque.value,
+      materiel: materielList.find(m => m.libelle === event.target.formMateriel.value),
+      fournisseur: fournisseurList.find(f => f.nom === event.target.formFournisseur.value),
     };
-
-    console.log('Données envoyées:', updatedItem);
 
     try {
       const response = await axios.put(`http://localhost:9091/api/produit/${updatedItem.id_produit}`, updatedItem);
-      console.log('Réponse reçue:', response);
-
       if (response.status === 200) {
         setData((prevData) =>
           prevData.map((item) =>
@@ -88,15 +104,10 @@ const StockMagasinier = () => {
 
   const getPageNumbers = () => {
     const range = 7;
-    const start = Math.floor((currentPage - 1) / range) * range + 1;
+    const start = Math.max(1, Math.floor((currentPage - 1) / range) * range + 1);
     const end = Math.min(start + range - 1, totalPages);
 
-    let pageNumbers = [];
-    for (let i = start; i <= end; i++) {
-      pageNumbers.push(i);
-    }
-
-    return pageNumbers;
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
   return (
@@ -127,14 +138,14 @@ const StockMagasinier = () => {
                 <td>
                   <button
                     className="btn btn-sm btn-primary me-2"
-                    onClick={() => handleEdit(item)} 
+                    onClick={() => handleEdit(item)}
                   >
                     <FaEdit />
                   </button>
                   <button
-                    className="btn btn-sm btn-danger"
+                    className="btn btn-sm btn-warning"
                   >
-                    <FaTrash />
+                    <FaTag />
                   </button>
                 </td>
               </tr>
@@ -180,7 +191,6 @@ const StockMagasinier = () => {
         </nav>
       </div>
 
-      {/* Modal for editing */}
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modifier les informations du produit</Modal.Title>
@@ -212,7 +222,36 @@ const StockMagasinier = () => {
                   defaultValue={selectedItem.marque}
                 />
               </Form.Group>
-              {/* Add other fields here */}
+              <Form.Group controlId="formMateriel">
+                <Form.Label>Matériel</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="materiel"
+                  defaultValue={selectedItem.materiel ? selectedItem.materiel.libelle : ''}
+                >
+                  <option value="">Sélectionner un matériel</option>
+                  {materielList.map(materiel => (
+                    <option key={materiel.id_materiel} value={materiel.libelle}>
+                      {materiel.libelle}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="formFournisseur">
+                <Form.Label>Fournisseur</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="fournisseur"
+                  defaultValue={selectedItem.fournisseur ? selectedItem.fournisseur.nom : ''}
+                >
+                  <option value="">Sélectionner un fournisseur</option>
+                  {fournisseurList.map(fournisseur => (
+                    <option key={fournisseur.fournisseur_id} value={fournisseur.nom}>
+                      {fournisseur.nom}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
               <div className="d-flex justify-content-end mt-3">
                 <Button variant="secondary" onClick={handleModalClose} className="me-2">
                   Annuler
