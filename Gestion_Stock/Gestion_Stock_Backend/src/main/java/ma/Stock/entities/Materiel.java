@@ -14,7 +14,7 @@ import java.util.Set;
 public class Materiel {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id_materiel;
+    private Integer id_materiel;
     private String libelle;
     @ManyToOne
     @JoinColumn(name = "type_materiel_id")

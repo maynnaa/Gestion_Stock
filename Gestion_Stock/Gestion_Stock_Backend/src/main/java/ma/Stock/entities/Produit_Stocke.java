@@ -7,18 +7,20 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Data @NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Produit_Stocke")
 public class Produit_Stocke {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_produit;
-    private Double num_serie;
+    private Integer id_produit;
+    private String num_serie;
     private Boolean stockable;
     private Boolean perissable;
+    @Temporal(TemporalType.DATE)
     private Date date_livraison;
-    private Date date_livraison_personnel;
     private String marque;
 
     @ManyToOne

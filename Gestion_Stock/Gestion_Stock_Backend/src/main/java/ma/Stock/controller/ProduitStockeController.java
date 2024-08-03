@@ -2,6 +2,8 @@ package ma.Stock.controller;
 
 import ma.Stock.entities.Produit_Stocke;
 import ma.Stock.service.ProduitStockeService;
+import ma.Stock.service.MaterielService;
+import ma.Stock.entities.Materiel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class ProduitStockeController {
 
     private final ProduitStockeService produitStockeService;
+    private final MaterielService materielService;
 
     @Autowired
-    public ProduitStockeController(ProduitStockeService produitStockeService) {
+    public ProduitStockeController(ProduitStockeService produitStockeService, MaterielService materielService) {
         this.produitStockeService = produitStockeService;
+        this.materielService = materielService;
     }
 
     @GetMapping
@@ -36,9 +40,25 @@ public class ProduitStockeController {
     }
 
     @PostMapping
-    public ResponseEntity<Produit_Stocke> createProduitStocke(@RequestBody Produit_Stocke produitStocke) {
-        Produit_Stocke createdProduitStocke = produitStockeService.save(produitStocke);
-        return new ResponseEntity<>(createdProduitStocke, HttpStatus.CREATED);
+    public ResponseEntity<?> createProduitStocke(@RequestBody Produit_Stocke produitStocke) {
+        try {
+            if (produitStocke.getMateriel() == null || produitStocke.getMateriel().getId_materiel() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID du matériel manquant.");
+            }
+
+            Optional<Materiel> materielOptional = materielService.findById(produitStocke.getMateriel().getId_materiel());
+            if (!materielOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Materiel non trouvé.");
+            }
+
+            produitStocke.setMateriel(materielOptional.get());
+
+            Produit_Stocke createdProduitStocke = produitStockeService.save(produitStocke);
+            return new ResponseEntity<>(createdProduitStocke, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la création du produit: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

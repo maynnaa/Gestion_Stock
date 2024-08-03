@@ -128,10 +128,7 @@ const StockMagasinier = () => {
               <th>Id produit</th>
               <th>Num serie</th>
               <th>Date livraison</th>
-              <th>Nom</th>
               <th>Marque</th>
-              <th>Quantité</th>
-              <th>Bénéficiaire</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -141,10 +138,7 @@ const StockMagasinier = () => {
                 <td className="text-center">{item.id}</td>
                 <td className="text-center">{item.numSerie}</td>
                 <td className="text-center">{item.dateLivraison}</td>
-                <td className="text-center">{item.nom}</td>
                 <td className="text-center">{item.marque}</td>
-                <td className="text-center">{item.quantite}</td>
-                <td className="text-center">{item.beneficiary}</td>
                 <td className="text-center">
                   <button 
                     className="btn btn-primary btn-sm me-2" 
