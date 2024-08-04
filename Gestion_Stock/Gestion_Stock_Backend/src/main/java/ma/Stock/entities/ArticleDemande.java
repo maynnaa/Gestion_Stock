@@ -27,5 +27,9 @@ public class ArticleDemande {
     @Column(name = "quantite")
     private int quantite;
 
+    @ManyToOne
+    @JoinColumn(name = "fournisseur_id")
+    private Fournisseur fournisseur;
+
 
 }
