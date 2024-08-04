@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTag } from 'react-icons/fa';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import Search from './search';
 
@@ -13,7 +13,9 @@ const StockMagasinier = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [materielList, setMaterielList] = useState([]);
   const [fournisseurList, setFournisseurList] = useState([]);
-  const [showPPRModal, setShowPPRModal] = useState(false); 
+  const [showPPRModal, setShowPPRModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const itemsPerPage = 9;
 
   useEffect(() => {
@@ -78,9 +80,13 @@ const StockMagasinier = () => {
           )
         );
         handleModalClose();
+        setSuccessMessage('L\'article a été modifié avec succès.');
+        setTimeout(() => setSuccessMessage(''), 3000);
       }
     } catch (error) {
       console.error('Erreur lors de la mise à jour des données:', error);
+      setErrorMessage('Erreur lors de la mise à jour des données.');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
@@ -100,20 +106,25 @@ const StockMagasinier = () => {
     const ppr = event.target.formPPR.value;
 
     try {
-        const response = await axios.post('http://localhost:9091/api/articleAffecte/assign', {
-            ppr: ppr,
-            produitId: selectedItem.id_produit
-        });
+      const response = await axios.post('http://localhost:9091/api/articleAffecte/assign', {
+        ppr: ppr,
+        produitId: selectedItem.id_produit
+      });
 
-        if (response.status === 200) {
-            console.log('Article affecté avec succès:', response.data);
-            handlePPRModalClose();
-        }
+      if (response.status === 200) {
+        console.log('Article affecté avec succès:', response.data);
+        handlePPRModalClose();
+        setSuccessMessage('Article affecté avec succès.');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
     } catch (error) {
-        console.error('Erreur lors de l\'affectation de l\'article:', error.response?.data || error.message);
-    }
-};
+      handlePPRModalClose(); 
 
+      console.error('Erreur lors de l\'affectation de l\'article:', error.response?.data || error.message);
+      setErrorMessage('PPR introuvable.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    }
+  };
 
   const filteredData = data.filter((item) =>
     (item.num_serie || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -144,6 +155,9 @@ const StockMagasinier = () => {
 
   return (
     <div className="container mt-2">
+      {successMessage && <Alert variant="success"  style={styles.alert }>{successMessage}</Alert>}
+      {errorMessage && <Alert variant="danger" style={styles.alert}>{errorMessage}</Alert>}
+
       <div style={styles.searchWrapper}>
         <Search onSearch={handleSearch} />
       </div>
@@ -276,7 +290,7 @@ const StockMagasinier = () => {
         </Modal.Body>
       </Modal>
 
-      <Modal show={showPPRModal} onHide={handlePPRModalClose}>
+      <Modal show={showPPRModal} onHide={handlePPRModalClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Affecter un article</Modal.Title>
         </Modal.Header>
@@ -323,5 +337,12 @@ const styles = {
     marginBottom: '0',
     maxHeight: '400px',
     overflowY: 'auto',
+  },
+  alert: {
+    fontSize: '13px', 
+    marginBottom: '10px',
+    maxWidth: '350px', 
+    margin: '0 auto', 
+    
   },
 };
