@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +28,11 @@ public class ArticleAffecte {
     private Personnel personnel;
 
     @Column(name = "date_livraison_personnel")
-    private int date_livraison_personnel;
+    private LocalDate dateLivraisonPersonnel;
 
+    @PrePersist
+    protected void onCreate() {
+        this.dateLivraisonPersonnel = LocalDate.now();
+    }
 
 }
