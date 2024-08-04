@@ -13,6 +13,7 @@ const StockMagasinier = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [materielList, setMaterielList] = useState([]);
   const [fournisseurList, setFournisseurList] = useState([]);
+  const [showPPRModal, setShowPPRModal] = useState(false); 
   const itemsPerPage = 9;
 
   useEffect(() => {
@@ -83,6 +84,37 @@ const StockMagasinier = () => {
     }
   };
 
+  const handlePPR = (item) => {
+    setSelectedItem(item);
+    setShowPPRModal(true);
+  };
+
+  const handlePPRModalClose = () => {
+    setShowPPRModal(false);
+    setSelectedItem(null);
+  };
+
+  const handleSavePPR = async (event) => {
+    event.preventDefault();
+
+    const ppr = event.target.formPPR.value;
+
+    try {
+        const response = await axios.post('http://localhost:9091/api/articleAffecte/assign', {
+            ppr: ppr,
+            produitId: selectedItem.id_produit
+        });
+
+        if (response.status === 200) {
+            console.log('Article affecté avec succès:', response.data);
+            handlePPRModalClose();
+        }
+    } catch (error) {
+        console.error('Erreur lors de l\'affectation de l\'article:', error.response?.data || error.message);
+    }
+};
+
+
   const filteredData = data.filter((item) =>
     (item.num_serie || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (item.date_livraison || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -127,23 +159,25 @@ const StockMagasinier = () => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-center">
             {currentData.map((item) => (
-              <tr key={item.id_produit} className="text-center">
+              <tr key={item.id_produit}>
                 <td>{item.num_serie}</td>
                 <td>{item.date_livraison}</td>
                 <td>{item.marque}</td>
-                <td>{item.materiel ? item.materiel.libelle : ''}</td>
-                <td>{item.fournisseur ? item.fournisseur.nom : ''}</td>
+                <td>{item.materiel?.libelle || ''}</td>
+                <td>{item.fournisseur?.nom || ''}</td>
                 <td>
                   <button
-                    className="btn btn-sm btn-primary me-2"
+                    className="btn btn-primary btn-sm"
                     onClick={() => handleEdit(item)}
+                    style={{ marginRight: '10px' }}
                   >
                     <FaEdit />
                   </button>
                   <button
-                    className="btn btn-sm btn-warning"
+                    className="btn btn-warning btn-sm"
+                    onClick={() => handlePPR(item)}
                   >
                     <FaTag />
                   </button>
@@ -153,47 +187,34 @@ const StockMagasinier = () => {
           </tbody>
         </table>
       </div>
-      <div style={styles.paginationWrapper}>
-        <nav>
-          <ul className="pagination justify-content-center" style={styles.pagination}>
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Précédent
+      <nav>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+              Précédent
+            </button>
+          </li>
+          {getPageNumbers().map((pageNumber) => (
+            <li
+              key={pageNumber}
+              className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
+            >
+              <button className="page-link" onClick={() => handlePageChange(pageNumber)}>
+                {pageNumber}
               </button>
             </li>
-            {getPageNumbers().map(pageNumber => (
-              <li
-                key={pageNumber}
-                className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(pageNumber)}
-                >
-                  {pageNumber}
-                </button>
-              </li>
-            ))}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Suivant
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+          ))}
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>
+              Suivant
+            </button>
+          </li>
+        </ul>
+      </nav>
 
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modifier les informations du produit</Modal.Title>
+          <Modal.Title>Modifier l'article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedItem && (
@@ -202,35 +223,30 @@ const StockMagasinier = () => {
                 <Form.Label>Numéro de série</Form.Label>
                 <Form.Control
                   type="text"
-                  name="num_serie"
                   defaultValue={selectedItem.num_serie}
+                  required
                 />
               </Form.Group>
               <Form.Group controlId="formDateLivraison">
                 <Form.Label>Date de livraison</Form.Label>
                 <Form.Control
                   type="date"
-                  name="date_livraison"
                   defaultValue={selectedItem.date_livraison}
+                  required
                 />
               </Form.Group>
               <Form.Group controlId="formMarque">
                 <Form.Label>Marque</Form.Label>
                 <Form.Control
                   type="text"
-                  name="marque"
                   defaultValue={selectedItem.marque}
+                  required
                 />
               </Form.Group>
               <Form.Group controlId="formMateriel">
                 <Form.Label>Matériel</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="materiel"
-                  defaultValue={selectedItem.materiel ? selectedItem.materiel.libelle : ''}
-                >
-                  <option value="">Sélectionner un matériel</option>
-                  {materielList.map(materiel => (
+                <Form.Control as="select" defaultValue={selectedItem.materiel?.libelle || ''} required>
+                  {materielList.map((materiel) => (
                     <option key={materiel.id_materiel} value={materiel.libelle}>
                       {materiel.libelle}
                     </option>
@@ -239,27 +255,46 @@ const StockMagasinier = () => {
               </Form.Group>
               <Form.Group controlId="formFournisseur">
                 <Form.Label>Fournisseur</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="fournisseur"
-                  defaultValue={selectedItem.fournisseur ? selectedItem.fournisseur.nom : ''}
-                >
-                  <option value="">Sélectionner un fournisseur</option>
-                  {fournisseurList.map(fournisseur => (
-                    <option key={fournisseur.fournisseur_id} value={fournisseur.nom}>
+                <Form.Control as="select" defaultValue={selectedItem.fournisseur?.nom || ''} required>
+                  {fournisseurList.map((fournisseur) => (
+                    <option key={fournisseur.id_fournisseur} value={fournisseur.nom}>
                       {fournisseur.nom}
                     </option>
                   ))}
                 </Form.Control>
               </Form.Group>
-              <div className="d-flex justify-content-end mt-3">
-                <Button variant="secondary" onClick={handleModalClose} className="me-2">
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleModalClose}>
                   Annuler
                 </Button>
-                <Button type="submit" variant="primary">
+                <Button variant="primary" type="submit">
                   Enregistrer
                 </Button>
-              </div>
+              </Modal.Footer>
+            </Form>
+          )}
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showPPRModal} onHide={handlePPRModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Affecter un article</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedItem && (
+            <Form onSubmit={handleSavePPR}>
+              <Form.Group controlId="formPPR">
+                <Form.Label>PPR</Form.Label>
+                <Form.Control type="text" required />
+              </Form.Group>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handlePPRModalClose}>
+                  Annuler
+                </Button>
+                <Button variant="primary" type="submit">
+                  Enregistrer
+                </Button>
+              </Modal.Footer>
             </Form>
           )}
         </Modal.Body>
@@ -268,12 +303,15 @@ const StockMagasinier = () => {
   );
 };
 
+export default StockMagasinier;
+
 const styles = {
   searchWrapper: {
     marginBottom: '1rem',
     display: 'flex',
     justifyContent: 'center',
     padding: '0 1rem',
+    marginBottom: '20px',
   },
   tableWrapper: {
     marginTop: '1rem',
@@ -283,7 +321,7 @@ const styles = {
   },
   pagination: {
     marginBottom: '0',
+    maxHeight: '400px',
+    overflowY: 'auto',
   },
 };
-
-export default StockMagasinier;
