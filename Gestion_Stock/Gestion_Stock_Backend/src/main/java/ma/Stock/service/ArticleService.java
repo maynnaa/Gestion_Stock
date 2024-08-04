@@ -26,8 +26,10 @@ public class ArticleService {
         articleRepository.deleteById(id);
     }
 
+
     public List<ArticleDemande> findAll() {
         return articleRepository.findAll();
     }
+
 
 }

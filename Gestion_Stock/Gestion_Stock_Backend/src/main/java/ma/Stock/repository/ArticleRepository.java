@@ -15,4 +15,6 @@ public interface ArticleRepository extends JpaRepository<ArticleDemande,Integer>
     List<ArticleDemande> findAll();
     void deleteById(Integer id);
 
+
+
 }

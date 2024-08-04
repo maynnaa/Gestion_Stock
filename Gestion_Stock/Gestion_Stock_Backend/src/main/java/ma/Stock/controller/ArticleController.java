@@ -62,4 +62,5 @@ public class ArticleController {
         List<ArticleDemande> articles = articleService.findAll();
         return ResponseEntity.ok(articles);
     }
-}
+
+    }
