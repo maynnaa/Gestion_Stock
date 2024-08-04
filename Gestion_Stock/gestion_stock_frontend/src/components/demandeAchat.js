@@ -4,32 +4,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const FormulaireDemandeAchat = () => {
   const [fournisseurs, setFournisseurs] = useState([]);
+  const [fournisseurMapping, setFournisseurMapping] = useState({});
+  const [selectedFournisseurId, setSelectedFournisseurId] = useState('');
   const [materialTypes, setMaterialTypes] = useState([]);
-  const [selectedFournisseur, setSelectedFournisseur] = useState('');
   const [selectedMaterialType, setSelectedMaterialType] = useState('');
   const [materials, setMaterials] = useState([]);
   const [tableRows, setTableRows] = useState([]);
 
-  // Fetch fournisseurs and material types on component mount
   useEffect(() => {
+   
     axios.get('http://localhost:9091/api/fournisseur')
       .then(response => {
-        setFournisseurs(response.data); // Directly set the response data
+        console.log('Fournisseurs fetched:', response.data);
+        setFournisseurs(response.data);
+
+        // Create fournisseur mapping
+        const mapping = response.data.reduce((acc, fournisseur) => {
+          acc[fournisseur.nom] = fournisseur.fournisseur_id;
+          return acc;
+        }, {});
+        setFournisseurMapping(mapping);
       })
       .catch(error => console.error('Error fetching fournisseurs:', error));
-  
+
     axios.get('http://localhost:9091/api/type-materiel')
       .then(response => {
+        console.log('Material types fetched:', response.data);
         setMaterialTypes(response.data);
       })
       .catch(error => console.error('Error fetching material types:', error));
   }, []);
 
-  // Fetch materials based on selected material type
   useEffect(() => {
     if (selectedMaterialType) {
       axios.get(`http://localhost:9091/api/materiel?typeMaterielId=${selectedMaterialType}`)
         .then(response => {
+          console.log('Materials fetched:', response.data);
           setMaterials(response.data);
         })
         .catch(error => console.error('Error fetching materials:', error));
@@ -51,45 +61,79 @@ const FormulaireDemandeAchat = () => {
   };
 
   const handleQuantityChange = (index, value) => {
-    const newQuantity = Math.max(1, value); // Ensure quantity is at least 1
+    const newQuantity = Math.max(1, value);
     handleRowChange(index, 'quantity', newQuantity);
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
     try {
-      // Step 1: Create a new demande_achat
+      if (!selectedFournisseurId) {
+        alert('Veuillez sélectionner un fournisseur.');
+        return;
+      }
+  
       const demandeResponse = await axios.post('http://localhost:9091/api/demandeAchat', {
-        date_demande: new Date().toISOString(), // or another date format your backend expects
-        id_personne: 1, // replace with actual id_personne
-        id_fournisseur: selectedFournisseur // assuming you want to save this as well
+        date_demande: new Date().toISOString(),
+        id_personne: 1
       });
-      
+  
       const idDemande = demandeResponse.data.id_demande;
-
-      // Step 2: Create entries in article_demande for each row in the table
+      console.log('Demande created with ID:', idDemande);
+  
+     
       for (let row of tableRows) {
+        if (!row.material) {
+          console.warn('Skipping row with missing material:', row);
+          continue;
+        }
+  
+        console.log('Submitting article with:', {
+          quantite: row.quantity,
+          demandeAchat: { id_demande: idDemande },
+          materiel: { id_materiel: row.material },
+          fournisseur_id: selectedFournisseurId 
+        });
+
+  
         await axios.post('http://localhost:9091/api/article', {
           quantite: row.quantity,
-          demandeAchat: { id_demande: idDemande }, // Send demandeAchat as an object with id
-          materiel: { id_materiel: row.material } // Send materiel as an object with id
+          demandeAchat: { id_demande: idDemande },
+          materiel: { id_materiel: row.material },
+          fournisseur: {fournisseur_id: selectedFournisseurId}
+        })
+        .then(response => {
+          console.log('Article submitted successfully:', response.data);
+        })
+        .catch(error => {
+          console.error('Error submitting article:', error);
         });
+        
       }
-
-      // Optionally, show a success message
+  
       alert('Demande d\'achat enregistrée avec succès');
-      
-      // Reset the form fields
-      setSelectedFournisseur('');
-      setSelectedMaterialType('');
-      setMaterials([]);
-      setTableRows([]);
-
+      resetForm();
     } catch (error) {
       console.error('Error submitting demande d\'achat:', error);
       alert('Une erreur s\'est produite lors de l\'enregistrement de la demande');
     }
+  };
+  
+  
+  const handleFournisseurChange = (e) => {
+    const fournisseurName = e.target.value;
+    const fournisseurId = fournisseurMapping[fournisseurName];
+    console.log('Selected fournisseur:', fournisseurName, 'ID:', fournisseurId); // Debugging
+    setSelectedFournisseurId(fournisseurId || '');
+  };
+
+  const resetForm = () => {
+    setSelectedFournisseurId('');
+    setSelectedMaterialType('');
+    setMaterials([]);
+    setTableRows([]);
   };
 
   return (
@@ -103,12 +147,11 @@ const FormulaireDemandeAchat = () => {
             <div className="col-sm-9">
               <select
                 className="form-control"
-                value={selectedFournisseur}
-                onChange={(e) => setSelectedFournisseur(e.target.value)}
+                onChange={handleFournisseurChange}
               >
                 <option value="">Choisissez un fournisseur</option>
                 {fournisseurs.map((fournisseur) => (
-                  <option key={fournisseur.id_fournisseur} value={fournisseur.id_fournisseur}>
+                  <option key={fournisseur.fournisseur_id} value={fournisseur.nom}>
                     {fournisseur.nom}
                   </option>
                 ))}
@@ -201,8 +244,8 @@ const FormulaireDemandeAchat = () => {
             <button className="btn btn-secondary" style={styles.cancelButton} onClick={() => window.location.reload()}>
               Annuler
             </button>
-            <button type="submit" className="btn btn-primary" style={styles.submitButton} onClick={handleSubmit}>
-              Envoyer
+            <button className="btn btn-primary" style={styles.submitButton} onClick={handleSubmit}>
+              Soumettre
             </button>
           </div>
         </div>
@@ -213,22 +256,17 @@ const FormulaireDemandeAchat = () => {
 
 const styles = {
   card: {
-    width: '100%',
+    width: '80%',
     maxWidth: '600px',
-    margin: '0 auto',
-    padding: '15px',
   },
   cardTitle: {
-    marginBottom: '15px',
+    textAlign: 'center',
   },
   tableContainer: {
-    maxHeight: '150px',
-    overflowY: 'auto',
+    marginBottom: '20px',
   },
   buttonContainer: {
-    marginTop: '15px',
-    display: 'flex',
-    justifyContent: 'center',
+    marginTop: '20px',
   },
   cancelButton: {
     marginRight: '10px',

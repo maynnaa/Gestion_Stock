@@ -1,9 +1,7 @@
 package ma.Stock.service;
 
 import ma.Stock.entities.ArticleDemande;
-
 import ma.Stock.repository.ArticleRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class ArticleService {
+
     @Autowired
     private ArticleRepository articleRepository;
 

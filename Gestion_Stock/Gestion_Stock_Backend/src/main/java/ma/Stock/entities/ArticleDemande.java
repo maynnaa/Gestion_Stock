@@ -28,7 +28,7 @@ public class ArticleDemande {
     private int quantite;
 
     @ManyToOne
-    @JoinColumn(name = "fournisseur_id")
+    @JoinColumn(name = "fournisseur_id", nullable = false)
     private Fournisseur fournisseur;
 
 
