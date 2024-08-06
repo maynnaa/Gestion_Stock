@@ -5,7 +5,8 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import { Nav } from 'react-bootstrap'; 
+import { useParams } from 'react-router-dom';
 
 const DemandesRecuesDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -13,6 +14,8 @@ const DemandesRecuesDirecteur = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
@@ -45,7 +48,7 @@ const DemandesRecuesDirecteur = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
@@ -77,7 +80,7 @@ const DemandesRecuesDirecteur = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDirecteur')}
+            onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -105,7 +108,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', 
+    top: '200px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

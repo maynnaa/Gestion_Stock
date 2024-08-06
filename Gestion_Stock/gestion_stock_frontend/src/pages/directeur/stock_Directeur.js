@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
-import Button from '../../components/button'; // Assurez-vous que le chemin est correct
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import Button from '../../components/button';
+import { Nav } from 'react-bootstrap'; 
 
 const StockDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate(); 
   const location = useLocation();
+  const { id_personnel } = useParams();
+  
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
@@ -18,16 +21,16 @@ const StockDirecteur = () => {
       case '/':
         setActiveButton('accueil');
         break;
-      case '/stockDivision':
+      case `/stockDirecteur/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/demandesRecues':
+      case `/demandesRecues/${id_personnel}`:
         setActiveButton('received');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -45,13 +48,14 @@ const StockDirecteur = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockDirecteur', 'stock')}
+            onClick={() => handleNavigation(`/stockDirecteur/${id_personnel}`, 'stock')}
           >
             Stock
           </Button>
@@ -60,18 +64,17 @@ const StockDirecteur = () => {
             hovered={hoveredButton === 'received' || activeButton === 'received'}
             onMouseEnter={() => handleMouseEnter('received')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandesRecuesDirecteur', 'received')}
+            onClick={() => handleNavigation(`/demandesRecuesDirecteur/${id_personnel}`, 'received')}
           >
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDirecteur')}
+            onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -79,6 +82,7 @@ const StockDirecteur = () => {
         </NavBar>
         <div style={styles.tableContainer}>
           <ScrollableTable />
+          <p>ID de l'utilisateur: {id_personnel}</p> {/* Affichage de l'ID */}
         </div>
       </div>
     </div>

@@ -6,36 +6,39 @@ import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import { useParams } from 'react-router-dom';
 
 const HistoriqueDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const location = useLocation();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilDivision/${id_personnel}`:
         setActiveButton('accueil');
         break;
-      case '/stockDivision':
+      case `/stockDivision/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/formulaireDivision':
+      case `/formulaireDivision/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historiqueDivision':
+      case `/historiqueDivision/${id_personnel}`:
         setActiveButton('history');
         break;
-      case '/demandesRecues':
+      case `/demandesRecues/${id_personnel}`:
         setActiveButton('received');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -51,12 +54,13 @@ const HistoriqueDivision = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -95,13 +99,12 @@ const HistoriqueDivision = () => {
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDivision')}
+            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -129,7 +132,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', 
+    top: '200px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -160,10 +163,10 @@ const styles = {
   },
   accueilLink: {
     fontWeight: 'bold',
-    color: '#6c757d', 
+    color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%', 
-    textDecoration: 'none', 
+    marginRight: '83%',
+    textDecoration: 'none',
   },
 };
 

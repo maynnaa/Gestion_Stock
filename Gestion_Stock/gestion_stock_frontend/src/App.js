@@ -24,46 +24,34 @@ import AccueilMagasinier from './pages/magasinier/accueil_magasinier';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/formulaire" element={<PageWithSidebar />} />
-          <Route path="/" element={<LoginPage />} /> 
-          <Route path='/stock' element={<StockChefService/>} />
-          <Route path="/historique" element={<HistoriquePage />} />
-          <Route path="/formulaireDivision" element={<FormulaireDivision />} />
-          <Route path="/historiqueDivision" element={<HistoriqueDivision />} />
-          <Route path="/demandesRecues" element={<DemandesRecues />} />
-          <Route path="/demande" element={<TestPage />} />
-          <Route path='/stockDivision' element={<StockDivision />} />
-          <Route path='/stockDivision' element={< StockDivision/>} />
-          <Route path='/stockDivision' element={< StockDivision/>} />
-          <Route path='/stockDirecteur' element={< StockDirecteur/>} />
-          <Route path="/demandesRecuesDirecteur" element={<DemandesRecuesDirecteur />} />
-          <Route path="/demandeAchat" element={<FormDemandeAchat/>} />
-          <Route path="/historiqueDemandeAchat" element={<HistoriqueDemandeAchat />} />
-          <Route path="/historiqueBesoinsMagasinier" element={<HistoriqueBesoins />} />
-          <Route path="/stockMagasinier" element={<GestionStockMagasinier />} />
-          <Route path="/gestionFournisseur" element={<GestionFournisseur />} />
-          <Route path="/affectationMateriel" element={<AffectationMateriel />} />
-          <Route path="/accueilDivision" element={<AccueilDivision />} />
-          <Route path="/accueilService" element={<AccueilService />} />
-          <Route path="/accueilDirecteur" element={<AccueilDirecteur />} />
-          <Route path="/accueilMagasinier" element={<AccueilMagasinier />} />
-
-
-
-
-
-
-
-
-
-
-        </Routes>
-      </div>
-    </Router>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/formulaire/:id_personnel" element={<PageWithSidebar />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path='/stock/:id_personnel' element={<StockChefService />} />
+            <Route path="/historique/:id_personnel" element={<HistoriquePage />} />
+            <Route path="/formulaireDivision/:id_personnel" element={<FormulaireDivision />} />
+            <Route path="/historiqueDivision/:id_personnel" element={<HistoriqueDivision />} />
+            <Route path="/demandesRecues/:id_personnel" element={<DemandesRecues />} />
+            <Route path="/demande/:id_personnel" element={<TestPage />} />
+            <Route path='/stockDivision/:id_personnel' element={<StockDivision />} />
+            <Route path='/stockDirecteur/:id_personnel' element={<StockDirecteur />} />
+            <Route path="/demandesRecuesDirecteur/:id_personnel" element={<DemandesRecuesDirecteur />} />
+            <Route path="/demandeAchat/:id_personnel" element={<FormDemandeAchat />} />
+            <Route path="/historiqueDemandeAchat/:id_personnel" element={<HistoriqueDemandeAchat />} />
+            <Route path="/historiqueBesoinsMagasinier/:id_personnel" element={<HistoriqueBesoins />} />
+            <Route path="/stockMagasinier/:id_personnel" element={<GestionStockMagasinier />} />
+            <Route path="/gestionFournisseur/:id_personnel" element={<GestionFournisseur />} />
+            <Route path="/affectationMateriel/:id_personnel" element={<AffectationMateriel />} />
+            <Route path="/accueilDivision/:id_personnel" element={<AccueilDivision />} />
+            <Route path="/accueilService/:id_personnel" element={<AccueilService />} />
+            <Route path="/accueilDirecteur/:id_personnel" element={<AccueilDirecteur />} />
+            <Route path="/accueilMagasinier/:id_personnel" element={<AccueilMagasinier />} />
+          </Routes>
+        </div>
+      </Router>
   );
 }
 

@@ -5,11 +5,14 @@ import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
 import Button from '../../components/button';
 import { Nav } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 const AccueilService = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [activeButton, setActiveButton] = useState('accueil'); // Default to 'accueil'
+  const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
   const navigate = useNavigate(); 
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -21,15 +24,14 @@ const AccueilService = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
         <div style={styles.additionalButtons}>
-         
-        <Button
+          <Button
             size="medium"
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
@@ -58,12 +60,12 @@ const AccueilService = () => {
           </Button>
         </div>
         <Sidebar />
-        </div>
+      </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilService')}
+            onClick={() => navigate(`/accueilService/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -99,7 +101,7 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-    display: 'flex',           // Ajoute Flexbox pour centrer
+    display: 'flex',
     flexDirection: 'column',   // Colonne pour centrer verticalement
     justifyContent: 'center',  // Centre verticalement
     alignItems: 'center',      // Centre horizontalement
@@ -109,13 +111,6 @@ const styles = {
     width: '100%',             // Assure que le container prend toute la largeur disponible
     display: 'flex',           // Utilise Flexbox dans le container
     justifyContent: 'center',  // Centre le contenu à l'intérieur
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: '10px', // Ajuster l'espace sous le header si nécessaire
   },
   accueilLink: {
     fontWeight: 'bold',

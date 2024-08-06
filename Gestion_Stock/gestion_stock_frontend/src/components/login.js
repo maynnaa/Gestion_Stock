@@ -17,21 +17,24 @@ const Login = () => {
           password: password
         }
       });
-      const { message, functionId } = response.data;
-      console.log("Function ID:", functionId);
+  
+      console.log("Réponse de l'API:", response.data); 
+      const { message, functionId, id_personnel } = response.data;
+  
+      localStorage.setItem('userId', id_personnel);
       setMessage(message);
       switch (functionId) {
         case 1:
-          navigate('/stockDirecteur');
+          navigate(`/accueilDirecteur/${id_personnel}`);
           break;
-        case 2: 
-          navigate('/stockDivision');
+        case 2:
+          navigate(`/accueilDivision/${id_personnel}`);
           break;
         case 3:
-          navigate('/stock');
+          navigate(`/accueilService/${id_personnel}`);
           break;
         case 4:
-          navigate('/stockMagasinier');
+          navigate(`/accueilMagasinier/${id_personnel}`);
           break;
         default:
           setMessage('Unknown function ID');
@@ -44,6 +47,7 @@ const Login = () => {
       }
     }
   };
+  
 
   return (
     <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100">

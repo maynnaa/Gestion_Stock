@@ -4,6 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
 import Button from '../../components/button'; 
+import { useParams } from 'react-router-dom';
 import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
 
 const StockChefService = () => {
@@ -11,26 +12,28 @@ const StockChefService = () => {
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate(); 
   const location = useLocation();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilService/${id_personnel}`:
         setActiveButton('home');
         break;
-      case '/stock':
+      case `/stock/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/formulaire':
+      case `/formulaire/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historique':
+      case `/historique/${id_personnel}`:
         setActiveButton('history');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -42,7 +45,7 @@ const StockChefService = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
@@ -83,7 +86,7 @@ const StockChefService = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilService')}
+            onClick={() => navigate(`/accueilService/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil

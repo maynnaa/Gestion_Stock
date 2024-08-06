@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import NavBar from '../../components/navbar';
 import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
@@ -8,8 +8,9 @@ import { Nav } from 'react-bootstrap';
 
 const AccueilMagasinier = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
-  const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
+  const [activeButton, setActiveButton] = useState('accueil'); 
   const navigate = useNavigate(); 
+  const { id_personnel } = useParams();
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -34,7 +35,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockMagasinier', 'stock')}
+            onClick={() => handleNavigation(`/stockMagasinier/${id_personnel}`, 'stock')}
           >
             Gestion de Stock
           </Button>
@@ -43,7 +44,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandeAchat', 'request')}
+            onClick={() => handleNavigation(`/demandeAchat/${id_personnel}`, 'request')}
           >
             Demande d'achat
           </Button>
@@ -52,7 +53,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueDemandeAchat', 'history')}
+            onClick={() => handleNavigation(`/historiqueDemandeAchat/${id_personnel}`, 'history')}
           >
             Historique des demandes d'achat
           </Button>
@@ -61,7 +62,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'historyBesoins' || activeButton === 'historyBesoins'}
             onMouseEnter={() => handleMouseEnter('historyBesoins')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueBesoinsMagasinier', 'historyBesoins')}
+            onClick={() => handleNavigation(`/historiqueBesoinsMagasinier/${id_personnel}`, 'historyBesoins')}
           >
             Historique des demandes de besoins
           </Button>
@@ -70,7 +71,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'gestionFournisseur' || activeButton === 'gestionFournisseur'}
             onMouseEnter={() => handleMouseEnter('gestionFournisseur')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/gestionFournisseur', 'gestionFournisseur')}
+            onClick={() => handleNavigation(`/gestionFournisseur/${id_personnel}`, 'gestionFournisseur')}
           >
             Gestion des Fournisseurs
           </Button>
@@ -79,7 +80,7 @@ const AccueilMagasinier = () => {
             hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
             onMouseEnter={() => handleMouseEnter('affectationMateriel')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/affectationMateriel', 'affectationMateriel')}
+            onClick={() => handleNavigation(`/affectationMateriel/${id_personnel}`, 'affectationMateriel')}
           >
             Affectation du Matériel
           </Button>
@@ -89,7 +90,7 @@ const AccueilMagasinier = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilMagasinier')}
+            onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -114,7 +115,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '180px', // Aligner le positionnement avec FormDemandeAchat
+    top: '180px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

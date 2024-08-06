@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import DemandeAchat from '../../components/historiqueAchat';
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import { Nav } from 'react-bootstrap';
 
 const HistoriqueDemandeAchat = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -13,29 +13,32 @@ const HistoriqueDemandeAchat = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
+  const { id_personnel } = useParams();
+  
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilMagasinier/${id_personnel}`:
         setActiveButton('home');
         break;
-      case '/gestionStock':
+      case `/stockMagasinier/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/demandeAchat':
+      case `/demandeAchat/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historiqueDemandeAchat':
+      case `/historiqueDemandeAchat/${id_personnel}`:
         setActiveButton('history');
         break;
-      case '/historiqueBesoins':
+      case `/historiqueBesoinsMagasinier/${id_personnel}`:
         setActiveButton('historyBesoins');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -64,7 +67,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockMagasinier', 'stock')}
+            onClick={() => handleNavigation(`/stockMagasinier/${id_personnel}`, 'stock')}
           >
             Gestion de Stock
           </Button>
@@ -73,7 +76,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandeAchat', 'request')}
+            onClick={() => handleNavigation(`/demandeAchat/${id_personnel}`, 'request')}
           >
             Demande d'achat
           </Button>
@@ -82,7 +85,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueDemandeAchat', 'history')}
+            onClick={() => handleNavigation(`/historiqueDemandeAchat/${id_personnel}`, 'history')}
           >
             Historique des demandes d'achat
           </Button>
@@ -91,7 +94,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'historyBesoins' || activeButton === 'historyBesoins'}
             onMouseEnter={() => handleMouseEnter('historyBesoins')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueBesoinsMagasinier', 'historyBesoins')}
+            onClick={() => handleNavigation(`/historiqueBesoinsMagasinier/${id_personnel}`, 'historyBesoins')}
           >
             Historique des demandes de besoins
           </Button>
@@ -100,7 +103,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'gestionFournisseur' || activeButton === 'gestionFournisseur'}
             onMouseEnter={() => handleMouseEnter('gestionFournisseur')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/gestionFournisseur', 'gestionFournisseur')}
+            onClick={() => handleNavigation(`/gestionFournisseur/${id_personnel}`, 'gestionFournisseur')}
           >
             Gestion des Fournisseurs
           </Button>
@@ -109,7 +112,7 @@ const HistoriqueDemandeAchat = () => {
             hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
             onMouseEnter={() => handleMouseEnter('affectationMateriel')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/affectationMateriel', 'affectationMateriel')}
+            onClick={() => handleNavigation(`/affectationMateriel/${id_personnel}`, 'affectationMateriel')}
           >
             Affectation du Matériel
           </Button>
@@ -119,7 +122,7 @@ const HistoriqueDemandeAchat = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilMagasinier')}
+            onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil

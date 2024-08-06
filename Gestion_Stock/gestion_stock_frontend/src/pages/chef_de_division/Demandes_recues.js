@@ -6,7 +6,7 @@ import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap';
-
+import { useParams } from 'react-router-dom';
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -14,11 +14,13 @@ const DemandesRecues = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case '/accueilDivision':
         setActiveButton('accueil');
         break;
       case '/stockDivision':
@@ -52,12 +54,13 @@ const DemandesRecues = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -96,13 +99,12 @@ const DemandesRecues = () => {
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDivision')}
+            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -130,7 +132,7 @@ const styles = {
   },
   additionalButtons: {
     position: 'absolute',
-    top: '200px', 
+    top: '200px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -142,7 +144,7 @@ const styles = {
     padding: '20px',
     backgroundColor: '#f8f9fa',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   contentContainer: {
@@ -155,16 +157,16 @@ const styles = {
     marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%', 
-    maxWidth: '800px', 
-    margin: '20px auto', 
+    width: '80%',
+    maxWidth: '800px',
+    margin: '20px auto',
   },
   accueilLink: {
     fontWeight: 'bold',
-    color: '#6c757d', // Couleur gris
+    color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%', // Ajuster l'espacement si nécessaire
-    textDecoration: 'none', // Retirer le soulignement par défaut des liens
+    marginRight: '83%',
+    textDecoration: 'none',
   },
 };
 

@@ -1,44 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import NavBar from '../../components/navbar';
 import Button from '../../components/button';
 import TableauFournisseur from '../../components/tableau_fournisseur'; 
-import SupplierFormModal from '../../components/ajouter_fournisseur'; // Importation du composant SupplierFormModal
-import { FaPlus } from 'react-icons/fa'; // Importation de l'icône plus
+import SupplierFormModal from '../../components/ajouter_fournisseur'; 
+import { FaPlus } from 'react-icons/fa';
 
 const GestionFournisseur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // État pour contrôler la visibilité du modal
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const navigate = useNavigate();
   const location = useLocation();
+  const { id_personnel } = useParams();
+  
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilMagasinier/${id_personnel}`:
         setActiveButton('home');
         break;
-      case '/gestionStock':
+      case `/stockMagasinier/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/demandeAchat':
+      case `/demandeAchat/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historiqueDemandeAchat':
+      case `/historiqueDemandeAchat/${id_personnel}`:
         setActiveButton('history');
         break;
-      case '/historiqueBesoins':
+      case `/historiqueBesoinsMagasinier/${id_personnel}`:
         setActiveButton('historyBesoins');
         break;
-      case '/gestionFournisseur':
+      case `/gestionFournisseur/${id_personnel}`:
         setActiveButton('gestionFournisseur');
+        break;
+      case `/affectationMateriel/${id_personnel}`:
+        setActiveButton('affectationMateriel');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -54,11 +60,11 @@ const GestionFournisseur = () => {
   };
 
   const handleAddFournisseur = () => {
-    setIsModalOpen(true); // Ouvrir le modal
+    setIsModalOpen(true); 
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Fermer le modal
+    setIsModalOpen(false); 
   };
 
   return (
@@ -71,7 +77,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'stock' || activeButton === 'stock'}
             onMouseEnter={() => handleMouseEnter('stock')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/stockMagasinier', 'stock')}
+            onClick={() => handleNavigation(`/stockMagasinier/${id_personnel}`, 'stock')}
           >
             Gestion de Stock
           </Button>
@@ -80,7 +86,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'request' || activeButton === 'request'}
             onMouseEnter={() => handleMouseEnter('request')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/demandeAchat', 'request')}
+            onClick={() => handleNavigation(`/demandeAchat/${id_personnel}`, 'request')}
           >
             Demande d'achat
           </Button>
@@ -89,7 +95,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'history' || activeButton === 'history'}
             onMouseEnter={() => handleMouseEnter('history')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueDemandeAchat', 'history')}
+            onClick={() => handleNavigation(`/historiqueDemandeAchat/${id_personnel}`, 'history')}
           >
             Historique des demandes d'achat
           </Button>
@@ -98,7 +104,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'historyBesoins' || activeButton === 'historyBesoins'}
             onMouseEnter={() => handleMouseEnter('historyBesoins')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/historiqueBesoinsMagasinier', 'historyBesoins')}
+            onClick={() => handleNavigation(`/historiqueBesoinsMagasinier/${id_personnel}`, 'historyBesoins')}
           >
             Historique des demandes de besoins
           </Button>
@@ -107,7 +113,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'gestionFournisseur' || activeButton === 'gestionFournisseur'}
             onMouseEnter={() => handleMouseEnter('gestionFournisseur')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/gestionFournisseur', 'gestionFournisseur')}
+            onClick={() => handleNavigation(`/gestionFournisseur/${id_personnel}`, 'gestionFournisseur')}
           >
             Gestion des Fournisseurs
           </Button>
@@ -116,7 +122,7 @@ const GestionFournisseur = () => {
             hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
             onMouseEnter={() => handleMouseEnter('affectationMateriel')}
             onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/affectationMateriel', 'affectationMateriel')}
+            onClick={() => handleNavigation(`/affectationMateriel/${id_personnel}`, 'affectationMateriel')}
           >
             Affectation du Matériel
           </Button>
@@ -126,7 +132,7 @@ const GestionFournisseur = () => {
         <NavBar>
           <a 
             href="#"
-            onClick={() => handleNavigation('/accueilMagasinier', 'home')}
+            onClick={() => handleNavigation(`/accueilMagasinier/${id_personnel}`, 'home')}
             style={styles.accueilLink}
           >
             Accueil
@@ -147,7 +153,7 @@ const GestionFournisseur = () => {
         <div style={styles.tableContainer}>
           <TableauFournisseur />
         </div>
-        <SupplierFormModal isOpen={isModalOpen} onClose={closeModal} /> {/* Ajout du modal */}
+        <SupplierFormModal isOpen={isModalOpen} onClose={closeModal} />
       </div>
     </div>
   );
@@ -185,7 +191,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '20px',
-    paddingTop: '25px', // Ajout d'espace au-dessus
+    paddingTop: '25px', 
   },
   searchContainer: {
     flex: 1,
@@ -196,7 +202,7 @@ const styles = {
     border: 'none',
     display: 'flex',
     alignItems: 'center',
-    marginLeft: '20px', // Ajuster l'espacement si nécessaire
+    marginLeft: '20px', 
   },
   icon: {
     marginRight: '5px',

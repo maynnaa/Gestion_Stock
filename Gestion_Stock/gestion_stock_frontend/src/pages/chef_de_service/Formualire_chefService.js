@@ -5,32 +5,35 @@ import Formulaire from '../../components/formulaire';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+import { useParams } from 'react-router-dom';
 
 const PageWithSidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilService/${id_personnel}`:
         setActiveButton('home');
         break;
-      case '/stock':
+      case `/stock/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/formulaire':
+      case `/formulaire/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historique':
+      case `/historique/${id_personnel}`:
         setActiveButton('history');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -42,7 +45,7 @@ const PageWithSidebar = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
@@ -83,7 +86,7 @@ const PageWithSidebar = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilService')}
+            onClick={() => navigate(`/accueilService/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil

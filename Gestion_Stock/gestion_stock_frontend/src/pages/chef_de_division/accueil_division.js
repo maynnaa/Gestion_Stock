@@ -5,11 +5,14 @@ import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
 import Button from '../../components/button';
 import { Nav } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 const AccueilDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
   const navigate = useNavigate(); 
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -21,12 +24,13 @@ const AccueilDivision = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -65,13 +69,12 @@ const AccueilDivision = () => {
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDivision')}
+            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
@@ -111,19 +114,12 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: '10px', // Ajuster l'espace sous le header si nécessaire
-  },
   accueilLink: {
     fontWeight: 'bold',
-    color: '#6c757d', // Couleur gris
+    color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%', // Ajuster l'espacement si nécessaire
-    textDecoration: 'none', // Retirer le soulignement par défaut des liens
+    marginRight: '83%', 
+    textDecoration: 'none',
   },
   contentContainer: {
     marginTop: '20px',

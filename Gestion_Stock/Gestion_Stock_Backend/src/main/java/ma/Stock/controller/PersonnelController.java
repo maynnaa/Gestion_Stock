@@ -65,8 +65,13 @@ public class PersonnelController {
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Login successful");
                 Integer functionId = personnel.getFonction().getId_fonction();
+                Integer idPersonnel = personnel.getId_personnel(); // Assurez-vous que vous avez une méthode pour obtenir l'ID de l'utilisateur
                 System.out.println("Function ID: " + functionId); // Log the function ID
+                System.out.println("User ID: " + idPersonnel); // Log the user ID
+
                 response.put("functionId", functionId);
+                response.put("id_personnel", idPersonnel); // Ajoutez l'ID de l'utilisateur à la réponse
+
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(Map.of("message", "Mot de passe incorrect"), HttpStatus.UNAUTHORIZED);
@@ -75,6 +80,7 @@ public class PersonnelController {
             return new ResponseEntity<>(Map.of("message", "Utilisateur introuvable"), HttpStatus.NOT_FOUND);
         }
     }
+
 
 
 

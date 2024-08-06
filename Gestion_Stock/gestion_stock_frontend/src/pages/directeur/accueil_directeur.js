@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import NavBar from '../../components/navbar';
 import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
@@ -9,7 +9,9 @@ import { Nav } from 'react-bootstrap';
 const AccueilDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState('accueil'); // Par défaut 'accueil'
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const { id_personnel } = useParams();
+  console.log("ID de l'utilisateur:", id_personnel);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -21,7 +23,7 @@ const AccueilDirecteur = () => {
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
-    navigate(path);
+    navigate(`${path}/${id_personnel}`);
   };
 
   return (
@@ -53,14 +55,14 @@ const AccueilDirecteur = () => {
         <NavBar>
           <Nav.Link
             href="#"
-            onClick={() => navigate('/accueilDirecteur')}
+            onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
           </Nav.Link>
         </NavBar>
         <div style={styles.contentContainer}>
-          <Accueil /> 
+          <Accueil />
         </div>
       </div>
     </div>
@@ -93,19 +95,12 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: '10px', // Ajuster l'espace sous le header si nécessaire
-  },
   accueilLink: {
     fontWeight: 'bold',
-    color: '#6c757d', // Couleur gris
+    color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%', // Ajuster l'espacement si nécessaire
-    textDecoration: 'none', // Retirer le soulignement par défaut des liens
+    marginRight: '83%',
+    textDecoration: 'none',
   },
   contentContainer: {
     marginTop: '20px',
