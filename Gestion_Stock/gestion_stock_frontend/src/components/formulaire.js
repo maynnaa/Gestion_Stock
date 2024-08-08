@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const generateRandomCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
-const divisions = ['Division 1'];
-const services = ['Service 1'];
+const divisions = ['Division 1']; // These will be fetched dynamically
+const services = ['Service 1']; // These will be fetched dynamically
 const materialTypes = ['Type 1', 'Type 2', 'Type 3'];
 const materialsByType = {
   'Type 1': ['Material 1', 'Material 2'],
@@ -16,11 +17,33 @@ const materialsByType = {
 const beneficiaries = ['User 1', 'User 2', 'User 3'];
 
 const Formulaire = () => {
-  const [ppr] = useState(generateRandomCode());
-  const [selectedDivision, setSelectedDivision] = useState(divisions[0]);
-  const [selectedService, setSelectedService] = useState(services[0]);
+  const { id_personnel } = useParams();
+  const [ppr, setPpr] = useState(generateRandomCode());
+  const [selectedDivision, setSelectedDivision] = useState('');
+  const [selectedService, setSelectedService] = useState('');
   const [selectedMaterialType, setSelectedMaterialType] = useState('');
   const [tableRows, setTableRows] = useState([]);
+
+  useEffect(() => {
+    const fetchPersonnelData = async () => {
+      try {
+        const response = await fetch(`/api/personnel/${id_personnel}`);
+        if (!response.ok) throw new Error('Failed to fetch personnel data');
+        const data = await response.json();
+        setPpr(data.ppr);
+        setSelectedService(data.entite.libelle);
+        
+        const divisionResponse = await fetch(`/api/entite/${data.entite.entite_parent_id}`);
+        if (!divisionResponse.ok) throw new Error('Failed to fetch division data');
+        const divisionData = await divisionResponse.json();
+        setSelectedDivision(divisionData.libelle);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchPersonnelData();
+  }, [id_personnel]);
 
   const addRow = () => {
     setTableRows([...tableRows, { material: '', quantity: 1, beneficiary: beneficiaries[0] }]);
@@ -68,34 +91,14 @@ const Formulaire = () => {
           <div className="form-group row mb-3">
             <label className="col-sm-3 col-form-label">Division:</label>
             <div className="col-sm-9">
-              <select
-                className="form-control"
-                value={selectedDivision}
-                onChange={(e) => setSelectedDivision(e.target.value)}
-              >
-                {divisions.map((division, index) => (
-                  <option key={index} value={division}>
-                    {division}
-                  </option>
-                ))}
-              </select>
+              <input type="text" className="form-control" value={selectedDivision} readOnly />
             </div>
           </div>
 
           <div className="form-group row mb-3">
             <label className="col-sm-3 col-form-label">Service:</label>
             <div className="col-sm-9">
-              <select
-                className="form-control"
-                value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
-              >
-                {services.map((service, index) => (
-                  <option key={index} value={service}>
-                    {service}
-                  </option>
-                ))}
-              </select>
+              <input type="text" className="form-control" value={selectedService} readOnly />
             </div>
           </div>
 

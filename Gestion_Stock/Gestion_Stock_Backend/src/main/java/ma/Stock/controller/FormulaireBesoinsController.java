@@ -2,12 +2,14 @@ package ma.Stock.controller;
 
 import ma.Stock.entities.FormulaireBesoins;
 import ma.Stock.service.FormulaireBesoinsService;
+import ma.Stock.service.MaterielService;
+import ma.Stock.service.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/formulaireBesoins")
@@ -16,47 +18,39 @@ public class FormulaireBesoinsController {
     @Autowired
     private FormulaireBesoinsService formulaireBesoinsService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FormulaireBesoins> getFormulaireBesoinsById(@PathVariable int id) {
-        Optional<FormulaireBesoins> formulaireBesoins = formulaireBesoinsService.findById(id);
-        return formulaireBesoins.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @Autowired
+    private MaterielService materielService;
 
-    @GetMapping
-    public List<FormulaireBesoins> getAllFormulaireBesoins() {
-        return formulaireBesoinsService.findAll();
-    }
+    @Autowired
+    private PersonnelService personnelService;
+
+    private static final Logger logger = LoggerFactory.getLogger(FormulaireBesoinsController.class);
 
     @PostMapping
-    public FormulaireBesoins createFormulaireBesoins(@RequestBody FormulaireBesoins formulaireBesoins) {
-        return formulaireBesoinsService.save(formulaireBesoins);
-    }
+    public ResponseEntity<FormulaireBesoins> createFormulaireBesoins(@RequestBody FormulaireBesoins formulaireBesoins) {
+        try {
+            if (formulaireBesoins.getPersonnel() == null) {
+                logger.error("Personnel is null in FormulaireBesoins");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FormulaireBesoins> updateFormulaireBesoins(@PathVariable int id, @RequestBody FormulaireBesoins formulaireBesoinsDetails) {
-        Optional<FormulaireBesoins> formulaireBesoins = formulaireBesoinsService.findById(id);
-        if (formulaireBesoins.isPresent()) {
-            FormulaireBesoins updatedFormulaireBesoins = formulaireBesoins.get();
-            updatedFormulaireBesoins.setDate_creation(formulaireBesoinsDetails.getDate_creation());
-            updatedFormulaireBesoins.setValidation(formulaireBesoinsDetails.getValidation());
-            updatedFormulaireBesoins.setPersonnel(formulaireBesoinsDetails.getPersonnel());
-            updatedFormulaireBesoins.setNotification(formulaireBesoinsDetails.getNotification());
-            formulaireBesoinsService.save(updatedFormulaireBesoins);
-            return ResponseEntity.ok(updatedFormulaireBesoins);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+            int idPersonnel = formulaireBesoins.getPersonnel().getId_personnel();
+            logger.info("Received id_personnel: {}", idPersonnel);
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFormulaireBesoins(@PathVariable int id) {
-        Optional<FormulaireBesoins> formulaireBesoins = formulaireBesoinsService.findById(id);
-        if (formulaireBesoins.isPresent()) {
-            formulaireBesoinsService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+            formulaireBesoins.getFormulaireMateriels().forEach(materiel -> {
+                materiel.setFormulaireBesoins(formulaireBesoins);
+                materiel.setMateriel(materielService.findById(materiel.getMateriel().getId_materiel())
+                        .orElseThrow(() -> new RuntimeException("Materiel not found")));
+                materiel.setPersonnel(personnelService.findById(materiel.getPersonnel().getId_personnel())
+                        .orElseThrow(() -> new RuntimeException("Personnel not found")));
+            });
+
+            FormulaireBesoins savedFormulaireBesoins = formulaireBesoinsService.save(formulaireBesoins);
+            logger.info("FormulaireBesoins created with ID: {}", savedFormulaireBesoins.getPersonnel().getId_personnel());
+            return ResponseEntity.ok(savedFormulaireBesoins);
+        } catch (Exception e) {
+            logger.error("Error creating FormulaireBesoins", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

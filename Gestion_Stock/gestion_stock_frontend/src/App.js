@@ -16,7 +16,6 @@ import HistoriqueBesoins from './pages/magasinier/historique_demandes_besoins';
 import FormDemandeAchat from './pages/magasinier/demande_achat';
 import GestionStockMagasinier from './pages/magasinier/gestion_stock';
 import GestionFournisseur from './pages/magasinier/gestion_fournisseur';
-import AffectationMateriel from './pages/magasinier/affectation_materiel';
 import AccueilDivision from './pages/chef_de_division/accueil_division';
 import AccueilService from './pages/chef_de_service/acceuil_service';
 import AccueilDirecteur from './pages/directeur/accueil_directeur';
@@ -44,7 +43,6 @@ function App() {
             <Route path="/historiqueBesoinsMagasinier/:id_personnel" element={<HistoriqueBesoins />} />
             <Route path="/stockMagasinier/:id_personnel" element={<GestionStockMagasinier />} />
             <Route path="/gestionFournisseur/:id_personnel" element={<GestionFournisseur />} />
-            <Route path="/affectationMateriel/:id_personnel" element={<AffectationMateriel />} />
             <Route path="/accueilDivision/:id_personnel" element={<AccueilDivision />} />
             <Route path="/accueilService/:id_personnel" element={<AccueilService />} />
             <Route path="/accueilDirecteur/:id_personnel" element={<AccueilDirecteur />} />

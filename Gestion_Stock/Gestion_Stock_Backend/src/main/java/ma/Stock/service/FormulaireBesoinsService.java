@@ -1,8 +1,9 @@
 package ma.Stock.service;
 
 import ma.Stock.entities.FormulaireBesoins;
-import ma.Stock.entities.Fournisseur;
+import ma.Stock.entities.Personnel;
 import ma.Stock.repository.FormulaireBesoinsRepository;
+import ma.Stock.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ public class FormulaireBesoinsService {
 
     @Autowired
     private FormulaireBesoinsRepository formulaireBesoinsRepository;
+
+
 
     public List<FormulaireBesoins> findAll() {
         return formulaireBesoinsRepository.findAll();
@@ -30,5 +33,6 @@ public class FormulaireBesoinsService {
     public FormulaireBesoins save(FormulaireBesoins formulaireBesoins) {
         return formulaireBesoinsRepository.save(formulaireBesoins);
     }
+
 
 }

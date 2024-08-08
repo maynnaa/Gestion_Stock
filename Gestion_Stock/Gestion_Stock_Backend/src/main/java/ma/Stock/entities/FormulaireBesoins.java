@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,24 +16,36 @@ import java.util.Set;
 @Entity
 @Table(name = "FormulaireBesoins")
 public class FormulaireBesoins {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_formulaire;
+    private Integer id_formulaire;
 
     @Column(name = "date_creation")
-    private Date date_creation;
+
+    private LocalDate date_creation ;
 
     @Column(name = "validation")
-    private String validation;
+    private String validation = "en cours";  // Valeur par défaut
 
     @ManyToOne
-    @JoinColumn(name = "id_personne")
+    @JoinColumn(name = "id_personnel")
     private Personnel personnel;
 
     @OneToOne
     @JoinColumn(name = "id_notification")
     private Notification notification;
 
-    @OneToMany(mappedBy = "formulaireBesoins")
+    @OneToMany(mappedBy = "formulaireBesoins", cascade = CascadeType.ALL)
     private Set<FormulaireMateriel> formulaireMateriels = new HashSet<>();
+
+
+    @PrePersist
+    protected void onCreate() {
+
+        this.date_creation = LocalDate.now();
+        if (validation == null) {
+            validation = "en cours";  // Assurer que validation a une valeur
+        }
+    }
 }

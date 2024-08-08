@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
-import Formulaire from '../../components/formulaire';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button';
 import { Nav } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import FormulaireDivisionn from '../../components/formulaireDivision';
 
 const FormulaireDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -13,7 +13,6 @@ const FormulaireDivision = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id_personnel } = useParams();
-  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;
@@ -104,7 +103,7 @@ const FormulaireDivision = () => {
             Accueil
           </Nav.Link>
         </NavBar>
-        <Formulaire />
+        <FormulaireDivisionn />
       </div>
     </div>
   );

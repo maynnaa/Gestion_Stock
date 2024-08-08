@@ -13,7 +13,6 @@ const StockDivision = () => {
   const navigate = useNavigate(); 
   const location = useLocation();
   const { id_personnel } = useParams();
-  console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
     const path = location.pathname;

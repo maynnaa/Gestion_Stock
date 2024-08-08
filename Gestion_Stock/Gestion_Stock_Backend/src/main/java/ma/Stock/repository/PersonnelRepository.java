@@ -22,4 +22,5 @@ public interface PersonnelRepository extends JpaRepository<Personnel, Integer> {
 
     List<Personnel> findAll();
     Personnel findByPpr(String ppr);
+
 }
