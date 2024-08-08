@@ -49,7 +49,7 @@ public class FormulaireMaterielController {
             Integer formulaireId = getIntegerFromPayload(payload, "formulaireBesoins");
             Integer materielId = getIntegerFromPayload(payload, "materiel");
             Integer quantity = getIntegerFromPayload(payload, "quantite");
-            Integer personnelId = getIntegerFromPayload(payload, "personnel");
+            Integer personnelId = getIntegerFromPayload(payload, "id_personnel");
             System.out.println(personnelId);
 
             if (formulaireId == null || materielId == null || quantity == null || personnelId == null) {

@@ -80,7 +80,8 @@ const FormulaireDivisionn = () => {
   }, [selectedMaterialType]);
 
   const addRow = () => {
-    setTableRows([...tableRows, { material: '', quantity: 1, beneficiary: '' }]); // Initialize beneficiary to ''
+      setTableRows([...tableRows, { material: '', quantity: 1, id_personnel: '' }]);
+
   };
 
   const removeRow = (index) => {
@@ -95,7 +96,10 @@ const FormulaireDivisionn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+   
 
+    // Préparer les données à envoyer
     const formData = {
       ppr,
       selectedDivision,
@@ -104,8 +108,11 @@ const FormulaireDivisionn = () => {
       date_creation: new Date().toISOString().split('T')[0],
       validation: 'en cours'
     };
-
+  
+    console.log('Form Data:', formData); // Log form data
+  
     try {
+      // Soumettre FormulaireBesoins
       const response = await fetch('/api/formulaireBesoins', {
         method: 'POST',
         headers: {
@@ -113,21 +120,24 @@ const FormulaireDivisionn = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to submit form');
       }
-
+  
       const formBesoinsData = await response.json();
-      const formulaireBesoins = formBesoinsData.id_formulaire;
-
+      console.log('FormulaireBesoins Response:', formBesoinsData); // Log response data
+      const formulaireBesoins = formBesoinsData.id_formulaire; // Correctly retrieve formulaire ID
+  
+      // Soumettre chaque FormulaireMateriel
       const materialRequests = tableRows.map(row => {
         const materialData = {
-          formulaireBesoins,
+          formulaireBesoins, // Correct formulaire ID
           materiel: row.material,
-          id_personnel: beneficiaries.find(b => b.id_personnel === row.beneficiary)?.id_personnel,
+          id_personnel: row.beneficiary,
           quantite: row.quantity,
         };
+        console.log('Material Data:', materialData); // Log each material data
         return fetch('/api/formulaireMateriel', {
           method: 'POST',
           headers: {
@@ -136,16 +146,17 @@ const FormulaireDivisionn = () => {
           body: JSON.stringify(materialData),
         });
       });
-
+  
       await Promise.all(materialRequests);
-
+  
+      // Gérer la soumission réussie (par exemple, redirection ou affichage d'un message de succès)
       alert('Form submitted successfully');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Failed to submit form');
     }
   };
-
+  
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <style>
@@ -228,7 +239,7 @@ const FormulaireDivisionn = () => {
                           className="form-control"
                           value={row.beneficiary}
                           onChange={(e) => handleRowChange(index, 'beneficiary', e.target.value)}
-                          disabled={!beneficiaries}
+                          s
                         >
                           <option value="">Choisissez un bénéficiaire</option>
                           {beneficiaries.map((beneficiary) => (
@@ -263,7 +274,7 @@ const FormulaireDivisionn = () => {
                         />
                       </td>
                       <td>
-                        <button className="btn btn-danger" type="button" onClick={() => removeRow(index)}>Supprimer</button>
+                        <button className="btn btn-danger" type="button" onClick={() => removeRow(index)}>🗑️</button>
                       </td>
                     </tr>
                   ))}
@@ -271,8 +282,11 @@ const FormulaireDivisionn = () => {
               </table>
             </div>
 
-            <div className="d-flex justify-content-end">
-              <button className="btn btn-primary" type="submit">Soumettre</button>
+            <div className="text-center" style={styles.buttonContainer}>
+              <button className="btn btn-secondary" type="button" style={styles.cancelButton} onClick={() => window.location.reload()}>
+                Annuler
+              </button>
+              <button type="submit" className="btn btn-primary">Enregistrer</button>
             </div>
           </form>
         </div>
@@ -283,18 +297,30 @@ const FormulaireDivisionn = () => {
 
 const styles = {
   card: {
-    width: '800px',
-    borderRadius: '8px',
-    padding: '20px',
-    backgroundColor: 'white',
+    width: '100%',
+    maxWidth: '700px',
+    height: '80%',
+    maxHeight: '600px',
+    overflowY: 'auto',
+    borderRadius: '10px',
+    backgroundColor: '#fff',
   },
   cardTitle: {
-    color: 'black',
-    textAlign: 'center',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '1.5rem',
+    color: '#333',
   },
   tableContainer: {
-    maxHeight: '300px',
+    maxHeight: '200px',
     overflowY: 'auto',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '10px',
+  },
+  cancelButton: {
+    marginRight: '10px',
   },
 };
 
