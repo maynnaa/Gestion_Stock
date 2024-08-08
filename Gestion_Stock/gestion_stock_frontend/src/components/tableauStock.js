@@ -1,40 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const data = [
-  { nom: 'Matériel A', quantite: 10 },
-  { nom: 'Matériel B', quantite: 15 },
-  { nom: 'Matériel C', quantite: 5 },
-  { nom: 'Matériel D', quantite: 8 },
-  { nom: 'Matériel E', quantite: 12 },
-  { nom: 'Matériel F', quantite: 7 },
-  { nom: 'Matériel G', quantite: 20 },
-  { nom: 'Matériel H', quantite: 3 },
-  { nom: 'Matériel I', quantite: 9 },
-  { nom: 'Matériel J', quantite: 6 },
-  { nom: 'Matériel A', quantite: 10 },
-  { nom: 'Matériel B', quantite: 15 },
-  { nom: 'Matériel C', quantite: 5 },
-  { nom: 'Matériel D', quantite: 8 },
-  { nom: 'Matériel E', quantite: 12 },
-  { nom: 'Matériel F', quantite: 7 },
-  { nom: 'Matériel G', quantite: 20 },
-  { nom: 'Matériel H', quantite: 3 },
-  { nom: 'Matériel I', quantite: 9 },
-  { nom: 'Matériel J', quantite: 6 },
-  { nom: 'Matériel A', quantite: 10 },
-  { nom: 'Matériel B', quantite: 15 },
-  { nom: 'Matériel C', quantite: 5 },
-  { nom: 'Matériel D', quantite: 8 },
-  { nom: 'Matériel E', quantite: 12 },
-  { nom: 'Matériel F', quantite: 7 },
-  { nom: 'Matériel G', quantite: 20 },
-  { nom: 'Matériel H', quantite: 3 },
-  { nom: 'Matériel I', quantite: 9 },
-  { nom: 'Matériel J', quantite: 6 },
-];
-
 const ScrollableTable = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const materialResponse = await axios.get('http://localhost:9091/api/materiel');
+        const productResponse = await axios.get('http://localhost:9091/api/produit');
+
+        console.log("Données des matériaux :", materialResponse.data);
+        console.log("Données des produits :", productResponse.data);
+
+        // Vérifiez si l'ID de matériel est correctement récupéré
+        const materialQuantityMap = productResponse.data.reduce((acc, product) => {
+          console.log("Produit :", product);  // Ajouté pour déboguer
+          const materialId = product.materiel?.id_materiel; // Vérifiez le chemin d'accès
+          if (materialId !== undefined) {
+            acc[materialId] = (acc[materialId] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        console.log("Mappage des quantités par ID matériel :", materialQuantityMap);
+
+        const aggregatedData = materialResponse.data.map(material => ({
+          nom: material.libelle,
+          quantite: materialQuantityMap[material.id_materiel] || 0
+        }));
+
+        console.log("Données agrégées :", aggregatedData);
+
+        setData(aggregatedData);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
   return (
     <div className="container mt-4">
       <div className="table-responsive" style={styles.tableWrapper}>
@@ -61,35 +68,33 @@ const ScrollableTable = () => {
 
 const styles = {
   tableWrapper: {
-    maxWidth: '800px', // Largeur maximale du tableau
-    margin: '0 auto', // Centre le tableau horizontalement
-    height: '550px', // Hauteur fixe pour le conteneur du tableau
-    overflowY: 'auto', // Active le défilement vertical si nécessaire
-    scrollbarWidth: 'thin', // Pour Firefox, rend la barre de défilement plus fine
+    maxWidth: '800px',
+    margin: '0 auto',
+    height: '550px',
+    overflowY: 'auto',
+    scrollbarWidth: 'thin',
   },
 };
 
-// Styles CSS personnalisés pour WebKit browsers (Chrome, Safari)
 const customScrollbarStyles = `
   .table-responsive::-webkit-scrollbar {
-    width: 8px; // Largeur de la barre de défilement
+    width: 8px;
   }
 
   .table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1; // Couleur de la piste de la barre de défilement
+    background: #f1f1f1;
   }
 
   .table-responsive::-webkit-scrollbar-thumb {
-    background: #888; // Couleur du curseur de la barre de défilement
-    border-radius: 10px; // Arrondir les coins du curseur
+    background: #888;
+    border-radius: 10px;
   }
 
   .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #555; // Couleur du curseur lors du survol
+    background: #555;
   }
 `;
 
-// Injecte les styles CSS personnalisés dans le document
 const styleSheet = document.createElement("style");
 styleSheet.type = "text/css";
 styleSheet.innerText = customScrollbarStyles;

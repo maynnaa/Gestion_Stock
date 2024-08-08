@@ -82,7 +82,7 @@ const StockDirecteur = () => {
         </NavBar>
         <div style={styles.tableContainer}>
           <ScrollableTable />
-          <p>ID de l'utilisateur: {id_personnel}</p> {/* Affichage de l'ID */}
+          
         </div>
       </div>
     </div>
