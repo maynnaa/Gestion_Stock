@@ -18,6 +18,8 @@ const ProductFormModal = ({ isOpen, onClose }) => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [selectedMateriel, setSelectedMateriel] = useState('');
   const [selectedFournisseur, setSelectedFournisseur] = useState('');
+  const [todayDate, setTodayDate] = useState('');
+  const [error, setError] = useState(''); // State for error message
 
   useEffect(() => {
     if (isOpen) {
@@ -35,6 +37,10 @@ const ProductFormModal = ({ isOpen, onClose }) => {
       axios.get('/api/fournisseur')
         .then(response => setFournisseurs(response.data))
         .catch(error => console.error('Error fetching fournisseurs:', error));
+
+      // Set today's date
+      const today = new Date().toISOString().split('T')[0];
+      setTodayDate(today);
     }
   }, [isOpen]);
 
@@ -48,10 +54,26 @@ const ProductFormModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!selectedFournisseur) {
-      console.error('Le fournisseur doit être sélectionné.');
+    // Validate brand field
+    const brandRegex = /^[A-Za-z\s]+$/;
+    if (!brandRegex.test(brand)) {
+      setError('La marque ne doit contenir que des lettres.');
       return;
     }
+  
+    // Validate serial number field
+    const serialNumberRegex = /^[A-Za-z]{2}\d{4}$/;
+    if (!serialNumberRegex.test(serialNumber)) {
+      setError('Le numéro de série doit être composé de 2 lettres suivies de 4 chiffres.');
+      return;
+    }
+  
+    if (!selectedFournisseur) {
+      setError('Le fournisseur doit être sélectionné.');
+      return;
+    }
+  
+    setError(''); // Clear any previous errors
   
     const productData = {
       num_serie: serialNumber,
@@ -61,15 +83,14 @@ const ProductFormModal = ({ isOpen, onClose }) => {
       marque: brand,
       type: { id: selectedType },
       materiel: { id_materiel: selectedMateriel },
-      fournisseur: { fournisseur_id: selectedFournisseur } // Assurez-vous que ceci est bien l'ID
+      fournisseur: { fournisseur_id: selectedFournisseur }
     };
-  
-    console.log('Données envoyées:', productData); // Vérifiez les données envoyées
   
     try {
       const response = await axios.post('/api/produit', productData);
       console.log('Product added successfully:', response.data);
-      onClose();
+      onClose(); 
+      window.location.reload(); 
     } catch (error) {
       console.error('There was an error adding the product!', error.response ? error.response.data : error.message);
     }
@@ -86,6 +107,7 @@ const ProductFormModal = ({ isOpen, onClose }) => {
       <div className="container">
         <h2 className="my-4">Ajouter un produit</h2>
         <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-danger">{error}</div>} {/* Display error message */}
           <div className="mb-3">
             <label htmlFor="type" className="form-label">Type:</label>
             <select
@@ -110,6 +132,7 @@ const ProductFormModal = ({ isOpen, onClose }) => {
               className="form-select"
               value={selectedMateriel}
               onChange={(e) => setSelectedMateriel(e.target.value)}
+              disabled={!selectedType}
               required
             >
               <option value="">Sélectionner un materiel</option>
@@ -167,6 +190,7 @@ const ProductFormModal = ({ isOpen, onClose }) => {
               className="form-control"
               value={deliveryDate}
               onChange={(e) => setDeliveryDate(e.target.value)}
+              max={todayDate} // Restrict future dates
               required
             />
           </div>
