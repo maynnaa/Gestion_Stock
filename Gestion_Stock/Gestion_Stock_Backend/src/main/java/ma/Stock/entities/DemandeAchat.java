@@ -21,7 +21,7 @@ public class DemandeAchat {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_personne")
+    @JoinColumn(name = "id_personnel")
     private Personnel personnel;
 
 

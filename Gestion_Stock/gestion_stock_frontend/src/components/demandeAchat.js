@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const FormulaireDemandeAchat = () => {
+const FormulaireDemandeAchat = ({id}) => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseurMapping, setFournisseurMapping] = useState({});
   const [selectedFournisseurId, setSelectedFournisseurId] = useState('');
@@ -12,7 +12,6 @@ const FormulaireDemandeAchat = () => {
   const [tableRows, setTableRows] = useState([]);
 
   useEffect(() => {
-   
     axios.get('http://localhost:9091/api/fournisseur')
       .then(response => {
         console.log('Fournisseurs fetched:', response.data);
@@ -77,7 +76,7 @@ const FormulaireDemandeAchat = () => {
   
       const demandeResponse = await axios.post('http://localhost:9091/api/demandeAchat', {
         date_demande: new Date().toISOString(),
-        id_personne: 1
+        personnel:{id_personnel:id},
       });
   
       const idDemande = demandeResponse.data.id_demande;

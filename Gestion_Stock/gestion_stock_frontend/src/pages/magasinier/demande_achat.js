@@ -120,7 +120,7 @@ const FormDemandeAchat = () => {
             Accueil
           </Nav.Link>
         </NavBar>
-        <FormulaireDemandeAchat />
+        <FormulaireDemandeAchat id={id_personnel}/>
       </div>
     </div>
   );
