@@ -22,4 +22,8 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "id_formulaire")
     private FormulaireBesoins formulaireBesoins;
+
+    @ManyToOne
+    @JoinColumn(name = "id_personnel")
+    private Personnel personnel;
 }
