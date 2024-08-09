@@ -33,6 +33,9 @@ public class FormulaireBesoinsService {
     public FormulaireBesoins save(FormulaireBesoins formulaireBesoins) {
         return formulaireBesoinsRepository.save(formulaireBesoins);
     }
+    public List<FormulaireBesoins> findByPersonnelId(int id) {
+        return formulaireBesoinsRepository.findByPersonnelId(id);
+    }
 
 
 }

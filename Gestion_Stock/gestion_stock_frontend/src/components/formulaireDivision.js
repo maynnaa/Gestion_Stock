@@ -299,8 +299,9 @@ const styles = {
   card: {
     width: '100%',
     maxWidth: '700px',
-    height: '80%',
-    maxHeight: '600px',
+    minWidth:'600px',
+    height: '70%',
+    maxHeight: '1500px',
     overflowY: 'auto',
     borderRadius: '10px',
     backgroundColor: '#fff',

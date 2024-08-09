@@ -35,6 +35,8 @@ public class FormulaireMaterielService {
     public FormulaireMateriel save(FormulaireMateriel formulaireMateriel) {
         return formulaireMaterielRepository.save(formulaireMateriel);
     }
-
+    public List<FormulaireMateriel> getArticlesByFormulaireBesoinsId(Integer idFormulaireBesoins) {
+        return formulaireMaterielRepository.findArticlesByFormulaireBesoinsId(idFormulaireBesoins);
+    }
 
 }

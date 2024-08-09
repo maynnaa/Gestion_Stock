@@ -1,9 +1,6 @@
 package ma.Stock.controller;
 
-import ma.Stock.entities.FormulaireBesoins;
-import ma.Stock.entities.FormulaireMateriel;
-import ma.Stock.entities.Materiel;
-import ma.Stock.entities.Personnel;
+import ma.Stock.entities.*;
 import ma.Stock.service.FormulaireBesoinsService;
 import ma.Stock.service.FormulaireMaterielService;
 import ma.Stock.service.MaterielService;
@@ -15,11 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/formulaireMateriel")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class FormulaireMaterielController {
 
     private static final Logger logger = LoggerFactory.getLogger(FormulaireMaterielController.class);
@@ -35,6 +35,17 @@ public class FormulaireMaterielController {
 
     @Autowired
     private PersonnelService personnelService;
+
+    @GetMapping("/formulaire/{id}")
+    public List<FormulaireMateriel> getArticlesByFormulaireBesoinsId(@PathVariable Integer id) {
+        return formulaireMaterielService.getArticlesByFormulaireBesoinsId(id);
+    }
+    @GetMapping
+    public ResponseEntity<List<FormulaireMateriel>> getAllFormulaireMateriel() {
+        List<FormulaireMateriel> allMateriel = formulaireMaterielService.findAll();
+        return ResponseEntity.ok(allMateriel);
+    }
+
 
     @PostMapping
     public ResponseEntity<?> createFormulaireMateriel(@RequestBody Map<String, Object> payload) {

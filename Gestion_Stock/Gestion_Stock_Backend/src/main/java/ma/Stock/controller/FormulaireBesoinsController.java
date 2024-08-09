@@ -1,5 +1,6 @@
 package ma.Stock.controller;
 
+import ma.Stock.entities.DemandeAchat;
 import ma.Stock.entities.FormulaireBesoins;
 import ma.Stock.service.FormulaireBesoinsService;
 import ma.Stock.service.MaterielService;
@@ -10,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/formulaireBesoins")
@@ -25,6 +29,27 @@ public class FormulaireBesoinsController {
     private PersonnelService personnelService;
 
     private static final Logger logger = LoggerFactory.getLogger(FormulaireBesoinsController.class);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FormulaireBesoins> getDemandeBesoinById(@PathVariable int id) {
+        System.out.println("Fetching Demande de besoins with ID: " + id);
+        Optional<FormulaireBesoins> demandeBesoins = formulaireBesoinsService.findById(id);
+        return demandeBesoins.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping
+    public ResponseEntity<List<FormulaireBesoins>> getAllFormulaireBesoins() {
+        List<FormulaireBesoins> allDemandes = formulaireBesoinsService.findAll();
+        return ResponseEntity.ok(allDemandes);
+    }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<FormulaireBesoins>> getFormulaireBesoinsByUserId(@PathVariable int userId) {
+        List<FormulaireBesoins> demandes = formulaireBesoinsService.findByPersonnelId(userId);
+        if (demandes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(demandes);
+    }
 
     @PostMapping
     public ResponseEntity<FormulaireBesoins> createFormulaireBesoins(@RequestBody FormulaireBesoins formulaireBesoins) {

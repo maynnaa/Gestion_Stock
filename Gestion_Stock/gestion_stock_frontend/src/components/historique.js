@@ -1,51 +1,145 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { FaArrowRight } from 'react-icons/fa'; // Importation de l'icône pour la redirection
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { FaArrowRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom'; // Importation pour la redirection
+import { Table } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { format } from 'date-fns';
 
-function DefaultExample({ searchTerm }) {
-  const items = [
-    { id: 1, creationDate: '01/07/2024' },
-    { id: 2, creationDate: '02/07/2024' },
-    { id: 3, creationDate: '03/07/2024' },
-    { id: 4, creationDate: '04/07/2024' },
-    { id: 5, creationDate: '05/06/2024' },
-    { id: 6, creationDate: '06/06/2024' },
-    { id: 7, creationDate: '07/06/2024' },
-    { id: 8, creationDate: '08/03/2024' },
-    { id: 9, creationDate: '09/02/2024' },
-    { id: 10, creationDate: '10/01/2024' },
-  ];
+function DefaultExample({ searchTerm = '' }) {
+  const [formulaireBesoins, setFormulaireBesoins] = useState([]);
+  const [selectedArticles, setSelectedArticles] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const { id_personnel } = useParams();
 
-  const navigate = useNavigate(); // Hook pour la redirection
+  useEffect(() => {
+    const fetchFormulaireBesoins = async () => {
+      if (!id_personnel) {
+        console.error('No id_personnel provided');
+        return;
+      }
 
-  const filteredItems = items.filter(item => 
-    item.creationDate.includes(searchTerm)
-  );
+      try {
+        const response = await axios.get(`/api/formulaireBesoins/user/${id_personnel}`);
+        console.log('FormulaireBesoins response:', response);
 
-  const handleRedirect = (id) => {
-    // Redirection vers la page de la demande spécifique
-    navigate(`/demande`);
+        if (Array.isArray(response.data)) {
+          setFormulaireBesoins(response.data);
+        } else {
+          console.error('Expected an array but got:', response.data);
+          setFormulaireBesoins([]);
+        }
+      } catch (error) {
+        console.error('Error fetching formulaireBesoins data:', error);
+        setFormulaireBesoins([]);
+      }
+    };
+
+    fetchFormulaireBesoins();
+  }, [id_personnel]);
+
+  useEffect(() => {
+    if (selectedItem) {
+      const fetchSelectedArticles = async () => {
+        try {
+          const response = await axios.get(`/api/formulaireMateriel/formulaire/${selectedItem.id_formulaire}`);
+          console.log('Selected Articles:', response.data);
+          setSelectedArticles(response.data);
+        } catch (error) {
+          console.error('Error fetching selected articles:', error);
+          setSelectedArticles([]);
+        }
+      };
+
+      fetchSelectedArticles();
+    }
+  }, [selectedItem]);
+
+  const filteredItems = Array.isArray(formulaireBesoins)
+    ? formulaireBesoins.filter(item => item.date_creation && item.date_creation.includes(searchTerm))
+    : [];
+
+  const handleShowModal = (item) => {
+    setSelectedItem(item);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedItem(null);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, 'dd/MM/yyyy');
   };
 
   return (
-    <div className="scrollable-list">
+    <div style={{ overflowY: 'auto' }}>
       <ListGroup>
         {filteredItems.map(item => (
-          <ListGroup.Item key={item.id}>
-            <div className="d-flex justify-content-between align-items-center">
-              <div><strong>Demande de besoin N°{item.id}</strong></div>
-              <div className="d-flex align-items-center">
-                <div><strong>Date de création:</strong> {item.creationDate}</div>
-                <button onClick={() => handleRedirect(item.id)} className="btn btn-link ml-3">
-                  <FaArrowRight />
-                </button>
+          <ListGroup.Item key={item.id_formulaire}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div><strong>Demande de besoin N°{item.id_formulaire}</strong></div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div><strong>Date de création:</strong> {formatDate(item.date_creation)}</div>
+                <Button 
+                  onClick={() => handleShowModal(item)} 
+                  style={{ background: 'none', border: 'none', padding: '0', marginLeft: '1rem' }} 
+                >
+                  <FaArrowRight style={{ color: 'blue' }} />
+                </Button>
               </div>
             </div>
           </ListGroup.Item>
         ))}
       </ListGroup>
+
+      {/* Modal for displaying item details */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Détail de la demande de besoins</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedItem ? (
+            <div>
+              <p><strong>Demande de besoin N°:</strong> {selectedItem.id_formulaire}</p>
+              <p><strong>Date de création:</strong> {formatDate(selectedItem.date_creation)}</p>
+              <p><strong>Validation:</strong> {selectedItem.validation}</p>
+
+              <Table responsive="xl" className="text-center">
+                <thead>
+                  <tr>
+                    <th>Matériel</th>
+                    <th>Quantité</th>
+                    <th>Beneficiaire</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedArticles.map(article => (
+                    <tr key={article.id}>
+                      <td>{article.materiel.libelle}</td>
+                      <td>{article.quantite}</td>
+                      <td>{article.personnel.nom_complet}</td> 
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          ) : (
+            <p>Aucun détail disponible</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Fermer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

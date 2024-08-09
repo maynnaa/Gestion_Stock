@@ -6,7 +6,7 @@ const generateRandomCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
-const FormulaireDivision = () => {
+const FormulaireDivisionn = () => {
   const { id_personnel } = useParams();
   const [ppr, setPpr] = useState(generateRandomCode());
   const [selectedDivision, setSelectedDivision] = useState('');
@@ -299,8 +299,9 @@ const styles = {
   card: {
     width: '100%',
     maxWidth: '700px',
-    height: '80%',
-    maxHeight: '600px',
+    minWidth:'600px',
+    height: '70%',
+    maxHeight: '',
     overflowY: 'auto',
     borderRadius: '10px',
     backgroundColor: '#fff',
@@ -324,4 +325,4 @@ const styles = {
   },
 };
 
-export default FormulaireDivision;
+export default FormulaireDivisionn;
