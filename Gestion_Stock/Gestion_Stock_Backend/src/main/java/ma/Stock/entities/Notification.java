@@ -18,6 +18,8 @@ public class Notification {
     private String type;
     private boolean isSeen;
 
-    @OneToOne(mappedBy = "notification")
+
+    @ManyToOne
+    @JoinColumn(name = "id_formulaire")
     private FormulaireBesoins formulaireBesoins;
 }
