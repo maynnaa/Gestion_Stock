@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Assurez-vous que useNavigate est importé
 import axios from 'axios';
 
-const NavBar = ({ id_personnel }) => {
-  const navigate = useNavigate();
+const NavBar = ({ id_personnel, onAccueilClick }) => {
+  const navigate = useNavigate(); // Définir navigate ici
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
@@ -34,10 +34,6 @@ const NavBar = ({ id_personnel }) => {
     console.log('Component mounted, fetching notifications...');
     fetchNotifications();
   }, [id_personnel]);
-
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
 
   return (
     <div>
@@ -105,7 +101,7 @@ const NavBar = ({ id_personnel }) => {
         <Nav className="navbar-nav">
           <Nav.Link
             href="#"
-            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
+            onClick={onAccueilClick} // Utiliser la fonction passée en prop
             style={styles.accueilLink}
           >
             Accueil
@@ -135,7 +131,7 @@ const NavBar = ({ id_personnel }) => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <Nav.Link href="#" onClick={() => handleNavigation('/login')}>
+            <Nav.Link href="#" onClick={() => navigate('/login')}>
               <FaSignOutAlt size={25} />
             </Nav.Link>
           </div>
@@ -150,7 +146,7 @@ const styles = {
     fontWeight: 'bold',
     color: '#6c757d',
     fontSize: '18px',
-    marginRight: 'auto',  // Align "Accueil" to the left
+    marginRight: '83%',
     textDecoration: 'none',
   },
 };

@@ -4,7 +4,8 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import FormulaireDemandeAchat from '../../components/demandeAchat';
-import { Nav } from 'react-bootstrap'; 
+
+
 
 const FormDemandeAchat = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -55,6 +56,10 @@ const FormDemandeAchat = () => {
   const handleNavigation = (path, button) => {
     setActiveButton(button);
     navigate(path);
+  };
+
+  const handleAccueilClick = () => {
+    navigate(`/accueilMagasinier/${id_personnel}`);
   };
 
   return (
@@ -110,15 +115,7 @@ const FormDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel}>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
-        </NavBar>
+        <NavBar id_personnel={id_personnel} onAccueilClick={handleAccueilClick} />
         <FormulaireDemandeAchat id={id_personnel}/>
       </div>
     </div>
@@ -147,13 +144,6 @@ const styles = {
     flex: 1,
     padding: '20px',
     backgroundColor: '#f8f9fa',
-  },
-  accueilLink: {
-    fontWeight: 'bold',
-    color: '#6c757d',
-    fontSize: '18px',
-    marginRight: '83%',
-    textDecoration: 'none',
   },
 };
 

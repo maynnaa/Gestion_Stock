@@ -67,6 +67,10 @@ const GestionFournisseur = () => {
   const closeModal = () => {
     setIsModalOpen(false); 
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilMagasinier/${id_personnel}`);
+  };
+
 
   return (
     <div style={styles.page}>
@@ -122,10 +126,9 @@ const GestionFournisseur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar userId={id_personnel}>
+        <NavBar userId={id_personnel}onAccueilClick={handleAccueilClick}>
           <a 
             href="#"
-            onClick={() => handleNavigation(`/accueilMagasinier/${id_personnel}`, 'home')}
             style={styles.accueilLink}
           >
             Accueil

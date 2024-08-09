@@ -57,6 +57,10 @@ const HistoriqueBesoins = () => {
     navigate(path);
   };
 
+  const handleAccueilClick = () => {
+    navigate(`/accueilMagasinier/${id_personnel}`);
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
@@ -114,7 +118,7 @@ const HistoriqueBesoins = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel}>
+        <NavBar id_personnel={id_personnel} onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => handleNavigation(`/accueilMagasinier/${id_personnel}`, 'home')}

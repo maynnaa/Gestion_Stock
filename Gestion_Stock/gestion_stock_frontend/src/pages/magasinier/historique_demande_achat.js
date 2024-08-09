@@ -56,6 +56,9 @@ const HistoriqueDemandeAchat = () => {
     setActiveButton(button);
     navigate(path);
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilMagasinier/${id_personnel}`);
+  };
 
   return (
     <div style={styles.page}>
@@ -110,7 +113,7 @@ const HistoriqueDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel}>
+        <NavBar id_personnel={id_personnel}onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
@@ -119,7 +122,7 @@ const HistoriqueDemandeAchat = () => {
             Accueil
           </Nav.Link>
         </NavBar>
-        <div style={styles.contentContainer}>
+        <div style={styles.contentContainer} >
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
             <DemandeAchat searchTerm={searchTerm} /> 

@@ -68,6 +68,10 @@ const GestionStockMagasinier = () => {
     setIsModalOpen(false); // Close the modal
   };
 
+  const handleAccueilClick = () => {
+    navigate(`/accueilMagasinier/${id_personnel}`);
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
@@ -118,19 +122,11 @@ const GestionStockMagasinier = () => {
           >
             Gestion des Fournisseurs
           </Button>
-          <Button
-            size="medium"
-            hovered={hoveredButton === 'affectationMateriel' || activeButton === 'affectationMateriel'}
-            onMouseEnter={() => handleMouseEnter('affectationMateriel')}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation(`/affectationMateriel/${id_personnel}`, 'affectationMateriel')}
-          >
-            Affectation de Matériel
-          </Button>
+          
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel}>
+        <NavBar id_personnel={id_personnel}onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}

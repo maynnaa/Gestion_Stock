@@ -49,6 +49,9 @@ const DemandesRecuesDirecteur = () => {
     setActiveButton(button);
     navigate(`${path}/${id_personnel}`);
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilDirecteur/${id_personnel}`);
+  };
 
   return (
     <div style={styles.page}>
@@ -76,7 +79,7 @@ const DemandesRecuesDirecteur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={parseInt(id_personnel, 10)}>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}

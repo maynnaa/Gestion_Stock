@@ -46,6 +46,10 @@ const StockChefService = () => {
     setActiveButton(button);
     navigate(`${path}/${id_personnel}`);
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilService/${id_personnel}`);
+  };
+
 
   return (
     <div style={styles.page}>
@@ -82,7 +86,7 @@ const StockChefService = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={parseInt(id_personnel, 10)} />
+        <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick} />
         <div style={styles.tableContainer}>
           <ScrollableTable />
         </div>

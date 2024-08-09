@@ -44,6 +44,9 @@ const StockDirecteur = () => {
     setActiveButton(button);
     navigate(path);
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilDirecteur/${id_personnel}`);
+  };
 
   return (
     <div style={styles.page}>
@@ -71,7 +74,7 @@ const StockDirecteur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={parseInt(id_personnel, 10)}>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
