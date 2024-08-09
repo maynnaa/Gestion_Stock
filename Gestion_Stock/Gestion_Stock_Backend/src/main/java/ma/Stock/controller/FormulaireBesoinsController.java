@@ -2,8 +2,10 @@ package ma.Stock.controller;
 
 import ma.Stock.entities.DemandeAchat;
 import ma.Stock.entities.FormulaireBesoins;
+import ma.Stock.entities.Notification;
 import ma.Stock.service.FormulaireBesoinsService;
 import ma.Stock.service.MaterielService;
+import ma.Stock.service.NotificationService;
 import ma.Stock.service.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class FormulaireBesoinsController {
 
     @Autowired
     private PersonnelService personnelService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private static final Logger logger = LoggerFactory.getLogger(FormulaireBesoinsController.class);
 
@@ -72,10 +77,23 @@ public class FormulaireBesoinsController {
 
             FormulaireBesoins savedFormulaireBesoins = formulaireBesoinsService.save(formulaireBesoins);
             logger.info("FormulaireBesoins created with ID: {}", savedFormulaireBesoins.getPersonnel().getId_personnel());
+            createNotification(savedFormulaireBesoins);
+
             return ResponseEntity.ok(savedFormulaireBesoins);
         } catch (Exception e) {
             logger.error("Error creating FormulaireBesoins", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+    private void createNotification(FormulaireBesoins formulaireBesoins) {
+        Notification notification = new Notification();
+        notification.setFormulaireBesoins(formulaireBesoins);
+        notification.setPersonnel(formulaireBesoins.getPersonnel()); // Associer le personnel
+        // Les valeurs par défaut sont déjà définies dans l'entité
+
+        notificationService.save(notification);
+    }
+
 }

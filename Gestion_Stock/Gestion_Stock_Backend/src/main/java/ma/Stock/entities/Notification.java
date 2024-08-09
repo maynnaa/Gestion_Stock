@@ -15,8 +15,8 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_notification;
-    private String type;
-    private boolean isSeen;
+    private String type="Demande de besoins";
+    private boolean isSeen=false;
 
 
     @ManyToOne
