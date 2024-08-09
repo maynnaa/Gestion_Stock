@@ -107,11 +107,10 @@ const HistoriqueDemandeAchat = () => {
           >
             Gestion des Fournisseurs
           </Button>
-          
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={id_personnel}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}

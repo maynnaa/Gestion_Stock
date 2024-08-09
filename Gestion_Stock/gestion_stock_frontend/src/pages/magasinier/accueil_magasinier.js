@@ -75,11 +75,10 @@ const AccueilMagasinier = () => {
           >
             Gestion des Fournisseurs
           </Button>
-          
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}

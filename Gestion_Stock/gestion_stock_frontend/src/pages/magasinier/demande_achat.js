@@ -12,7 +12,7 @@ const FormDemandeAchat = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id_personnel } = useParams();
-  
+
   console.log("ID de l'utilisateur:", id_personnel);
 
   useEffect(() => {
@@ -107,11 +107,10 @@ const FormDemandeAchat = () => {
           >
             Gestion des Fournisseurs
           </Button>
-          
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={id_personnel}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}

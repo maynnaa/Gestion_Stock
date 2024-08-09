@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
-import { useParams } from 'react-router-dom';
 
 const HistoriquePage = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -89,15 +88,7 @@ const HistoriquePage = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilService/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
-        </NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} />
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>

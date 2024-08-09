@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; 
-import { useParams } from 'react-router-dom';
 
 const StockDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate(); 
   const location = useLocation();
-  const { id_personnel } = useParams();
+  const { id_personnel } = useParams(); // Récupération de l'ID de l'utilisateur connecté
 
   useEffect(() => {
     const path = location.pathname;
@@ -94,7 +93,8 @@ const StockDivision = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} />
+        <div style={styles.contentContainer}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
@@ -102,8 +102,6 @@ const StockDivision = () => {
           >
             Accueil
           </Nav.Link>
-        </NavBar>
-        <div style={styles.contentContainer}>
           <ScrollableTable /> 
         </div>
       </div>

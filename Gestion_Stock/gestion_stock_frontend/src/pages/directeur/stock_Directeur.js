@@ -18,13 +18,13 @@ const StockDirecteur = () => {
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilDirecteur/${id_personnel}`:
         setActiveButton('accueil');
         break;
       case `/stockDirecteur/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case `/demandesRecues/${id_personnel}`:
+      case `/demandesRecuesDirecteur/${id_personnel}`:
         setActiveButton('received');
         break;
       default:
@@ -71,7 +71,7 @@ const StockDirecteur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
@@ -82,7 +82,6 @@ const StockDirecteur = () => {
         </NavBar>
         <div style={styles.tableContainer}>
           <ScrollableTable />
-          
         </div>
       </div>
     </div>

@@ -29,6 +29,7 @@ const AccueilDirecteur = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -49,10 +50,9 @@ const AccueilDirecteur = () => {
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}

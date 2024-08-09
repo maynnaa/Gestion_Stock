@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
 import Formulaire from '../../components/formulaire'; 
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
-import { useParams } from 'react-router-dom';
 
 const PageWithSidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -83,15 +82,7 @@ const PageWithSidebar = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilService/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
-        </NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} />
         <Formulaire />
       </div>
     </div>

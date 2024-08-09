@@ -1,11 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const NavBar = ({ children }) => {
+const NavBar = ({ id_personnel }) => {
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const fetchNotifications = async () => {
+    try {
+      console.log('Fetching notifications...');
+      const response = await axios.get('http://localhost:9091/api/notification');
+      console.log('Notifications fetched:', response.data);
+
+      const allNotifications = response.data;
+      console.log('User ID:', id_personnel);
+
+      const userNotifications = allNotifications.filter(notification => {
+        console.log('Comparing user ID:', id_personnel, 'with notification personnel ID:', notification.personnel.id_personnel);
+        return notification.personnel.id_personnel === id_personnel;
+      });
+
+      console.log('Filtered notifications for user:', userNotifications);
+      setNotifications(userNotifications);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log('Component mounted, fetching notifications...');
+    fetchNotifications();
+  }, [id_personnel]);
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -26,10 +54,10 @@ const NavBar = ({ children }) => {
           }
 
           .navbar-custom .navbar-nav {
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
           }
 
           .navbar-custom .nav-link {
@@ -40,7 +68,6 @@ const NavBar = ({ children }) => {
           .navbar-custom .nav-right {
             display: flex;
             align-items: center;
-            margin-right: 30px;
           }
 
           .dropdown-menu {
@@ -66,41 +93,66 @@ const NavBar = ({ children }) => {
           .notification-text {
             color: #555;
           }
+
+          .no-notifications {
+            padding: 10px;
+            text-align: center;
+            color: #888;
+          }
         `}
       </style>
       <Navbar className="navbar-custom" expand="lg">
         <Nav className="navbar-nav">
-          {children}
-          <Nav className="nav-right">
+          <Nav.Link
+            href="#"
+            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+
+          <div className="nav-right">
             <Dropdown show={showNotifications} onToggle={(isOpen) => setShowNotifications(isOpen)}>
               <Dropdown.Toggle as="a" className="nav-link" id="notification-dropdown">
                 <FaBell size={25} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu align="end">
-                <Dropdown.Item>
-                  <div className="notification-title">New Comment</div>
-                  <div className="notification-text">Someone commented on your post.</div>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <div className="notification-title">New Like</div>
-                  <div className="notification-text">Someone liked your post.</div>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <div className="notification-title">New Message</div>
-                  <div className="notification-text">You have received a new message.</div>
-                </Dropdown.Item>
+                {notifications.length === 0 ? (
+                  <div className="no-notifications">Aucune nouvelle notification</div>
+                ) : (
+                  notifications.map(notification => (
+                    <Dropdown.Item key={notification.id_notification}>
+                      <div className="notification-title">
+                        {notification.type === 'demande de besoin' ? 'Nouvelle demande de besoin' : 'Réponse'}
+                      </div>
+                      <div className="notification-text">
+                        {notification.formulaireBesoins ? `Demande de besoin ID ${notification.formulaireBesoins.id_formulaire}` : 'Réponse'}
+                      </div>
+                    </Dropdown.Item>
+                  ))
+                )}
               </Dropdown.Menu>
             </Dropdown>
 
             <Nav.Link href="#" onClick={() => handleNavigation('/login')}>
               <FaSignOutAlt size={25} />
             </Nav.Link>
-          </Nav>
+          </div>
         </Nav>
       </Navbar>
     </div>
   );
+};
+
+const styles = {
+  accueilLink: {
+    fontWeight: 'bold',
+    color: '#6c757d',
+    fontSize: '18px',
+    marginRight: 'auto',  // Align "Accueil" to the left
+    textDecoration: 'none',
+  },
 };
 
 export default NavBar;

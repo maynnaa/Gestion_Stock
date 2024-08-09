@@ -1,3 +1,4 @@
+// GestionFournisseur.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar'; 
@@ -121,7 +122,7 @@ const GestionFournisseur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar userId={id_personnel}>
           <a 
             href="#"
             onClick={() => handleNavigation(`/accueilMagasinier/${id_personnel}`, 'home')}

@@ -5,8 +5,7 @@ import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import DefaultExample from '../../components/historique';
-import { Nav } from 'react-bootstrap'; // Ajouter cette ligne
-
+import { Nav } from 'react-bootstrap';
 
 const HistoriqueBesoins = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -112,11 +111,10 @@ const HistoriqueBesoins = () => {
           >
             Gestion des Fournisseurs
           </Button>
-       
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={id_personnel}>
           <Nav.Link
             href="#"
             onClick={() => handleNavigation(`/accueilMagasinier/${id_personnel}`, 'home')}

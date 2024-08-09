@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -20,25 +19,25 @@ const DemandesRecues = () => {
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/accueilDivision':
+      case `/accueilDivision/${id_personnel}`:
         setActiveButton('accueil');
         break;
-      case '/stockDivision':
+      case `/stockDivision/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/formulaireDivision':
+      case `/formulaireDivision/${id_personnel}`:
         setActiveButton('request');
         break;
-      case '/historiqueDivision':
+      case `/historiqueDivision/${id_personnel}`:
         setActiveButton('history');
         break;
-      case '/demandesRecues':
+      case `/demandesRecues/${id_personnel}`:
         setActiveButton('received');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -101,15 +100,7 @@ const DemandesRecues = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
-        </NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} />
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>

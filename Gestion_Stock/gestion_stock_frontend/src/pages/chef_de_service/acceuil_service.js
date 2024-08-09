@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import NavBar from '../../components/navbar';
 import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
 import Button from '../../components/button';
 import { Nav } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 
 const AccueilService = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -62,15 +61,7 @@ const AccueilService = () => {
         <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilService/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
-        </NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)} />
         <div style={styles.contentContainer}>
           <Accueil /> 
         </div>

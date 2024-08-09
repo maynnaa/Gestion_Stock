@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; 
-import { useParams } from 'react-router-dom';
 
 const DemandesRecuesDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -20,19 +19,19 @@ const DemandesRecuesDirecteur = () => {
   useEffect(() => {
     const path = location.pathname;
     switch (path) {
-      case '/':
+      case `/accueilDirecteur/${id_personnel}`:
         setActiveButton('accueil');
         break;
-      case '/stockDivision':
+      case `/stockDirecteur/${id_personnel}`:
         setActiveButton('stock');
         break;
-      case '/demandesRecues':
+      case `/demandesRecuesDirecteur/${id_personnel}`:
         setActiveButton('received');
         break;
       default:
         setActiveButton(null);
     }
-  }, [location.pathname]);
+  }, [location.pathname, id_personnel]);
 
   const handleMouseEnter = (button) => {
     setHoveredButton(button);
@@ -54,6 +53,7 @@ const DemandesRecuesDirecteur = () => {
   return (
     <div style={styles.page}>
       <div style={styles.sidebarWrapper}>
+        <Sidebar />
         <div style={styles.additionalButtons}>
           <Button
             size="medium"
@@ -74,10 +74,9 @@ const DemandesRecuesDirecteur = () => {
             Demandes reçues
           </Button>
         </div>
-        <Sidebar />
       </div>
       <div style={styles.content}>
-        <NavBar>
+        <NavBar id_personnel={parseInt(id_personnel, 10)}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilDirecteur/${id_personnel}`)}
