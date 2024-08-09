@@ -1,39 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Assurez-vous que useNavigate est importé
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DivisionPopup from './division_popup'; 
 
 const NavBar = ({ id_personnel, onAccueilClick }) => {
-  const navigate = useNavigate(); // Définir navigate ici
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [iconColor, setIconColor] = useState('#000');
+  const [showPopup, setShowPopup] = useState(false); // État pour afficher le popup
+  const [selectedNotification, setSelectedNotification] = useState(null); // Notification sélectionnée
 
   const fetchNotifications = async () => {
     try {
-      console.log('Fetching notifications...');
       const response = await axios.get('http://localhost:9091/api/notification');
-      console.log('Notifications fetched:', response.data);
-
       const allNotifications = response.data;
-      console.log('User ID:', id_personnel);
 
-      const userNotifications = allNotifications.filter(notification => {
-        console.log('Comparing user ID:', id_personnel, 'with notification personnel ID:', notification.personnel.id_personnel);
-        return notification.personnel.id_personnel === id_personnel;
-      });
+      const userNotifications = allNotifications.filter(notification => 
+        notification.personnel.id_personnel === id_personnel
+      );
 
-      console.log('Filtered notifications for user:', userNotifications);
       setNotifications(userNotifications);
+      setIconColor(userNotifications.length > 0 ? 'red' : '#000');
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
   };
 
   useEffect(() => {
-    console.log('Component mounted, fetching notifications...');
     fetchNotifications();
   }, [id_personnel]);
+
+  const handleNotificationClick = (notification) => {
+    setSelectedNotification(notification);
+    setShowPopup(true); // Afficher le popup
+    setShowNotifications(false); // Fermer le menu déroulant
+  };
 
   return (
     <div>
@@ -101,7 +105,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
         <Nav className="navbar-nav">
           <Nav.Link
             href="#"
-            onClick={onAccueilClick} // Utiliser la fonction passée en prop
+            onClick={onAccueilClick}
             style={styles.accueilLink}
           >
             Accueil
@@ -110,7 +114,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
           <div className="nav-right">
             <Dropdown show={showNotifications} onToggle={(isOpen) => setShowNotifications(isOpen)}>
               <Dropdown.Toggle as="a" className="nav-link" id="notification-dropdown">
-                <FaBell size={25} />
+                <FaBell size={25} color={iconColor} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu align="end">
@@ -118,7 +122,10 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
                   <div className="no-notifications">Aucune nouvelle notification</div>
                 ) : (
                   notifications.map(notification => (
-                    <Dropdown.Item key={notification.id_notification}>
+                    <Dropdown.Item 
+                      key={notification.id_notification}
+                      onClick={() => handleNotificationClick(notification)} // Ajouter la fonction de clic
+                    >
                       <div className="notification-title">
                         {notification.type === 'demande de besoin' ? 'Nouvelle demande de besoin' : 'Réponse'}
                       </div>
@@ -137,6 +144,15 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
           </div>
         </Nav>
       </Navbar>
+
+      {/* Afficher le popup si showPopup est true */}
+      {showPopup && (
+        <DivisionPopup 
+          showModal={showPopup} 
+          handleCloseModal={() => setShowPopup(false)} 
+          notification={selectedNotification} // Passer la notification sélectionnée
+        />
+      )}
     </div>
   );
 };

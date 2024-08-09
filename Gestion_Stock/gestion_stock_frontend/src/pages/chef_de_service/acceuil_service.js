@@ -4,7 +4,7 @@ import NavBar from '../../components/navbar';
 import Sidebar from '../../layout/sidebar';
 import Accueil from '../../components/accueil';
 import Button from '../../components/button';
-import { Nav } from 'react-bootstrap';
+
 
 const AccueilService = () => {
   const [hoveredButton, setHoveredButton] = useState(null);

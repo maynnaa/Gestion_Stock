@@ -4,7 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import ScrollableTable from '../../components/tableauStock'; 
 import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+
 
 const StockChefService = () => {
   const [hoveredButton, setHoveredButton] = useState(null);

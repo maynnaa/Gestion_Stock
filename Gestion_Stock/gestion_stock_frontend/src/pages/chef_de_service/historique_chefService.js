@@ -5,7 +5,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+
 
 const HistoriquePage = () => {
   const [hoveredButton, setHoveredButton] = useState(null);

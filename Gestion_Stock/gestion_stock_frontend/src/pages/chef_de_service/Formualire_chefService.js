@@ -4,7 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import Formulaire from '../../components/formulaire'; 
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+
 
 const PageWithSidebar = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
