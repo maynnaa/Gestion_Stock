@@ -31,11 +31,7 @@ public class FormulaireBesoins {
     @ManyToOne
     @JoinColumn(name = "id_personnel")
     private Personnel personnel;
-
-    @OneToOne
-    @JoinColumn(name = "id_notification")
-    private Notification notification;
-
+    
     @OneToMany(mappedBy = "formulaireBesoins", cascade = CascadeType.ALL)
     private Set<FormulaireMateriel> formulaireMateriels = new HashSet<>();
 
