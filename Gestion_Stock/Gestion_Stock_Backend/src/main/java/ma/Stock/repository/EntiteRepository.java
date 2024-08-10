@@ -19,11 +19,7 @@ public interface EntiteRepository extends JpaRepository<Entite, Integer> {
 
     Entite save(Entite entite);
     List<Entite> findAll();
-    // Méthode pour trouver une entité par son id_entite
-    @Query("SELECT e FROM Entite e WHERE e.id_entite = :id_entite")
-    Optional<Entite> findByIdEntite(@Param("id_entite") Integer id_entite);
 
-    // Méthode pour trouver une entité par son entite_parent_id
-    @Query("SELECT e FROM Entite e WHERE e.id_entite = (SELECT e2.entite_parent_id FROM Entite e2 WHERE e2.id_entite = :id_entite)")
-    Optional<Entite> findParentEntite(@Param("id_entite") Integer id_entite);
+    @Query("SELECT e.entite_parent_id FROM Entite e WHERE e.id_entite = :idEntite")
+    Integer findParentIdByIdEntite(@Param("idEntite") Integer idEntite);
 }

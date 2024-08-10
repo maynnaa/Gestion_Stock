@@ -21,7 +21,7 @@ const FormulaireDivisionn = () => {
     const fetchPersonnelData = async () => {
       try {
         const response = await fetch(`/api/personnel/${id_personnel}`);
-        if (!response.ok) throw new Error('Failed to fetch personnel data');
+        if (!response.ok) throw new Error('Failed to fetch personnel data');        
         const data = await response.json();
         setPpr(data.ppr);
         setSelectedService(data.entite.libelle);
@@ -126,13 +126,13 @@ const FormulaireDivisionn = () => {
       }
   
       const formBesoinsData = await response.json();
-      console.log('FormulaireBesoins Response:', formBesoinsData); // Log response data
-      const formulaireBesoins = formBesoinsData.id_formulaire; // Correctly retrieve formulaire ID
+      console.log('FormulaireBesoins Response:', formBesoinsData);
+      const formulaireBesoins = formBesoinsData.id_formulaire; 
   
       // Soumettre chaque FormulaireMateriel
       const materialRequests = tableRows.map(row => {
         const materialData = {
-          formulaireBesoins, // Correct formulaire ID
+          formulaireBesoins, 
           materiel: row.material,
           id_personnel: row.beneficiary,
           quantite: row.quantity,

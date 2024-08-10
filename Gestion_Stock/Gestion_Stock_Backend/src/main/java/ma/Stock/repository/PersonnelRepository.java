@@ -22,10 +22,10 @@ public interface PersonnelRepository extends JpaRepository<Personnel, Integer> {
     Optional<Personnel> findByEmail(String email);
     List<Personnel> findAll();
     Personnel findByPpr(String ppr);
-    @Query("SELECT p FROM Personnel p WHERE p.entite.entite_parent_id = :entiteParentId")
-    Personnel findByEntiteParentId(@Param("entiteParentId") int entiteParentId);
 
 
+    @Query("SELECT p FROM Personnel p WHERE p.entite.id_entite = :idEntite")
+    Optional<Personnel> findByEntiteId(@Param("idEntite") Integer idEntite);
 
 
 

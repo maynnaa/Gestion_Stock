@@ -94,22 +94,23 @@ public class FormulaireBesoinsController {
     private void createNotification(FormulaireBesoins formulaireBesoins) {
         Notification notification = new Notification();
         notification.setFormulaireBesoins(formulaireBesoins);
-        Optional<Entite> optionalEntite = Optional.ofNullable(formulaireBesoins.getPersonnel().getEntite());
-        optionalEntite.ifPresent(entite -> {
-            Personnel parentPersonnel = personnelRepository.findByEntiteParentId(entite.getEntite_parent_id());
-            notification.setPersonnel(parentPersonnel);
-        });
 
-        Personnel personnel = formulaireBesoins.getPersonnel();
-        if (personnel != null && personnel.getEntite() != null) {
-            Integer entiteId = personnel.getEntite().getId_entite();
-            System.out.println("voilaaa");
-            System.out.println(entiteId);
-//9elb 3la  personnel li 3ndo  id= parentEntite
-        } else {
-            // Gérer le cas où personnel ou personnel.getEntite() est null
-            System.out.println("Personnel ou Entité est null");
-        }
+        Integer Idpersonnel = formulaireBesoins.getPersonnel().getId_personnel();
+        System.out.println(Idpersonnel);
+        Optional<Personnel> personnel = personnelService.findById(Idpersonnel);
+        System.out.println(personnel);
+        Integer IdEntite=personnel.get().getEntite().getId_entite();
+        System.out.println(IdEntite);
+        Integer entite=entiteService.getParentEntite(IdEntite);
+        System.out.println("id pareneeeeeeet "+entite);
+
+        Optional<Personnel> personnelfinal = personnelService.findEntite(entite);
+        Personnel personnelfinall = personnelfinal.get();
+        System.out.println(personnelfinal);
+        notification.setPersonnel(personnelfinall);
+
+
+
 
         notificationService.save(notification);
     }

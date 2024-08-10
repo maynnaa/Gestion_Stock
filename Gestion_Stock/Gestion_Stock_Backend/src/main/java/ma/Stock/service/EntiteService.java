@@ -33,18 +33,12 @@ public class EntiteService {
     public Entite save(Entite entite) {
         return entiteRepository.save(entite);
     }
-    public Entite getParentEntite(Integer id_entite) {
-        // Trouver l'entité actuelle
-        Optional<Entite> currentEntiteOpt = entiteRepository.findByIdEntite(id_entite);
 
-        if (currentEntiteOpt.isPresent()) {
-            Entite currentEntite = currentEntiteOpt.get();
-            // Forcer le chargement de l'entité parent
-            Integer parentId = currentEntite.getEntite_parent_id();
-            return entiteRepository.findByIdEntite(parentId).orElse(null);
-        }
+    public Integer getParentEntite(Integer id_entite) {
+        // Retrieve the entite_parent_id for the given id_entite
+        Integer parentId = entiteRepository.findParentIdByIdEntite(id_entite);
 
-        return null;
+        return parentId;
     }
 
 

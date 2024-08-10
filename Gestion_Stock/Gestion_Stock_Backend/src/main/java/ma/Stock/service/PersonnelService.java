@@ -38,7 +38,9 @@ public class PersonnelService {
         return personnelRepository.save(personnel);
     }
 
-
+    public Optional<Personnel> findEntite(Integer id_entite) {
+        return personnelRepository.findByEntiteId(id_entite);
+    }
 
     public Optional<Personnel> findByEmail(String email) {
         return personnelRepository.findByEmail(email);
