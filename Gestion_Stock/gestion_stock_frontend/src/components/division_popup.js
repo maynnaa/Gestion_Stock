@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 function DivisionPopup({ showModal, handleCloseModal, notification }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
 
@@ -40,7 +41,6 @@ function DivisionPopup({ showModal, handleCloseModal, notification }) {
     console.log('Demande approuvée');
     handleCloseModal(); // Fermer le modal après l'action
   };
-
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
@@ -81,5 +81,4 @@ function DivisionPopup({ showModal, handleCloseModal, notification }) {
     </Modal>
   );
 }
-
-export default DivisionPopup;
+export default DivisionPopup ;

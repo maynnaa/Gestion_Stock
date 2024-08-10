@@ -14,12 +14,16 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const [selectedNotification, setSelectedNotification] = useState(null); // Notification sélectionnée
 
   const fetchNotifications = async () => {
+    if (!id_personnel) {
+      console.warn('id_personnel is null or undefined');
+      return;
+    }
     try {
       const response = await axios.get('http://localhost:9091/api/notification');
       const allNotifications = response.data;
 
       const userNotifications = allNotifications.filter(notification => 
-        notification.personnel.id_personnel === id_personnel
+        notification.personnel && notification.personnel.id_personnel === id_personnel
       );
 
       setNotifications(userNotifications);
@@ -124,14 +128,14 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
                   notifications.map(notification => (
                     <Dropdown.Item 
                       key={notification.id_notification}
-                      onClick={() => handleNotificationClick(notification)} // Ajouter la fonction de clic
+                      onClick={() => handleNotificationClick(notification)} 
                     >
                       <div className="notification-title">
-                        {notification.type === 'demande de besoin' ? 'Nouvelle demande de besoin' : 'Réponse'}
+                        {notification.type === 'Demande de besoins' 
+                          ? 'Vous avez une nouvelle demande de besoin à consulter ' 
+                          : 'Vous avez une réponse'}
                       </div>
-                      <div className="notification-text">
-                        {notification.formulaireBesoins ? `Demande de besoin ID ${notification.formulaireBesoins.id_formulaire}` : 'Réponse'}
-                      </div>
+                  
                     </Dropdown.Item>
                   ))
                 )}
