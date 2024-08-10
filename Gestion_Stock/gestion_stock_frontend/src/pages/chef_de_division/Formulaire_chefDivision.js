@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button';
-import { Nav } from 'react-bootstrap';
+
 import FormulaireDivisionn from '../../components/formulaireDivision';
 
 const FormulaireDivision = () => {
@@ -47,6 +47,9 @@ const FormulaireDivision = () => {
   const handleNavigation = (path, button) => {
     setActiveButton(button);
     navigate(`${path}/${id_personnel}`);
+  };
+  const handleAccueilClick = () => {
+    navigate(`/accueilDivision/${id_personnel}`);
   };
 
   return (
@@ -93,7 +96,7 @@ const FormulaireDivision = () => {
         </div>
       </div>
       <div style={styles.mainContent}>
-        <NavBar id_personnel={parseInt(id_personnel, 10)} />
+        <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick} />
         <FormulaireDivisionn />
       </div>
     </div>

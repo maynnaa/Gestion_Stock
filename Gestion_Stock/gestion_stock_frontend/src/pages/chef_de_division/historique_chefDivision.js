@@ -5,7 +5,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
-import { Nav } from 'react-bootstrap'; // Importer Nav pour le bouton 'Accueil'
+
 
 const HistoriqueDivision = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -55,6 +55,9 @@ const HistoriqueDivision = () => {
     setActiveButton(button);
     navigate(`${path}/${id_personnel}`);
   };
+  const handleAccueilClick = () => {
+    navigate(`/accueilDivision/${id_personnel}`);
+  };
 
   return (
     <div style={styles.page}>
@@ -100,7 +103,7 @@ const HistoriqueDivision = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={parseInt(id_personnel, 10)} />
+        <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}/>
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
