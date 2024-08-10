@@ -1,7 +1,11 @@
 package ma.Stock.service;
 
+import ma.Stock.entities.Entite;
 import ma.Stock.entities.Notification;
+import ma.Stock.entities.Personnel;
+import ma.Stock.repository.EntiteRepository;
 import ma.Stock.repository.NotificationRepository;
+import ma.Stock.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +17,10 @@ public class NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
-
+    @Autowired
+    private PersonnelRepository personnelRepository;
+    @Autowired
+    private EntiteRepository entiteRepository;
     public List<Notification> findAll() {
         return notificationRepository.findAll();
     }
@@ -29,4 +36,5 @@ public class NotificationService {
     public Notification save(Notification notification) {
         return notificationRepository.save(notification);
     }
+
 }

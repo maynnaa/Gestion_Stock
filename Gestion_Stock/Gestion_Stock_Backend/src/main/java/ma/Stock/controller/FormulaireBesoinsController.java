@@ -1,12 +1,9 @@
 package ma.Stock.controller;
 
-import ma.Stock.entities.DemandeAchat;
-import ma.Stock.entities.FormulaireBesoins;
-import ma.Stock.entities.Notification;
-import ma.Stock.service.FormulaireBesoinsService;
-import ma.Stock.service.MaterielService;
-import ma.Stock.service.NotificationService;
-import ma.Stock.service.PersonnelService;
+import ma.Stock.entities.*;
+import ma.Stock.repository.PersonnelRepository;
+import ma.Stock.service.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +23,13 @@ public class FormulaireBesoinsController {
 
     @Autowired
     private MaterielService materielService;
+    @Autowired
+    private EntiteService entiteService;
 
     @Autowired
     private PersonnelService personnelService;
-
+    @Autowired
+    private PersonnelRepository personnelRepository;
     @Autowired
     private NotificationService notificationService;
 
@@ -37,16 +37,18 @@ public class FormulaireBesoinsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FormulaireBesoins> getDemandeBesoinById(@PathVariable int id) {
-        System.out.println("Fetching Demande de besoins with ID: " + id);
+        logger.info("Fetching Demande de besoins with ID: {}", id);
         Optional<FormulaireBesoins> demandeBesoins = formulaireBesoinsService.findById(id);
         return demandeBesoins.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @GetMapping
     public ResponseEntity<List<FormulaireBesoins>> getAllFormulaireBesoins() {
         List<FormulaireBesoins> allDemandes = formulaireBesoinsService.findAll();
         return ResponseEntity.ok(allDemandes);
     }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<FormulaireBesoins>> getFormulaireBesoinsByUserId(@PathVariable int userId) {
         List<FormulaireBesoins> demandes = formulaireBesoinsService.findByPersonnelId(userId);
@@ -75,8 +77,11 @@ public class FormulaireBesoinsController {
                         .orElseThrow(() -> new RuntimeException("Personnel not found")));
             });
 
+            // Sauvegarder le formulaire
             FormulaireBesoins savedFormulaireBesoins = formulaireBesoinsService.save(formulaireBesoins);
             logger.info("FormulaireBesoins created with ID: {}", savedFormulaireBesoins.getPersonnel().getId_personnel());
+
+            // Créer une notification
             createNotification(savedFormulaireBesoins);
 
             return ResponseEntity.ok(savedFormulaireBesoins);
@@ -86,14 +91,33 @@ public class FormulaireBesoinsController {
         }
     }
 
-
     private void createNotification(FormulaireBesoins formulaireBesoins) {
         Notification notification = new Notification();
         notification.setFormulaireBesoins(formulaireBesoins);
-        notification.setPersonnel(formulaireBesoins.getPersonnel()); // Associer le personnel
-        // Les valeurs par défaut sont déjà définies dans l'entité
+        Optional<Entite> optionalEntite = Optional.ofNullable(formulaireBesoins.getPersonnel().getEntite());
+        optionalEntite.ifPresent(entite -> {
+            Personnel parentPersonnel = personnelRepository.findByEntiteParentId(entite.getEntite_parent_id());
+            notification.setPersonnel(parentPersonnel);
+        });
+
+        Personnel personnel = formulaireBesoins.getPersonnel();
+        if (personnel != null && personnel.getEntite() != null) {
+            Integer entiteId = personnel.getEntite().getId_entite();
+            System.out.println("voilaaa");
+            System.out.println(entiteId);
+//9elb 3la  personnel li 3ndo  id= parentEntite
+        } else {
+            // Gérer le cas où personnel ou personnel.getEntite() est null
+            System.out.println("Personnel ou Entité est null");
+        }
 
         notificationService.save(notification);
     }
+
+
+
+
+
+
 
 }

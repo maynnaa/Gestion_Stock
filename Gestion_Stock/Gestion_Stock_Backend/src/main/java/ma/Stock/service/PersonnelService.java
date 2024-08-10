@@ -1,6 +1,8 @@
 package ma.Stock.service;
 
+import ma.Stock.entities.Entite;
 import ma.Stock.entities.Personnel;
+import ma.Stock.repository.EntiteRepository;
 import ma.Stock.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class PersonnelService {
 
     @Autowired
     private PersonnelRepository personnelRepository;
+    @Autowired
+    private EntiteRepository entiteRepository;
 
     public List<Personnel> findAll() {
         return personnelRepository.findAll();
@@ -33,6 +37,7 @@ public class PersonnelService {
     public Personnel save(Personnel personnel) {
         return personnelRepository.save(personnel);
     }
+
 
 
     public Optional<Personnel> findByEmail(String email) {

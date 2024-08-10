@@ -21,7 +21,7 @@ public class Personnel {
     private String password;
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_entite")
     private Entite entite;
 
