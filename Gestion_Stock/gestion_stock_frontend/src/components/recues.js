@@ -11,24 +11,50 @@ function Recues({ id }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [formulaireMaterielData, setFormulaireMaterielData] = useState([]);
+  const [personnelData, setPersonnelData] = useState([]);
+  const [materielData, setMaterielData] = useState([]);
 
   useEffect(() => {
+    // Fetch the notifications
     axios.get(`/api/notification`)
       .then(response => {
-        console.log('All notifications received:', response.data); 
-
-        // Filtrer les notifications pour ne garder que celles qui correspondent à l'id passé en paramètre
-        const filteredNotifications = response.data.filter(notification => {
-          console.log('Comparing:', notification.personnel.id_personnel, 'with', parseInt(id, 10));
-          return notification.personnel.id_personnel === parseInt(id, 10);
-        });
-
-        console.log('Filtered notifications:', filteredNotifications);
+        const filteredNotifications = response.data.filter(notification => 
+          notification.personnel.id_personnel === parseInt(id, 10)
+        );
         setNotifications(filteredNotifications);
       })
       .catch(error => {
         console.error('Error fetching notifications:', error);
       });
+
+    // Fetch the formulaireMateriel data
+    axios.get(`/api/formulaireMateriel`)
+      .then(response => {
+        setFormulaireMaterielData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching formulaireMateriel data:', error);
+      });
+
+    // Fetch the personnel data
+    axios.get(`/api/personnel`)
+      .then(response => {
+        setPersonnelData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching personnel data:', error);
+      });
+
+    // Fetch the materiel data
+    axios.get(`/api/materiel`)
+      .then(response => {
+        setMaterielData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching materiel data:', error);
+      });
+
   }, [id]);
 
   const handleModalOpen = (item) => {
@@ -43,7 +69,17 @@ function Recues({ id }) {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR'); // Simple date format
+    return date.toLocaleDateString('fr-FR');
+  };
+
+  const getMaterielLabel = (id_materiel) => {
+    const materiel = materielData.find(m => m.id_materiel === id_materiel);
+    return materiel ? materiel.libelle : '';
+  };
+
+  const getPersonnelName = (id_personnel) => {
+    const personnel = personnelData.find(p => p.id_personnel === id_personnel);
+    return personnel ? personnel.nom_complet : '';
   };
 
   return (
@@ -72,6 +108,7 @@ function Recues({ id }) {
           ))}
         </ListGroup>
       </div>
+
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Détail de la demande de besoins</Modal.Title>
@@ -92,13 +129,15 @@ function Recues({ id }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedItem.formulaireBesoins.formulaireMateriels && selectedItem.formulaireBesoins.formulaireMateriels.map(article => (
-                    <tr key={article.id}>
-                      <td>{article.materiel.libelle}</td>
-                      <td>{article.quantite}</td>
-                      <td>{article.personnel.nom_complet}</td>
-                    </tr>
-                  ))}
+                  {formulaireMaterielData
+                    .filter(fm => fm.formulaireBesoins.id_formulaire === selectedItem.formulaireBesoins.id_formulaire)
+                    .map(article => (
+                      <tr key={article.id}>
+                        <td>{getMaterielLabel(article.materiel.id_materiel)}</td>
+                        <td>{article.quantite}</td>
+                        <td>{getPersonnelName(article.personnel.id_personnel)}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +13,9 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const [showPopup, setShowPopup] = useState(false); // État pour afficher le popup
   const [selectedNotification, setSelectedNotification] = useState(null); // Notification sélectionnée
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     if (!id_personnel) {
-      console.warn('id_personnel is null or undefined');
+      console.warn('id_personnel est null ou undefined');
       return;
     }
     try {
@@ -29,13 +29,13 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
       setNotifications(userNotifications);
       setIconColor(userNotifications.length > 0 ? 'red' : '#000');
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('Erreur lors de la récupération des notifications :', error);
     }
-  };
+  }, [id_personnel]);
 
   useEffect(() => {
     fetchNotifications();
-  }, [id_personnel]);
+  }, [fetchNotifications]);
 
   const handleNotificationClick = (notification) => {
     setSelectedNotification(notification);
