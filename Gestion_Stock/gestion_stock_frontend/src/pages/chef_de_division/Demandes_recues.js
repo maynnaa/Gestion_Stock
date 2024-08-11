@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import DefaultExample from '../../components/historique';
+import Recues from '../../components/recues'; // Correct import statement
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
-
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -106,10 +105,12 @@ const DemandesRecues = () => {
       <div style={styles.content}>
         <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}/>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} /> 
+          <Search onSearch={handleSearch} />
+         
           <div style={styles.tableWrapper}>
-            <DefaultExample searchTerm={searchTerm} /> 
+            <Recues searchTerm={searchTerm} id={id_personnel}/>
           </div>
+          
         </div>
       </div>
     </div>

@@ -6,9 +6,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-function DivisionPopup({ showModal, handleCloseModal, notification }) {
+function DivisionPopup({ showModal, handleCloseModal, notification ,id}) {
   const [selectedArticles, setSelectedArticles] = useState([]);
-
   useEffect(() => {
     if (notification && notification.formulaireBesoins) {
       const fetchSelectedArticles = async () => {

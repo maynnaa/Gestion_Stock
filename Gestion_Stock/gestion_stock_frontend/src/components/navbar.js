@@ -154,7 +154,8 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
         <DivisionPopup 
           showModal={showPopup} 
           handleCloseModal={() => setShowPopup(false)} 
-          notification={selectedNotification} // Passer la notification sélectionnée
+          notification={selectedNotification} 
+          id={id_personnel}
         />
       )}
     </div>

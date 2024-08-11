@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import DefaultExample from '../../components/historique';
+import Recues from '../../components/recues';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
@@ -91,7 +91,7 @@ const DemandesRecuesDirecteur = () => {
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <DefaultExample searchTerm={searchTerm} /> 
+            <Recues searchTerm={searchTerm} id={id_personnel}/>
           </div>
         </div>
       </div>
