@@ -94,7 +94,6 @@ public class FormulaireBesoinsController {
     private void createNotification(FormulaireBesoins formulaireBesoins) {
         Notification notification = new Notification();
         notification.setFormulaireBesoins(formulaireBesoins);
-
         Integer Idpersonnel = formulaireBesoins.getPersonnel().getId_personnel();
         System.out.println(Idpersonnel);
         Optional<Personnel> personnel = personnelService.findById(Idpersonnel);
@@ -103,15 +102,15 @@ public class FormulaireBesoinsController {
         System.out.println(IdEntite);
         Integer entite=entiteService.getParentEntite(IdEntite);
         System.out.println("id pareneeeeeeet "+entite);
-
         Optional<Personnel> personnelfinal = personnelService.findEntite(entite);
         Personnel personnelfinall = personnelfinal.get();
         System.out.println(personnelfinal);
         notification.setPersonnel(personnelfinall);
+        Integer idfct=personnel.get().getFonction().getId_fonction();
+        if(idfct==2) formulaireBesoins.setValidation("Premiere validation");
+        else if (idfct==3) {formulaireBesoins.setValidation("en cours");
 
-
-
-
+        }
         notificationService.save(notification);
     }
 

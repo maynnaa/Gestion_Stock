@@ -26,7 +26,7 @@ public class FormulaireBesoins {
     private LocalDate date_creation ;
 
     @Column(name = "validation")
-    private String validation = "en cours";  // Valeur par défaut
+    private String validation ;
 
     @ManyToOne
     @JoinColumn(name = "id_personnel")
