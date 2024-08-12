@@ -7,6 +7,7 @@ import Button from '../../components/button';
 import TableauFournisseur from '../../components/tableau_fournisseur'; 
 import SupplierFormModal from '../../components/ajouter_fournisseur'; 
 import { FaPlus } from 'react-icons/fa';
+import { Nav } from 'react-bootstrap';
 
 const GestionFournisseur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -126,13 +127,14 @@ const GestionFournisseur = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar userId={id_personnel}onAccueilClick={handleAccueilClick}>
-          <a 
+      <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}>
+          <Nav.Link
             href="#"
+            onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
             style={styles.accueilLink}
           >
             Accueil
-          </a>
+          </Nav.Link>
         </NavBar>
         <div style={styles.controlsContainer}>
           <div style={styles.searchContainer}>

@@ -113,7 +113,7 @@ const HistoriqueDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel}onAccueilClick={handleAccueilClick}>
+      <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}>
           <Nav.Link
             href="#"
             onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}

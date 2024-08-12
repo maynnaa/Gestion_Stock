@@ -4,7 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Button from '../../components/button'; 
 import FormulaireDemandeAchat from '../../components/demandeAchat';
-
+import { Nav } from 'react-bootstrap'; 
 
 
 const FormDemandeAchat = () => {
@@ -115,7 +115,15 @@ const FormDemandeAchat = () => {
         </div>
       </div>
       <div style={styles.content}>
-        <NavBar id_personnel={id_personnel} onAccueilClick={handleAccueilClick} />
+      <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}>
+          <Nav.Link
+            href="#"
+            onClick={() => navigate(`/accueilMagasinier/${id_personnel}`)}
+            style={styles.accueilLink}
+          >
+            Accueil
+          </Nav.Link>
+        </NavBar>
         <FormulaireDemandeAchat id={id_personnel}/>
       </div>
     </div>
