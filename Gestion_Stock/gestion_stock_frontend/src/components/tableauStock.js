@@ -14,9 +14,11 @@ const ScrollableTable = () => {
         console.log("Données des matériaux :", materialResponse.data);
         console.log("Données des produits :", productResponse.data);
 
-        // Vérifiez si l'ID de matériel est correctement récupéré
-        const materialQuantityMap = productResponse.data.reduce((acc, product) => {
-          console.log("Produit :", product);  // Ajouté pour déboguer
+        // Filtrer les produits dont la disponibilité est 'disponible'
+        const availableProducts = productResponse.data.filter(product => product.disponibilite === 'disponible');
+
+        const materialQuantityMap = availableProducts.reduce((acc, product) => {
+          console.log("Produit disponible :", product);  // Ajouté pour déboguer
           const materialId = product.materiel?.id_materiel; // Vérifiez le chemin d'accès
           if (materialId !== undefined) {
             acc[materialId] = (acc[materialId] || 0) + 1;
@@ -40,19 +42,19 @@ const ScrollableTable = () => {
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4" >
       <div className="table-responsive" style={styles.tableWrapper}>
         <table className="table table-bordered">
           <thead>
-            <tr>
+            <tr className="text-center">
               <th>Nom</th>
               <th>Quantité</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-center">
             {data.map((item, index) => (
               <tr key={index}>
                 <td>{item.nom}</td>

@@ -70,7 +70,7 @@ public class ProduitStockeController {
             }
 
             produitStocke.setFournisseur(fournisseurOptional.get());
-
+            produitStocke.setDisponibilite("disponible");
             Produit_Stocke createdProduitStocke = produitStockeService.save(produitStocke);
             return new ResponseEntity<>(createdProduitStocke, HttpStatus.CREATED);
         } catch (Exception e) {

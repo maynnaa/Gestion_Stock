@@ -83,6 +83,7 @@ const StockMagasinier = () => {
           )
         );
         handleModalClose();
+
         setSuccessMessage('L\'article a été modifié avec succès.');
         setTimeout(() => setSuccessMessage(''), 3000);
       }
@@ -118,6 +119,8 @@ const StockMagasinier = () => {
       if (response.status === 200) {
         console.log('Article affecté avec succès:', response.data);
         handlePPRModalClose();
+        window.location.reload(); 
+
         setSuccessMessage('Article affecté avec succès.');
         setTimeout(() => setSuccessMessage(''), 3000);
       }
