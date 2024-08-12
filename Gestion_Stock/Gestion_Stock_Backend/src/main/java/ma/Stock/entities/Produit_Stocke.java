@@ -22,6 +22,7 @@ public class Produit_Stocke {
     @Temporal(TemporalType.DATE)
     private Date date_livraison;
     private String marque;
+    private String disponibilite;
 
     @ManyToOne
     @JoinColumn(name = "id_materiel")

@@ -20,12 +20,15 @@ const StockMagasinier = () => {
 
   useEffect(() => {
     axios.get('http://localhost:9091/api/produit')
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération des données:', error);
-      });
+    .then(response => {
+      // Filtrer les produits par disponibilité
+      const produitsDisponibles = response.data.filter(produit => produit.disponibilite === 'disponible');
+      setData(produitsDisponibles);
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des données:', error);
+    });
+  
 
     axios.get('http://localhost:9091/api/materiel')
       .then(response => {
@@ -110,7 +113,8 @@ const StockMagasinier = () => {
         ppr: ppr,
         produitId: selectedItem.id_produit
       });
-
+      
+        
       if (response.status === 200) {
         console.log('Article affecté avec succès:', response.data);
         handlePPRModalClose();
@@ -171,6 +175,7 @@ const StockMagasinier = () => {
               <th>Matériel</th>
               <th>Fournisseur</th>
               <th>Action</th>
+
             </tr>
           </thead>
           <tbody className="text-center">
@@ -181,6 +186,7 @@ const StockMagasinier = () => {
                 <td>{item.marque}</td>
                 <td>{item.materiel?.libelle || ''}</td>
                 <td>{item.fournisseur?.nom || ''}</td>
+
                 <td>
                   <button
                     className="btn btn-primary btn-sm"
