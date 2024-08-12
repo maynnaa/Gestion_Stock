@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
+  const [fonctionId, setFonctionId] = useState(null);
+  const [idPersonnel, setIdPersonnel] = useState(null);
 
   useEffect(() => {
     if (notification && notification.formulaireBesoins) {
@@ -30,6 +32,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
       try {
         const response = await axios.get(`/api/personnel/${id}/fonction`);
         console.log('ID Fonction:', response.data);
+        setFonctionId(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'ID Fonction:', error);
       }
@@ -40,13 +43,57 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     }
   }, [id]);
 
-  if (!notification || !notification.formulaireBesoins) {
-    return null;
-  }
+  useEffect(() => {
+    if (notification && notification.formulaireBesoins) {
+      const personnel = notification.formulaireBesoins.personnel;
+      if (personnel && personnel.id_personnel) {
+        setIdPersonnel(personnel.id_personnel);
+      }
+    }
+  }, [notification]);
 
-  const handleReject = () => {
-    // Logique pour rejeter la demande
-    console.log('Demande rejetée');
+  const handleReject = async () => {
+    const idFormulaire = notification?.formulaireBesoins?.id_formulaire;
+
+    console.log('ID Formulaire:', idFormulaire);
+    console.log('ID Personnel:', idPersonnel);
+
+    if (!idFormulaire || !idPersonnel) {
+      console.error('ID Formulaire ou ID Personnel manquant');
+      return;
+    }
+
+    if (fonctionId === 1 || fonctionId === 2) {
+      try {
+        // Créer l'objet Notification avec les objets FormulaireBesoins et Personnel
+        const notificationData = {
+          is_seen: 0,
+          type: 'reponse',
+          formulaireBesoins: {
+            id_formulaire: idFormulaire
+          },
+          personnel: {
+            id_personnel: idPersonnel
+          }
+        };
+        console.log('Données envoyées pour la notification:', notificationData);
+
+        // Créer une notification dans la table `notification`
+        await axios.post('/api/notification', notificationData);
+
+        // Mettre à jour le champ `validation` dans la table `formulaire_besoins` à "refusée"
+        await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
+          validation: 'refusée'
+        });
+
+        console.log('Demande rejetée et notification créée');
+      } catch (error) {
+        console.error('Erreur lors du rejet de la demande:', error);
+      }
+    } else {
+      console.log('Action non autorisée pour cette fonction');
+    }
+
     handleCloseModal(); // Fermer le modal après l'action
   };
 
@@ -86,12 +133,16 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         </Table>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={handleReject}>
-          Rejeter
-        </Button>
-        <Button variant="success" onClick={handleApprove}>
-          Approuver
-        </Button>
+        {notification.type !== 'reponse' && (
+          <>
+            <Button variant="danger" onClick={handleReject}>
+              Rejeter
+            </Button>
+            <Button variant="success" onClick={handleApprove}>
+              Approuver
+            </Button>
+          </>
+        )}
       </Modal.Footer>
     </Modal>
   );

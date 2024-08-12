@@ -115,6 +115,33 @@ public class FormulaireBesoinsController {
     }
 
 
+    @PutMapping("/{id}")
+    public ResponseEntity<FormulaireBesoins> updateFormulaireBesoins(@PathVariable int id, @RequestBody FormulaireBesoins formulaireBesoinsDetails) {
+        logger.info("Updating FormulaireBesoins with ID: {}", id);
+
+        // Récupérer le formulaire existant
+        Optional<FormulaireBesoins> existingFormulaireBesoins = formulaireBesoinsService.findById(id);
+        if (!existingFormulaireBesoins.isPresent()) {
+            logger.error("FormulaireBesoins with ID {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
+
+        // Mettre à jour uniquement le champ validation
+        FormulaireBesoins formulaireBesoins = existingFormulaireBesoins.get();
+        formulaireBesoins.setValidation(formulaireBesoinsDetails.getValidation());
+
+        // Sauvegarder le formulaire mis à jour
+        try {
+            FormulaireBesoins updatedFormulaireBesoins = formulaireBesoinsService.save(formulaireBesoins);
+            logger.info("FormulaireBesoins with ID {} updated successfully", id);
+            return ResponseEntity.ok(updatedFormulaireBesoins);
+        } catch (Exception e) {
+            logger.error("Error updating FormulaireBesoins with ID {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
 
 
 

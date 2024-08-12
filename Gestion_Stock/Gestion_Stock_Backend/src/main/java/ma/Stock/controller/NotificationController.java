@@ -37,9 +37,22 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
-        Notification createdNotification = notificationService.save(notification);
-        return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
+        try {
+            // Validation de l'objet Notification reçu
+            if (notification.getFormulaireBesoins() == null || notification.getPersonnel() == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            Notification createdNotification = notificationService.save(notification);
+            return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();  // Imprime la pile d'erreurs pour faciliter le débogage
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Notification> updateNotification(@PathVariable("id") int id, @RequestBody Notification updatedNotification) {
