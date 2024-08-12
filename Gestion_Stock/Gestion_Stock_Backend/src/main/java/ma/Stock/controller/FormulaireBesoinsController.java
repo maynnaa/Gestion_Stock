@@ -107,6 +107,7 @@ public class FormulaireBesoinsController {
         System.out.println(personnelfinal);
         notification.setPersonnel(personnelfinall);
         Integer idfct=personnel.get().getFonction().getId_fonction();
+        notification.setIs_seen("false");
         if(idfct==2) formulaireBesoins.setValidation("Premiere validation");
         else if (idfct==3) {formulaireBesoins.setValidation("en cours");
 

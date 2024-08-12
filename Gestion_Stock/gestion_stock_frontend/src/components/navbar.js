@@ -10,8 +10,8 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [iconColor, setIconColor] = useState('#000');
-  const [showPopup, setShowPopup] = useState(false); // État pour afficher le popup
-  const [selectedNotification, setSelectedNotification] = useState(null); // Notification sélectionnée
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
   const fetchNotifications = useCallback(async () => {
     if (!id_personnel) {
@@ -23,7 +23,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
       const allNotifications = response.data;
 
       const userNotifications = allNotifications.filter(notification => 
-        notification.personnel && notification.personnel.id_personnel === id_personnel
+        notification.personnel && notification.personnel.id_personnel === id_personnel && notification.is_seen === "false"
       );
 
       setNotifications(userNotifications);
@@ -37,11 +37,33 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
     fetchNotifications();
   }, [fetchNotifications]);
 
-  const handleNotificationClick = (notification) => {
-    setSelectedNotification(notification);
-    setShowPopup(true); // Afficher le popup
-    setShowNotifications(false); // Fermer le menu déroulant
+  
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      // Update the 'is_seen' field for the clicked notification
+      await axios.put(`http://localhost:9091/api/notification/${notification.id_notification}`, {
+        ...notification,
+        is_seen: "true",
+      });
+      // Update the local state to reflect the change
+      setNotifications(notifications.map(notif => 
+        notif.id_notification === notification.id_notification 
+          ? { ...notif, is_seen: "true" } 
+          : notif
+      ));
+      
+      setSelectedNotification(notification);
+      setShowPopup(true); // Afficher le popup
+      setShowNotifications(false); // Fermer le menu déroulant
+
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la notification :', error);
+    }
   };
+
+  
+  
 
   return (
     <div>
@@ -135,7 +157,6 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
                           ? 'Vous avez une nouvelle demande de besoin à consulter ' 
                           : 'Vous avez une réponse'}
                       </div>
-                  
                     </Dropdown.Item>
                   ))
                 )}
@@ -149,7 +170,6 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
         </Nav>
       </Navbar>
 
-      {/* Afficher le popup si showPopup est true */}
       {showPopup && (
         <DivisionPopup 
           showModal={showPopup} 

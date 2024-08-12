@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notification")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -44,6 +46,7 @@ public class NotificationController {
             }
 
             Notification createdNotification = notificationService.save(notification);
+            System.out.println(createdNotification);
             return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();  // Imprime la pile d'erreurs pour faciliter le débogage

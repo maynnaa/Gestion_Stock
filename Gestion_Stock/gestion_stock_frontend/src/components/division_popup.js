@@ -69,7 +69,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     if (fonctionId === 1 || fonctionId === 2) {
       try {
         const notificationData = {
-          is_seen: 0,
+          is_seen:"false",
           type: 'reponse',
           formulaireBesoins: {
             id_formulaire: idFormulaire
@@ -85,6 +85,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
           validation: 'refusée'
         });
+       
 
         console.log('Demande rejetée et notification créée');
       } catch (error) {
@@ -95,6 +96,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     }
 
     handleCloseModal();
+
   };
 
   const handleApprove = async () => {
@@ -110,7 +112,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     try {
       if (fonctionId === 1) {
         const notificationData1 = {
-          is_seen: 0,
+          is_seen: "false",
           type: 'reponse',
           formulaireBesoins: {
             id_formulaire: idFormulaire
@@ -128,7 +130,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         });
   
         const notificationData2 = {
-          is_seen: 0,
+          is_seen: "false",
           type: 'Demande de besoins',
           formulaireBesoins: {
             id_formulaire: idFormulaire
@@ -144,7 +146,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         console.log('Approbation du directeur enregistrée et notifications créées');
       } else if (fonctionId === 2) {
         const notificationData = {
-          is_seen: 0,
+          is_seen: "false",
           type: 'Demande de besoins',
           formulaireBesoins: {
             id_formulaire: idFormulaire
@@ -170,6 +172,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     }
   
     handleCloseModal();
+
   };
   
   if (loading) {
