@@ -108,28 +108,67 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     }
   
     try {
-      // Créer l'objet Notification avec les objets FormulaireBesoins et Personnel
-      const notificationData = {
-        is_seen: 0,
-        type: 'Demande de besoins',
-        formulaireBesoins: {
-          id_formulaire: idFormulaire
-        },
-        personnel: {
-          id_personnel: 15
-        }
-      };
-      console.log('Données envoyées pour la notification:', notificationData);
+      if (fonctionId === 1) {
+        // Première notification pour la personne qui a créé le formulaire
+        const notificationData1 = {
+          is_seen: 0,
+          type: 'reponse',
+          formulaireBesoins: {
+            id_formulaire: idFormulaire
+          },
+          personnel: {
+            id_personnel: idPersonnel
+          }
+        };
+        console.log('Données envoyées pour la première notification:', notificationData1);
   
-      // Créer une notification dans la table `notification`
-      await axios.post('/api/notification', notificationData);
+        await axios.post('/api/notification', notificationData1);
   
-      // Mettre à jour le champ `validation` dans la table `formulaire_besoins` à "Premiere validation"
-      await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
-        validation: 'Premiere validation'
-      });
+        // Mise à jour de la validation à "Approbation du directeur"
+        await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
+          validation: 'Approbation du directeur'
+        });
   
-      console.log('Demande approuvée et notification créée');
+        // Deuxième notification pour id_personnel 14
+        const notificationData2 = {
+          is_seen: 0,
+          type: 'Demande de besoins',
+          formulaireBesoins: {
+            id_formulaire: idFormulaire
+          },
+          personnel: {
+            id_personnel: 14
+          }
+        };
+        console.log('Données envoyées pour la deuxième notification:', notificationData2);
+  
+        await axios.post('/api/notification', notificationData2);
+  
+        console.log('Approbation du directeur enregistrée et notifications créées');
+      } else if (fonctionId === 2) {
+        // Logique d'approbation standard pour fonctionId = 2
+        const notificationData = {
+          is_seen: 0,
+          type: 'Demande de besoins',
+          formulaireBesoins: {
+            id_formulaire: idFormulaire
+          },
+          personnel: {
+            id_personnel: 15
+          }
+        };
+        console.log('Données envoyées pour la notification:', notificationData);
+  
+        await axios.post('/api/notification', notificationData);
+  
+        await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
+          validation: 'Premiere validation'
+        });
+  
+        console.log('Demande approuvée et notification créée');
+      } else {
+        console.log('Action non autorisée pour cette fonction');
+      }
     } catch (error) {
       console.error('Erreur lors de l\'approbation de la demande:', error);
     }
@@ -137,7 +176,6 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     handleCloseModal(); // Fermer le modal après l'action
   };
   
-
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
@@ -168,7 +206,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         </Table>
       </Modal.Body>
       <Modal.Footer>
-        {notification.type !== 'reponse' && (
+        {fonctionId !== 4 && notification.type !== 'reponse' && (
           <>
             <Button variant="danger" onClick={handleReject}>
               Rejeter

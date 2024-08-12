@@ -4,7 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
 import Search from '../../components/search'; 
 import Button from '../../components/button'; 
-import DefaultExample from '../../components/historique';
+import Recues from '../../components/recues';
 import { Nav } from 'react-bootstrap';
 
 const HistoriqueBesoins = () => {
@@ -130,7 +130,7 @@ const HistoriqueBesoins = () => {
         <div style={styles.contentContainer}>
           <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <DefaultExample searchTerm={searchTerm} /> 
+            <Recues searchTerm={searchTerm} id={id_personnel}/>
           </div>
         </div>
       </div>
