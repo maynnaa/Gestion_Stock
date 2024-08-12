@@ -42,7 +42,15 @@ public class PersonnelService {
         return personnelRepository.findByEntiteId(id_entite);
     }
 
+
+    public Integer getFonctionIdByPersonnelId(int idPersonnel) {
+        return personnelRepository.findFonctionIdByPersonnelId(idPersonnel);
+    }
+
     public Optional<Personnel> findByEmail(String email) {
         return personnelRepository.findByEmail(email);
     }
 }
+
+
+

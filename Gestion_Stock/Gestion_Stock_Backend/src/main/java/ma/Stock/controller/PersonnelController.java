@@ -28,6 +28,11 @@ public class PersonnelController {
         List<Personnel> personnels = personnelService.findAll();
         return new ResponseEntity<>(personnels, HttpStatus.OK);
     }
+    @GetMapping("/{idPersonnel}/fonction")
+    public ResponseEntity<Integer> getFonctionIdByPersonnelId(@PathVariable int idPersonnel) {
+        Integer idFonction = personnelService.getFonctionIdByPersonnelId(idPersonnel);
+        return ResponseEntity.ok(idFonction);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Personnel> getPersonnelById(@PathVariable("id") int id) {

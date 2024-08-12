@@ -5,9 +5,9 @@ import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-function DivisionPopup({ showModal, handleCloseModal, notification ,id}) {
+function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
+
   useEffect(() => {
     if (notification && notification.formulaireBesoins) {
       const fetchSelectedArticles = async () => {
@@ -25,6 +25,21 @@ function DivisionPopup({ showModal, handleCloseModal, notification ,id}) {
     }
   }, [notification]);
 
+  useEffect(() => {
+    const fetchFonctionId = async () => {
+      try {
+        const response = await axios.get(`/api/personnel/${id}/fonction`);
+        console.log('ID Fonction:', response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'ID Fonction:', error);
+      }
+    };
+
+    if (id) {
+      fetchFonctionId();
+    }
+  }, [id]);
+
   if (!notification || !notification.formulaireBesoins) {
     return null;
   }
@@ -40,6 +55,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification ,id}) {
     console.log('Demande approuvée');
     handleCloseModal(); // Fermer le modal après l'action
   };
+
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
@@ -80,4 +96,5 @@ function DivisionPopup({ showModal, handleCloseModal, notification ,id}) {
     </Modal>
   );
 }
-export default DivisionPopup ;
+
+export default DivisionPopup;

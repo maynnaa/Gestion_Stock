@@ -9,9 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-
     Optional<Notification> findById(Integer id);
-
     void deleteById(Integer id);
     Notification save(Notification notification);
     List<Notification> findAll();

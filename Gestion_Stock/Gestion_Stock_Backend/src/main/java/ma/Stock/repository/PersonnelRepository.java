@@ -27,6 +27,9 @@ public interface PersonnelRepository extends JpaRepository<Personnel, Integer> {
     @Query("SELECT p FROM Personnel p WHERE p.entite.id_entite = :idEntite")
     Optional<Personnel> findByEntiteId(@Param("idEntite") Integer idEntite);
 
+    @Query("SELECT p.fonction.id_fonction FROM Personnel p WHERE p.id_personnel = :idPersonnel")
+    Integer findFonctionIdByPersonnelId(@Param("idPersonnel") int idPersonnel);
+
 
 
 }

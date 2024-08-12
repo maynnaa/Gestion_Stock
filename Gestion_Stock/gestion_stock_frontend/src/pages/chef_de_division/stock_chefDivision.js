@@ -98,13 +98,7 @@ const StockDivision = () => {
       <div style={styles.content}>
         <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick} />
         <div style={styles.contentContainer}>
-          <Nav.Link
-            href="#"
-            onClick={() => navigate(`/accueilDivision/${id_personnel}`)}
-            style={styles.accueilLink}
-          >
-            Accueil
-          </Nav.Link>
+          
           <ScrollableTable /> 
         </div>
       </div>
