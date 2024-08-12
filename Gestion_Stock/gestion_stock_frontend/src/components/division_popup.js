@@ -9,6 +9,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
   const [fonctionId, setFonctionId] = useState(null);
   const [idPersonnel, setIdPersonnel] = useState(null);
+  const [loading, setLoading] = useState(true); // Ajout d'un état pour le chargement
 
   useEffect(() => {
     if (notification && notification.formulaireBesoins) {
@@ -35,6 +36,8 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         setFonctionId(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'ID Fonction:', error);
+      } finally {
+        setLoading(false); // Marquer le chargement comme terminé
       }
     };
 
@@ -65,7 +68,6 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
 
     if (fonctionId === 1 || fonctionId === 2) {
       try {
-        // Créer l'objet Notification avec les objets FormulaireBesoins et Personnel
         const notificationData = {
           is_seen: 0,
           type: 'reponse',
@@ -78,10 +80,8 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         };
         console.log('Données envoyées pour la notification:', notificationData);
 
-        // Créer une notification dans la table `notification`
         await axios.post('/api/notification', notificationData);
 
-        // Mettre à jour le champ `validation` dans la table `formulaire_besoins` à "refusée"
         await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
           validation: 'refusée'
         });
@@ -94,7 +94,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
       console.log('Action non autorisée pour cette fonction');
     }
 
-    handleCloseModal(); // Fermer le modal après l'action
+    handleCloseModal();
   };
 
   const handleApprove = async () => {
@@ -109,7 +109,6 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   
     try {
       if (fonctionId === 1) {
-        // Première notification pour la personne qui a créé le formulaire
         const notificationData1 = {
           is_seen: 0,
           type: 'reponse',
@@ -124,12 +123,10 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   
         await axios.post('/api/notification', notificationData1);
   
-        // Mise à jour de la validation à "Approbation du directeur"
         await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
           validation: 'Approbation du directeur'
         });
   
-        // Deuxième notification pour id_personnel 14
         const notificationData2 = {
           is_seen: 0,
           type: 'Demande de besoins',
@@ -146,7 +143,6 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
   
         console.log('Approbation du directeur enregistrée et notifications créées');
       } else if (fonctionId === 2) {
-        // Logique d'approbation standard pour fonctionId = 2
         const notificationData = {
           is_seen: 0,
           type: 'Demande de besoins',
@@ -173,9 +169,13 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
       console.error('Erreur lors de l\'approbation de la demande:', error);
     }
   
-    handleCloseModal(); // Fermer le modal après l'action
+    handleCloseModal();
   };
   
+  if (loading) {
+    return null; // N'affiche rien tant que les données ne sont pas chargées
+  }
+
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header closeButton>
