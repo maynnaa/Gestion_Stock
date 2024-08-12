@@ -21,8 +21,8 @@ public class FormulaireBesoins {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_formulaire;
 
-    @Column(name = "date_creation")
 
+    @Column(name = "date_creation",updatable = false)
     private LocalDate date_creation ;
 
     @Column(name = "validation")

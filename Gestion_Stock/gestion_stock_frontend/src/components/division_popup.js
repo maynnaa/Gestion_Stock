@@ -97,11 +97,46 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     handleCloseModal(); // Fermer le modal après l'action
   };
 
-  const handleApprove = () => {
-    // Logique pour approuver la demande
-    console.log('Demande approuvée');
+  const handleApprove = async () => {
+    const idFormulaire = notification?.formulaireBesoins?.id_formulaire;
+  
+    console.log('ID Formulaire:', idFormulaire);
+  
+    if (!idFormulaire) {
+      console.error('ID Formulaire manquant');
+      return;
+    }
+  
+    try {
+      // Créer l'objet Notification avec les objets FormulaireBesoins et Personnel
+      const notificationData = {
+        is_seen: 0,
+        type: 'Demande de besoins',
+        formulaireBesoins: {
+          id_formulaire: idFormulaire
+        },
+        personnel: {
+          id_personnel: 15
+        }
+      };
+      console.log('Données envoyées pour la notification:', notificationData);
+  
+      // Créer une notification dans la table `notification`
+      await axios.post('/api/notification', notificationData);
+  
+      // Mettre à jour le champ `validation` dans la table `formulaire_besoins` à "Premiere validation"
+      await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
+        validation: 'Premiere validation'
+      });
+  
+      console.log('Demande approuvée et notification créée');
+    } catch (error) {
+      console.error('Erreur lors de l\'approbation de la demande:', error);
+    }
+  
     handleCloseModal(); // Fermer le modal après l'action
   };
+  
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
