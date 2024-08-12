@@ -47,6 +47,11 @@ public class ArticleAffecteController {
         articleAffecte.setPersonnel(personnel);
 
         ArticleAffecte savedArticleAffecte = articleAffecteRepository.save(articleAffecte);
+
+        produitStocke.setDisponibilite("indisponible");
+        produitStockeRepository.save(produitStocke); // Save the updated product
+
         return ResponseEntity.ok(savedArticleAffecte);
     }
+
 }

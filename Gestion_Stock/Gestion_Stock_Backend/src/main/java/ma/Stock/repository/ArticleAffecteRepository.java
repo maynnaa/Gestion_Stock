@@ -3,6 +3,7 @@ package ma.Stock.repository;
 import ma.Stock.entities.ArticleAffecte;
 import ma.Stock.entities.Entite;
 import ma.Stock.entities.Personnel;
+import ma.Stock.entities.Produit_Stocke;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ public interface ArticleAffecteRepository extends JpaRepository<ArticleAffecte,I
     ArticleAffecte save(ArticleAffecte article);
     List<ArticleAffecte> findAll();
     void deleteById(Integer id);
+
 
 
 }
