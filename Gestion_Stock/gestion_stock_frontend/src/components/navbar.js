@@ -12,6 +12,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const [iconColor, setIconColor] = useState('#000');
   const [showPopup, setShowPopup] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
+  const [refresh, setRefresh] = useState(false); // Nouvel état pour le rafraîchissement
 
   const fetchNotifications = useCallback(async () => {
     if (!id_personnel) {
@@ -35,9 +36,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [fetchNotifications]);
-
-  
+  }, [fetchNotifications, refresh]); // Déclenchement du fetch lors du changement de refresh
 
   const handleNotificationClick = async (notification) => {
     try {
@@ -62,8 +61,30 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
     }
   };
 
-  
-  
+  const handleCloseModal = () => {
+    setShowPopup(false);
+    // Déclencher le rafraîchissement uniquement pour les notifications de type "reponse"
+    if (selectedNotification && selectedNotification.type === 'reponse') {
+      setRefresh(prev => !prev);
+    }
+  };
+
+  const handleActionClick = async (action) => {
+    try {
+      // Logique pour gérer l'approbation ou le rejet ici, par exemple :
+      await axios.put(`http://localhost:9091/api/notification/${selectedNotification.id_notification}`, {
+        ...selectedNotification,
+        status: action,
+      });
+
+      // Rafraîchir les notifications après l'action
+      setRefresh(prev => !prev);
+      setShowPopup(false);
+
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la notification :', error);
+    }
+  };
 
   return (
     <div>
@@ -173,9 +194,11 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
       {showPopup && (
         <DivisionPopup 
           showModal={showPopup} 
-          handleCloseModal={() => setShowPopup(false)} 
+          handleCloseModal={handleCloseModal} 
           notification={selectedNotification} 
           id={id_personnel}
+          onApprove={() => handleActionClick('approve')} // Appel du rafraîchissement après l'approbation
+          onReject={() => handleActionClick('reject')} // Appel du rafraîchissement après le rejet
         />
       )}
     </div>

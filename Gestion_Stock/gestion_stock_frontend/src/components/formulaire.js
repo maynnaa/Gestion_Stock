@@ -16,44 +16,52 @@ const FormulaireDivisionn = () => {
   const [materials, setMaterials] = useState([]);
   const [tableRows, setTableRows] = useState([]);
   const [beneficiaries, setBeneficiaries] = useState([]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   useEffect(() => {
     const fetchPersonnelData = async () => {
       try {
         const response = await fetch(`/api/personnel/${id_personnel}`);
-        if (!response.ok) throw new Error('Failed to fetch personnel data');
+        if (!response.ok) throw new Error('Échec du chargement des données du personnel');
         const data = await response.json();
         setPpr(data.ppr);
         setSelectedService(data.entite.libelle);
 
         const divisionResponse = await fetch(`/api/entite/${data.entite.entite_parent_id}`);
-        if (!divisionResponse.ok) throw new Error('Failed to fetch division data');
+        if (!divisionResponse.ok) throw new Error('Échec du chargement des données de la division');
         const divisionData = await divisionResponse.json();
         setSelectedDivision(divisionData.libelle);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Erreur lors du chargement des données:', error);
+        setAlertMessage('Erreur lors du chargement des données');
+        setAlertType('danger');
       }
     };
 
     const fetchMaterialTypes = async () => {
       try {
         const response = await fetch('/api/type-materiel');
-        if (!response.ok) throw new Error('Failed to fetch material types');
+        if (!response.ok) throw new Error('Échec du chargement des types de matériel');
         const data = await response.json();
         setMaterialTypes(data);
       } catch (error) {
-        console.error('Error fetching material types:', error);
+        console.error('Erreur lors du chargement des types de matériel:', error);
+        setAlertMessage('Erreur lors du chargement des types de matériel');
+        setAlertType('danger');
       }
     };
 
     const fetchBeneficiaries = async () => {
       try {
         const response = await fetch('/api/personnel');
-        if (!response.ok) throw new Error('Failed to fetch beneficiaries');
+        if (!response.ok) throw new Error('Échec du chargement des bénéficiaires');
         const data = await response.json();
         setBeneficiaries(data);
       } catch (error) {
-        console.error('Error fetching beneficiaries:', error);
+        console.error('Erreur lors du chargement des bénéficiaires:', error);
+        setAlertMessage('Erreur lors du chargement des bénéficiaires');
+        setAlertType('danger');
       }
     };
 
@@ -68,20 +76,32 @@ const FormulaireDivisionn = () => {
 
       try {
         const response = await fetch(`/api/materiel?type=${selectedMaterialType}`);
-        if (!response.ok) throw new Error('Failed to fetch materials');
+        if (!response.ok) throw new Error('Échec du chargement des matériels');
         const data = await response.json();
         setMaterials(data);
       } catch (error) {
-        console.error('Error fetching materials:', error);
+        console.error('Erreur lors du chargement des matériels:', error);
+        setAlertMessage('Erreur lors du chargement des matériels');
+        setAlertType('danger');
       }
     };
 
     fetchMaterials();
   }, [selectedMaterialType]);
 
-  const addRow = () => {
-      setTableRows([...tableRows, { material: '', quantity: 1, id_personnel: '' }]);
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage('');
+        setAlertType('');
+      }, 3000); // 3 seconds
 
+      return () => clearTimeout(timer); // Cleanup the timer if the component unmounts or message changes
+    }
+  }, [alertMessage]);
+
+  const addRow = () => {
+    setTableRows([...tableRows, { material: '', quantity: 1, id_personnel: '' }]);
   };
 
   const removeRow = (index) => {
@@ -96,8 +116,6 @@ const FormulaireDivisionn = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-   
 
     // Préparer les données à envoyer
     const formData = {
@@ -106,11 +124,9 @@ const FormulaireDivisionn = () => {
       selectedService,
       personnel: { id_personnel },
       date_creation: new Date().toISOString().split('T')[0],
-      validation: 'en cours'
+      validation: 'en cours',
     };
-  
-    console.log('Form Data:', formData); // Log form data
-  
+
     try {
       // Soumettre FormulaireBesoins
       const response = await fetch('/api/formulaireBesoins', {
@@ -120,24 +136,22 @@ const FormulaireDivisionn = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error('Échec de la soumission du formulaire');
       }
-  
+
       const formBesoinsData = await response.json();
-      console.log('FormulaireBesoins Response:', formBesoinsData); // Log response data
       const formulaireBesoins = formBesoinsData.id_formulaire; // Correctly retrieve formulaire ID
-  
+
       // Soumettre chaque FormulaireMateriel
-      const materialRequests = tableRows.map(row => {
+      const materialRequests = tableRows.map((row) => {
         const materialData = {
           formulaireBesoins, // Correct formulaire ID
           materiel: row.material,
           id_personnel: row.beneficiary,
           quantite: row.quantity,
         };
-        console.log('Material Data:', materialData); // Log each material data
         return fetch('/api/formulaireMateriel', {
           method: 'POST',
           headers: {
@@ -146,33 +160,31 @@ const FormulaireDivisionn = () => {
           body: JSON.stringify(materialData),
         });
       });
-  
+
       await Promise.all(materialRequests);
-  
-      // Gérer la soumission réussie (par exemple, redirection ou affichage d'un message de succès)
-      alert('Form submitted successfully');
+
+      // Gérer la soumission réussie
+      setAlertMessage('Formulaire soumis avec succès');
+      setAlertType('success');
+
+      // Reset only the material type and table entries
+      setSelectedMaterialType('');
+      setMaterials([]);
+      setTableRows([]);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Failed to submit form');
+      console.error('Erreur lors de la soumission du formulaire:', error);
+      setAlertMessage('Échec de la soumission du formulaire');
+      setAlertType('danger');
     }
   };
-  
+
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <style>
-        {`
-          ::-webkit-scrollbar {
-            width: 8px;
-          }
-          ::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 4px;
-          }
-          ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-          }
-        `}
-      </style>
+    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+      {alertMessage && (
+        <div className={`alert alert-${alertType} mt-3`} role="alert" style={styles.alert}>
+          {alertMessage}
+        </div>
+      )}
       <div className="card shadow-sm" style={styles.card}>
         <div className="card-body">
           <h5 className="card-title mb-3" style={styles.cardTitle}>Formulaire De Besoin</h5>
@@ -239,7 +251,6 @@ const FormulaireDivisionn = () => {
                           className="form-control"
                           value={row.beneficiary}
                           onChange={(e) => handleRowChange(index, 'beneficiary', e.target.value)}
-                          s
                         >
                           <option value="">Choisissez un bénéficiaire</option>
                           {beneficiaries.map((beneficiary) => (
@@ -299,7 +310,7 @@ const styles = {
   card: {
     width: '100%',
     maxWidth: '700px',
-    minWidth:'600px',
+    minWidth: '600px',
     height: '70%',
     maxHeight: '',
     overflowY: 'auto',
@@ -322,6 +333,11 @@ const styles = {
   },
   cancelButton: {
     marginRight: '10px',
+  },
+  alert: {
+    width: '80%',
+    maxWidth: '800px',
+    marginBottom: '20px',
   },
 };
 
