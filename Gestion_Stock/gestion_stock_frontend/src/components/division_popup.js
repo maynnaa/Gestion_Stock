@@ -88,6 +88,7 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
        
 
         console.log('Demande rejetée et notification créée');
+        window.location.reload();
       } catch (error) {
         console.error('Erreur lors du rejet de la demande:', error);
       }
@@ -164,6 +165,8 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         });
   
         console.log('Demande approuvée et notification créée');
+        window.location.reload();
+
       } else {
         console.log('Action non autorisée pour cette fonction');
       }
