@@ -135,7 +135,7 @@ const TableauFournisseur = () => {
       <div className="table-responsive" style={styles.tableWrapper}>
         <table className="table table-bordered">
           <thead>
-            <tr>
+            <tr className='text-center'>
               <th>Nom du gérant</th>
               <th>CIN</th>
               <th>Num_IMM</th>
@@ -143,7 +143,7 @@ const TableauFournisseur = () => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='text-center'>
             {currentData.map((item) => (
               <tr key={item.fournisseur_id}>
                 <td>{item.nom}</td>
