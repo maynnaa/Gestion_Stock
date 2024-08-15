@@ -58,7 +58,7 @@ const ScrollableTable = () => {
             {data.map((item, index) => (
               <tr key={index}>
                 <td>{item.nom}</td>
-                <td>{item.quantite}</td>
+                <td>{item.quantite > 0 ? 'En stock' : 'En rupture de stock'}</td>
               </tr>
             ))}
           </tbody>
