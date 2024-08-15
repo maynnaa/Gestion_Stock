@@ -141,7 +141,8 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
           }
         };
         console.log('Données envoyées pour la deuxième notification:', notificationData2);
-  
+        window.location.reload();
+        
         await axios.post('/api/notification', notificationData2);
   
         console.log('Approbation du directeur enregistrée et notifications créées');

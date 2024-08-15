@@ -64,9 +64,11 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const handleCloseModal = () => {
     setShowPopup(false);
     // Déclencher le rafraîchissement uniquement pour les notifications de type "reponse"
-    if (selectedNotification && selectedNotification.type === 'reponse') {
-      setRefresh(prev => !prev);
-    }
+   
+        
+      window.location.reload();
+
+    
   };
 
   const handleActionClick = async (action) => {
