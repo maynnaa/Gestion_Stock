@@ -3,15 +3,16 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { FaArrowRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
-import { Table } from 'react-bootstrap';
+import { Table, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { format } from 'date-fns';
 
-function DemandeAchat({ searchTerm }) {
+function DemandeAchat() {
   const [demandes, setDemandes] = useState([]);
   const [articles, setArticles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // Nouveau state pour la recherche par date
 
   useEffect(() => {
     axios
@@ -43,9 +44,12 @@ function DemandeAchat({ searchTerm }) {
     setSelectedItemId(id);
   };
 
-  const filteredItems = demandes.filter((item) =>
-    item.date_demande.includes(searchTerm)
-  );
+  // Filtrage par date
+  const filteredItems = demandes.filter((item) => {
+    if (!searchTerm) return true;
+    const itemDate = new Date(item.date_demande).toISOString().split('T')[0];
+    return itemDate === searchTerm;
+  });
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -60,29 +64,40 @@ function DemandeAchat({ searchTerm }) {
 
   return (
     <>
-      <div className="scrollable-list">
-        <ListGroup>
-          {filteredItems.map((item) => (
-            <ListGroup.Item key={item.id_demande}>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>Demande d'achat N°{item.id_demande}</strong>
-                </div>
-                <div className="d-flex align-items-center">
+      <div className="d-flex flex-column align-items-center">
+        <FormControl
+          type="date"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Rechercher par date"
+          className="mb-3"
+          style={{ width: '50%', margin: '0 auto' }} 
+          title="Rechercher par date" 
+        />
+        <div className="scrollable-list" style={{ width: '300%', maxWidth: '750px' }}>
+          <ListGroup>
+            {filteredItems.map((item) => (
+              <ListGroup.Item key={item.id_demande}>
+                <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <strong>Date de création:</strong> {formatDate(item.date_demande)}
+                    <strong>Demande d'achat N°{item.id_demande}</strong>
                   </div>
-                  <button
-                    onClick={() => handleModalOpen(item.id_demande)}
-                    className="btn btn-link ml-3"
-                  >
-                    <FaArrowRight />
-                  </button>
+                  <div className="d-flex align-items-center">
+                    <div>
+                      <strong>Date de création:</strong> {formatDate(item.date_demande)}
+                    </div>
+                    <button
+                      onClick={() => handleModalOpen(item.id_demande)}
+                      className="btn btn-link ml-3"
+                    >
+                      <FaArrowRight />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </div>
       </div>
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>

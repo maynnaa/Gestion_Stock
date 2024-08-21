@@ -123,7 +123,6 @@ const HistoriqueDemandeAchat = () => {
           </Nav.Link>
         </NavBar>
         <div style={styles.contentContainer} >
-          <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
             <DemandeAchat searchTerm={searchTerm} /> 
           </div>

@@ -3,14 +3,12 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Recues from '../../components/recues';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import { Nav } from 'react-bootstrap'; 
 
 const DemandesRecuesDirecteur = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
   const { id_personnel } = useParams();
@@ -41,9 +39,7 @@ const DemandesRecuesDirecteur = () => {
     setHoveredButton(null);
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
+  
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
@@ -89,9 +85,8 @@ const DemandesRecuesDirecteur = () => {
           </Nav.Link>
         </NavBar>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <Recues searchTerm={searchTerm} id={id_personnel}/>
+            <Recues  id={id_personnel}/>
           </div>
         </div>
       </div>

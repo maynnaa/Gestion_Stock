@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import Recues from '../../components/recues';
 import { Nav } from 'react-bootstrap';
@@ -10,7 +9,6 @@ import { Nav } from 'react-bootstrap';
 const HistoriqueBesoins = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
   const { id_personnel } = useParams();
@@ -48,9 +46,7 @@ const HistoriqueBesoins = () => {
     setHoveredButton(null);
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
+ 
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
@@ -128,9 +124,8 @@ const HistoriqueBesoins = () => {
           </Nav.Link>
         </NavBar>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <Recues searchTerm={searchTerm} id={id_personnel}/>
+            <Recues  id={id_personnel}/>
           </div>
         </div>
       </div>

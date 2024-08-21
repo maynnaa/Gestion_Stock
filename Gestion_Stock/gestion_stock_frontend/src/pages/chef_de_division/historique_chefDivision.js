@@ -3,7 +3,6 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import DefaultExample from '../../components/historique'; // Assurez-vous que le chemin est correct
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 
 
@@ -105,9 +104,8 @@ const HistoriqueDivision = () => {
       <div style={styles.content}>
         <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}/>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <DefaultExample searchTerm={searchTerm} /> 
+            <DefaultExample  /> 
           </div>
         </div>
       </div>

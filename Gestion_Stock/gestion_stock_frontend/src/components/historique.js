@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { FaArrowRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table } from 'react-bootstrap';
+import { Table, FormControl } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { format } from 'date-fns';
@@ -14,6 +14,7 @@ function DefaultExample({ searchTerm = '' }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [searchDate, setSearchDate] = useState(searchTerm); // État pour la recherche par date
   const { id_personnel } = useParams();
 
   useEffect(() => {
@@ -59,9 +60,12 @@ function DefaultExample({ searchTerm = '' }) {
     }
   }, [selectedItem]);
 
-  const filteredItems = Array.isArray(formulaireBesoins)
-    ? formulaireBesoins.filter(item => item.date_creation && item.date_creation.includes(searchTerm))
-    : [];
+  // Filtrage par date
+  const filteredItems = formulaireBesoins.filter(item => {
+    if (!searchDate) return true;
+    const itemDate = new Date(item.date_creation).toISOString().split('T')[0];
+    return itemDate === searchDate;
+  });
 
   const handleShowModal = (item) => {
     setSelectedItem(item);
@@ -80,24 +84,35 @@ function DefaultExample({ searchTerm = '' }) {
 
   return (
     <div style={{ overflowY: 'auto' }}>
-      <ListGroup>
-        {filteredItems.map(item => (
-          <ListGroup.Item key={item.id_formulaire}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div><strong>Demande de besoin N°{item.id_formulaire}</strong></div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div><strong>Date de création:</strong> {formatDate(item.date_creation)}</div>
-                <Button 
-                  onClick={() => handleShowModal(item)} 
-                  style={{ background: 'none', border: 'none', padding: '0', marginLeft: '1rem' }} 
-                >
-                  <FaArrowRight style={{ color: 'blue' }} />
-                </Button>
+      <FormControl
+        type="date"
+        value={searchDate}
+        onChange={e => setSearchDate(e.target.value)}
+        placeholder="Rechercher par date"
+        className="mb-3"
+        style={{ width: '40%', margin: '0 auto' }} 
+        title="Rechercher par date" 
+      />
+      <div style={{ width: '100%', maxWidth: '750px', margin: '0 auto' }}>
+        <ListGroup>
+          {filteredItems.map(item => (
+            <ListGroup.Item key={item.id_formulaire}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div><strong>Demande de besoin N°{item.id_formulaire}</strong></div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div><strong>Date de création:</strong> {formatDate(item.date_creation)}</div>
+                  <Button 
+                    onClick={() => handleShowModal(item)} 
+                    style={{ background: 'none', border: 'none', padding: '0', marginLeft: '1rem' }} 
+                  >
+                    <FaArrowRight style={{ color: 'blue' }} />
+                  </Button>
+                </div>
               </div>
-            </div>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </div>
 
       {/* Modal for displaying item details */}
       <Modal show={showModal} onHide={handleCloseModal}>

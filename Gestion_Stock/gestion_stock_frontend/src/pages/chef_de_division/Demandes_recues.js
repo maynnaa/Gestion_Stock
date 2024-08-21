@@ -3,13 +3,11 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Recues from '../../components/recues'; // Correct import statement
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 
 const DemandesRecues = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
   const { id_personnel } = useParams();
@@ -46,9 +44,7 @@ const DemandesRecues = () => {
     setHoveredButton(null);
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
+ 
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
@@ -105,10 +101,9 @@ const DemandesRecues = () => {
       <div style={styles.content}>
         <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}/>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} />
          
           <div style={styles.tableWrapper}>
-            <Recues searchTerm={searchTerm} id={id_personnel}/>
+            <Recues  id={id_personnel}/>
           </div>
           
         </div>

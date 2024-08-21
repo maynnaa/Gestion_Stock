@@ -3,14 +3,13 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import DefaultExample from '../../components/historique';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
+
 import Button from '../../components/button'; 
 
 
 const HistoriquePage = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); 
   const location = useLocation();
   const { id_personnel } = useParams();
@@ -44,9 +43,7 @@ const HistoriquePage = () => {
     setHoveredButton(null);
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
+ 
 
   const handleNavigation = (path, button) => {
     setActiveButton(button);
@@ -94,9 +91,8 @@ const HistoriquePage = () => {
       <div style={styles.content}>
         <NavBar id_personnel={parseInt(id_personnel, 10)} onAccueilClick={handleAccueilClick}/>
         <div style={styles.contentContainer}>
-          <Search onSearch={handleSearch} /> 
           <div style={styles.tableWrapper}>
-            <DefaultExample searchTerm={searchTerm} /> 
+            <DefaultExample  /> 
           </div>
         </div>
       </div>

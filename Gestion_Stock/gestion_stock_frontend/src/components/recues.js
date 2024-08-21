@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { FaArrowRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table } from 'react-bootstrap';
+import { Table, FormControl } from 'react-bootstrap';
 
 function Recues({ id }) { 
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +14,7 @@ function Recues({ id }) {
   const [formulaireMaterielData, setFormulaireMaterielData] = useState([]);
   const [personnelData, setPersonnelData] = useState([]);
   const [materielData, setMaterielData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // Nouveau state pour la recherche
 
   useEffect(() => {
     // Fetch the notifications
@@ -82,11 +83,27 @@ function Recues({ id }) {
     return personnel ? personnel.nom_complet : '';
   };
 
+  // Filtrage par date
+  const filteredNotifications = notifications.filter(item => {
+    if (!searchTerm) return true;
+    return item.formulaireBesoins.date_creation.includes(searchTerm); // Comparer avec la date de création
+  });
+
   return (
     <>
       <div className="scrollable-list">
+        <FormControl
+          type="date"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Rechercher par date"
+          className="mb-3"
+          style={{ width: '40%', margin: '0 auto' }} 
+          title="Rechercher par date" 
+        />
+
         <ListGroup>
-          {notifications.map(item => (
+          {filteredNotifications.map(item => (
             <ListGroup.Item key={item.id_notification}>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
