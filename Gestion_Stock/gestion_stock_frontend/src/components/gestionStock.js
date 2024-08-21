@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEdit, FaTag } from 'react-icons/fa';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Search from './search';
+
 
 const StockMagasinier = () => {
   const [data, setData] = useState([]);
@@ -14,22 +17,18 @@ const StockMagasinier = () => {
   const [materielList, setMaterielList] = useState([]);
   const [fournisseurList, setFournisseurList] = useState([]);
   const [showPPRModal, setShowPPRModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const itemsPerPage = 9;
 
   useEffect(() => {
     axios.get('http://localhost:9091/api/produit')
     .then(response => {
-      // Filtrer les produits par disponibilité
       const produitsDisponibles = response.data.filter(produit => produit.disponibilite === 'disponible');
       setData(produitsDisponibles);
     })
     .catch(error => {
       console.error('Erreur lors de la récupération des données:', error);
     });
-  
-
+ 
     axios.get('http://localhost:9091/api/materiel')
       .then(response => {
         setMaterielList(response.data);
@@ -84,13 +83,11 @@ const StockMagasinier = () => {
         );
         handleModalClose();
 
-        setSuccessMessage('L\'article a été modifié avec succès.');
-        setTimeout(() => setSuccessMessage(''), 3000);
+        toast.success('L\'article a été modifié avec succès.');
       }
     } catch (error) {
       console.error('Erreur lors de la mise à jour des données:', error);
-      setErrorMessage('Erreur lors de la mise à jour des données.');
-      setTimeout(() => setErrorMessage(''), 3000);
+      toast.error('Erreur lors de la mise à jour des données.');
     }
   };
 
@@ -115,21 +112,19 @@ const StockMagasinier = () => {
         produitId: selectedItem.id_produit
       });
       
-        
       if (response.status === 200) {
         console.log('Article affecté avec succès:', response.data);
+
         handlePPRModalClose();
         window.location.reload(); 
 
-        setSuccessMessage('Article affecté avec succès.');
-        setTimeout(() => setSuccessMessage(''), 3000);
+        toast.success('Article affecté avec succès.');
       }
     } catch (error) {
       handlePPRModalClose(); 
 
       console.error('Erreur lors de l\'affectation de l\'article:', error.response?.data || error.message);
-      setErrorMessage('PPR introuvable.');
-      setTimeout(() => setErrorMessage(''), 3000);
+      toast.error('PPR introuvable.');
     }
   };
 
@@ -162,8 +157,7 @@ const StockMagasinier = () => {
 
   return (
     <div className="container mt-2">
-      {successMessage && <Alert variant="success"  style={styles.alert }>{successMessage}</Alert>}
-      {errorMessage && <Alert variant="danger" style={styles.alert}>{errorMessage}</Alert>}
+      <ToastContainer />
 
       <div style={styles.searchWrapper}>
         <Search onSearch={handleSearch} />
@@ -178,7 +172,6 @@ const StockMagasinier = () => {
               <th>Matériel</th>
               <th>Fournisseur</th>
               <th>Action</th>
-
             </tr>
           </thead>
           <tbody className="text-center">
@@ -189,7 +182,6 @@ const StockMagasinier = () => {
                 <td>{item.marque}</td>
                 <td>{item.materiel?.libelle || ''}</td>
                 <td>{item.fournisseur?.nom || ''}</td>
-
                 <td>
                   <button
                     className="btn btn-primary btn-sm"
@@ -268,7 +260,7 @@ const StockMagasinier = () => {
               </Form.Group>
               <Form.Group controlId="formMateriel">
                 <Form.Label>Matériel</Form.Label>
-                <Form.Control as="select" defaultValue={selectedItem.materiel?.libelle || ''} required>
+                <Form.Control as="select" defaultValue={selectedItem.materiel?.libelle || ''}>
                   {materielList.map((materiel) => (
                     <option key={materiel.id_materiel} value={materiel.libelle}>
                       {materiel.libelle}
@@ -278,7 +270,7 @@ const StockMagasinier = () => {
               </Form.Group>
               <Form.Group controlId="formFournisseur">
                 <Form.Label>Fournisseur</Form.Label>
-                <Form.Control as="select" defaultValue={selectedItem.fournisseur?.nom || ''} required>
+                <Form.Control as="select" defaultValue={selectedItem.fournisseur?.nom || ''}>
                   {fournisseurList.map((fournisseur) => (
                     <option key={fournisseur.id_fournisseur} value={fournisseur.nom}>
                       {fournisseur.nom}
@@ -286,22 +278,17 @@ const StockMagasinier = () => {
                   ))}
                 </Form.Control>
               </Form.Group>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleModalClose}>
-                  Annuler
-                </Button>
-                <Button variant="primary" type="submit">
-                  Enregistrer
-                </Button>
-              </Modal.Footer>
+              <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
+              Sauvegarder
+              </Button>
             </Form>
           )}
         </Modal.Body>
       </Modal>
 
-      <Modal show={showPPRModal} onHide={handlePPRModalClose} centered>
+      <Modal show={showPPRModal} onHide={handlePPRModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Affecter un article</Modal.Title>
+          <Modal.Title>Attribuer un PPR</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedItem && (
@@ -310,14 +297,9 @@ const StockMagasinier = () => {
                 <Form.Label>PPR</Form.Label>
                 <Form.Control type="text" required />
               </Form.Group>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handlePPRModalClose}>
-                  Annuler
-                </Button>
-                <Button variant="primary" type="submit">
-                  Enregistrer
-                </Button>
-              </Modal.Footer>
+              <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
+                Attribuer
+              </Button>
             </Form>
           )}
         </Modal.Body>
@@ -326,7 +308,8 @@ const StockMagasinier = () => {
   );
 };
 
-export default StockMagasinier;
+
+
 
 const styles = {
   searchWrapper: {
@@ -355,3 +338,5 @@ const styles = {
     
   },
 };
+export default StockMagasinier;
+

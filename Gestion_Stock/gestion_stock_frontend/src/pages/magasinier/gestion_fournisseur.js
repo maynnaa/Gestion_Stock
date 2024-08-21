@@ -200,7 +200,7 @@ const styles = {
     border: 'none',
     display: 'flex',
     alignItems: 'center',
-    marginLeft: '20px', 
+    marginTop: '20px',
   },
   icon: {
     marginRight: '5px',

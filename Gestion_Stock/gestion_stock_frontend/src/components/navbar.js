@@ -12,7 +12,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const [iconColor, setIconColor] = useState('#000');
   const [showPopup, setShowPopup] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
-  const [refresh, setRefresh] = useState(false); // Nouvel état pour le rafraîchissement
+  const [refresh, setRefresh] = useState(false);
 
   const fetchNotifications = useCallback(async () => {
     if (!id_personnel) {
@@ -36,16 +36,14 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [fetchNotifications, refresh]); // Déclenchement du fetch lors du changement de refresh
+  }, [fetchNotifications, refresh]);
 
   const handleNotificationClick = async (notification) => {
     try {
-      // Update the 'is_seen' field for the clicked notification
       await axios.put(`http://localhost:9091/api/notification/${notification.id_notification}`, {
         ...notification,
         is_seen: "true",
       });
-      // Update the local state to reflect the change
       setNotifications(notifications.map(notif => 
         notif.id_notification === notification.id_notification 
           ? { ...notif, is_seen: "true" } 
@@ -53,8 +51,8 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
       ));
       
       setSelectedNotification(notification);
-      setShowPopup(true); // Afficher le popup
-      setShowNotifications(false); // Fermer le menu déroulant
+      setShowPopup(true);
+      setShowNotifications(false);
 
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la notification :', error);
@@ -63,29 +61,29 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
 
   const handleCloseModal = () => {
     setShowPopup(false);
-    // Déclencher le rafraîchissement uniquement pour les notifications de type "reponse"
-   
-        
-      window.location.reload();
-
-    
+    window.location.reload();
   };
 
   const handleActionClick = async (action) => {
     try {
-      // Logique pour gérer l'approbation ou le rejet ici, par exemple :
       await axios.put(`http://localhost:9091/api/notification/${selectedNotification.id_notification}`, {
         ...selectedNotification,
         status: action,
       });
-
-      // Rafraîchir les notifications après l'action
       setRefresh(prev => !prev);
       setShowPopup(false);
-
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la notification :', error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('id_personnel');
+    navigate('/login', { replace: true });
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.history.go(1);
+    };
   };
 
   return (
@@ -186,7 +184,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <Nav.Link href="#" onClick={() => navigate('/login')}>
+            <Nav.Link href="#" onClick={handleLogout}>
               <FaSignOutAlt size={25} />
             </Nav.Link>
           </div>
@@ -199,8 +197,8 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
           handleCloseModal={handleCloseModal} 
           notification={selectedNotification} 
           id={id_personnel}
-          onApprove={() => handleActionClick('approve')} // Appel du rafraîchissement après l'approbation
-          onReject={() => handleActionClick('reject')} // Appel du rafraîchissement après le rejet
+          onApprove={() => handleActionClick('approve')} 
+          onReject={() => handleActionClick('reject')} 
         />
       )}
     </div>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer from react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
-const FormulaireDemandeAchat = ({id}) => {
+const FormulaireDemandeAchat = ({ id }) => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [fournisseurMapping, setFournisseurMapping] = useState({});
   const [selectedFournisseurId, setSelectedFournisseurId] = useState('');
@@ -14,10 +16,7 @@ const FormulaireDemandeAchat = ({id}) => {
   useEffect(() => {
     axios.get('http://localhost:9091/api/fournisseur')
       .then(response => {
-        console.log('Fournisseurs fetched:', response.data);
         setFournisseurs(response.data);
-
-        // Create fournisseur mapping
         const mapping = response.data.reduce((acc, fournisseur) => {
           acc[fournisseur.nom] = fournisseur.fournisseur_id;
           return acc;
@@ -28,7 +27,6 @@ const FormulaireDemandeAchat = ({id}) => {
 
     axios.get('http://localhost:9091/api/type-materiel')
       .then(response => {
-        console.log('Material types fetched:', response.data);
         setMaterialTypes(response.data);
       })
       .catch(error => console.error('Error fetching material types:', error));
@@ -38,7 +36,6 @@ const FormulaireDemandeAchat = ({id}) => {
     if (selectedMaterialType) {
       axios.get(`http://localhost:9091/api/materiel?typeMaterielId=${selectedMaterialType}`)
         .then(response => {
-          console.log('Materials fetched:', response.data);
           setMaterials(response.data);
         })
         .catch(error => console.error('Error fetching materials:', error));
@@ -64,67 +61,46 @@ const FormulaireDemandeAchat = ({id}) => {
     handleRowChange(index, 'quantity', newQuantity);
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       if (!selectedFournisseurId) {
-        alert('Veuillez sélectionner un fournisseur.');
+        toast.error('Veuillez sélectionner un fournisseur.'); // Show error toast
         return;
       }
-  
+
       const demandeResponse = await axios.post('http://localhost:9091/api/demandeAchat', {
         date_demande: new Date().toISOString(),
-        personnel:{id_personnel:id},
+        personnel: { id_personnel: id },
       });
-  
+
       const idDemande = demandeResponse.data.id_demande;
-      console.log('Demande created with ID:', idDemande);
-  
-     
+
       for (let row of tableRows) {
         if (!row.material) {
-          console.warn('Skipping row with missing material:', row);
           continue;
         }
-  
-        console.log('Submitting article with:', {
-          quantite: row.quantity,
-          demandeAchat: { id_demande: idDemande },
-          materiel: { id_materiel: row.material },
-          fournisseur_id: selectedFournisseurId 
-        });
 
-  
         await axios.post('http://localhost:9091/api/article', {
           quantite: row.quantity,
           demandeAchat: { id_demande: idDemande },
           materiel: { id_materiel: row.material },
-          fournisseur: {fournisseur_id: selectedFournisseurId}
-        })
-        .then(response => {
-          console.log('Article submitted successfully:', response.data);
-        })
-        .catch(error => {
-          console.error('Error submitting article:', error);
+          fournisseur: { fournisseur_id: selectedFournisseurId }
         });
-        
       }
-  
-      alert('Demande d\'achat enregistrée avec succès');
+
+      toast.success('Demande d\'achat enregistrée avec succès'); // Show success toast
       resetForm();
     } catch (error) {
       console.error('Error submitting demande d\'achat:', error);
-      alert('Une erreur s\'est produite lors de l\'enregistrement de la demande');
+      toast.error('Une erreur s\'est produite lors de l\'enregistrement de la demande'); // Show error toast
     }
   };
-  
-  
+
   const handleFournisseurChange = (e) => {
     const fournisseurName = e.target.value;
     const fournisseurId = fournisseurMapping[fournisseurName];
-    console.log('Selected fournisseur:', fournisseurName, 'ID:', fournisseurId); // Debugging
     setSelectedFournisseurId(fournisseurId || '');
   };
 
@@ -136,7 +112,8 @@ const FormulaireDemandeAchat = ({id}) => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="d-flex justify-content-center align-items-center vh-100 flex-column">
+      <ToastContainer /> {/* Add ToastContainer here */}
       <div className="card shadow-sm" style={styles.card}>
         <div className="card-body">
           <h5 className="card-title mb-3" style={styles.cardTitle}>Demande d'achat</h5>

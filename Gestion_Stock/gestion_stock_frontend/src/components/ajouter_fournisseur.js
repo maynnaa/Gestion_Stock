@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast } from 'react-toastify'; // Import toast from react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
-// Set the root element for accessibility
 Modal.setAppElement('#root');
 
 const SupplierFormModal = ({ isOpen, onClose }) => {
@@ -14,15 +15,12 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
 
   const validateInputs = () => {
-    // Validation du CIN
     if (cin.length !== 8 || !/^[a-zA-Z]{2}\d{6}$/.test(cin)) {
       return 'Le CIN doit comporter 2 lettres suivies de 6 chiffres.';
     }
-    // Validation du Numéro d'immatriculation
     if (numIMM.length !== 8 || !/^\d{8}$/.test(numIMM)) {
       return 'Le numéro d\'immatriculation doit comporter 8 chiffres.';
     }
-    // Validation du Numéro de Registre de Commerce
     if (numRC.length < 5 || numRC.length > 7 || !/^\d{5,7}$/.test(numRC)) {
       return 'Le numéro de Registre de Commerce doit comporter entre 5 et 7 chiffres.';
     }
@@ -32,13 +30,12 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset error state before each submission
     setError('');
 
-    // Validate inputs
     const validationError = validateInputs();
     if (validationError) {
       setError(validationError);
+      toast.error(validationError); // Show error toast
       return;
     }
 
@@ -50,24 +47,27 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
     };
 
     try {
-      await axios.post('http://localhost:9091/api/fournisseur', newFournisseur, {
+      const response = await axios.post('http://localhost:9091/api/fournisseur', newFournisseur, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      alert('Fournisseur ajouté avec succès !');
-      // Réinitialiser le formulaire
-      setNomGerant('');
-      setCin('');
-      setNumIMM('');
-      setNumRC('');
-      onClose(); // Fermer la modal après la soumission
+      
+      toast.success('Fournisseur ajouté avec succès !'); // Show success toast
+      
+      // Afficher le message de succès pendant 1 seconde avant de recharger
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // 1000 millisecondes = 1 seconde
     } catch (err) {
-      // Gestion des erreurs API
       if (err.response && err.response.status === 409) {
-        setError('Le fournisseur existe déjà avec ce CIN, ce numéro de RC, ou ce numéro d\'immatriculation.');
+        const message = 'Le fournisseur existe déjà avec ce CIN, ce numéro de RC, ou ce numéro d\'immatriculation.';
+        setError(message);
+        toast.error(message); // Show error toast
       } else {
-        setError('Erreur lors de l\'ajout du fournisseur.');
+        const message = 'Erreur lors de l\'ajout du fournisseur.';
+        setError(message);
+        toast.error(message); // Show error toast
       }
       console.error(err);
     }
@@ -127,7 +127,6 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
               required
             />
           </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
           <div className="d-flex justify-content-between">
             <button type="submit" className="btn btn-primary">Enregistrer</button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>
@@ -138,7 +137,6 @@ const SupplierFormModal = ({ isOpen, onClose }) => {
   );
 };
 
-// Custom styles for the modal
 const customStyles = {
   content: {
     top: '40%',
@@ -147,8 +145,8 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '500px', 
-    height: '490px', 
+    width: '500px',
+    height: '490px',
     padding: '20px',
     borderRadius: '8px',
   },

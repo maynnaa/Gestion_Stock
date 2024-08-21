@@ -4,6 +4,9 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import Search from './search'; // Assurez-vous que ce composant de recherche existe et est correctement implémenté
+import { ToastContainer, toast } from 'react-toastify';  // Importation des composants de Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Importation des styles de Toastify
+import ConfirmationModal from './confirmationModal';
 
 const TableauFournisseur = () => {
   const [data, setData] = useState([]);
@@ -11,6 +14,8 @@ const TableauFournisseur = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const itemsPerPage = 9;
 
   useEffect(() => {
@@ -33,20 +38,27 @@ const TableauFournisseur = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce fournisseur?`)) {
+  const handleDelete = (item) => {
+    setItemToDelete(item);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (itemToDelete) {
       try {
-        const response = await axios.delete(`http://localhost:9091/api/fournisseur/${id}`);
+        const response = await axios.delete(`http://localhost:9091/api/fournisseur/${itemToDelete.fournisseur_id}`);
         if (response.status === 204) {
-          setData(data.filter(item => item.fournisseur_id !== id));
-          alert('Fournisseur supprimé avec succès.');
+          setData(data.filter(item => item.fournisseur_id !== itemToDelete.fournisseur_id));
+          toast.success('Fournisseur supprimé avec succès.'); // Message de succès
         } else {
-          alert('Erreur lors de la suppression du fournisseur.');
+          toast.error('Erreur lors de la suppression du fournisseur.'); // Message d'erreur
         }
       } catch (error) {
         console.error('Erreur lors de la suppression du fournisseur:', error);
-        alert('Erreur lors de la suppression du fournisseur.');
+        toast.error('Erreur lors de la suppression du fournisseur.'); // Message d'erreur
       }
+      setShowConfirmModal(false);
+      setItemToDelete(null);
     }
   };
 
@@ -82,15 +94,16 @@ const TableauFournisseur = () => {
         setData(data.map(item =>
           item.fournisseur_id === selectedItem.fournisseur_id ? { ...item, ...updatedSupplier } : item
         ));
-        alert('Fournisseur mis à jour avec succès !');
+        toast.success('Fournisseur mis à jour avec succès !'); // Message de succès
       } else {
-        alert('Erreur lors de la mise à jour du fournisseur.');
+        toast.error('Erreur lors de la mise à jour du fournisseur.'); // Message d'erreur
       }
 
       handleModalClose();
+
     } catch (err) {
       console.error('Erreur lors de la mise à jour du fournisseur:', err);
-      alert('Erreur lors de la mise à jour du fournisseur.');
+      toast.error('Erreur lors de la mise à jour du fournisseur.'); // Message d'erreur
     }
   };
 
@@ -159,7 +172,7 @@ const TableauFournisseur = () => {
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(item.fournisseur_id)}
+                    onClick={() => handleDelete(item)}
                   >
                     <FaTrash />
                   </button>
@@ -259,25 +272,37 @@ const TableauFournisseur = () => {
           )}
         </Modal.Body>
       </Modal>
+
+      {/* Confirmation Modal for deletion */}
+      <ConfirmationModal
+        show={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={confirmDelete}
+        message="Êtes-vous sûr de vouloir supprimer ce fournisseur ?"
+      />
+
+      {/* ToastContainer for notifications */}
+      <ToastContainer />
     </div>
   );
 };
 
 const styles = {
   searchWrapper: {
-    marginBottom: '1rem',
     display: 'flex',
     justifyContent: 'center',
-    padding: '0 1rem',
+    marginBottom: '20px',
   },
   tableWrapper: {
-    marginTop: '1rem',
+    marginTop: '20px',
   },
   paginationWrapper: {
-    marginTop: '1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '20px',
   },
   pagination: {
-    marginBottom: '0',
+    cursor: 'pointer',
   },
 };
 

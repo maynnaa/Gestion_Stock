@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css'; // Assurez-vous d'importer les styles
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const generateRandomCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -34,8 +38,7 @@ const FormulaireDivisionn = () => {
         setSelectedDivision(divisionData.libelle);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setAlertMessage('Erreur lors du chargement des données');
-        setAlertType('danger');
+        toast.error('Erreur lors du chargement des données');
       }
     };
 
@@ -47,8 +50,7 @@ const FormulaireDivisionn = () => {
         setMaterialTypes(data);
       } catch (error) {
         console.error('Error fetching material types:', error);
-        setAlertMessage('Erreur lors du chargement des types de matériel');
-        setAlertType('danger');
+        toast.error('Erreur lors du chargement des types de matériel');
       }
     };
 
@@ -60,8 +62,7 @@ const FormulaireDivisionn = () => {
         setBeneficiaries(data);
       } catch (error) {
         console.error('Error fetching beneficiaries:', error);
-        setAlertMessage('Erreur lors du chargement des bénéficiaires');
-        setAlertType('danger');
+        toast.error('Erreur lors du chargement des bénéficiaires');
       }
     };
 
@@ -81,25 +82,15 @@ const FormulaireDivisionn = () => {
         setMaterials(data);
       } catch (error) {
         console.error('Error fetching materials:', error);
-        setAlertMessage('Erreur lors du chargement des matériels');
-        setAlertType('danger');
+        toast.error('Erreur lors du chargement des matériels');
+
       }
     };
 
     fetchMaterials();
   }, [selectedMaterialType]);
 
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage('');
-        setAlertType('');
-      }, 3000); // 3 seconds
-
-      return () => clearTimeout(timer); // Cleanup the timer if the component unmounts or message changes
-    }
-  }, [alertMessage]);
-
+  
   const addRow = () => {
     setTableRows([...tableRows, { material: '', quantity: 1, id_personnel: '' }]);
   };
@@ -160,8 +151,8 @@ const FormulaireDivisionn = () => {
 
       await Promise.all(materialRequests);
 
-      setAlertMessage('Formulaire soumis avec succès');
-      setAlertType('success');
+      toast.success('Formulaire soumis avec succès');
+
 
       // Reset only the material type and table entries
       setSelectedMaterialType('');
@@ -169,8 +160,8 @@ const FormulaireDivisionn = () => {
       setTableRows([]);
     } catch (error) {
       console.error('Error submitting form:', error);
-      setAlertMessage('Échec de la soumission du formulaire');
-      setAlertType('danger');
+      toast.error('Échec de la soumission du formulaire');
+
     }
   };
 
@@ -298,6 +289,7 @@ const FormulaireDivisionn = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
