@@ -51,11 +51,11 @@ const TableauFournisseur = () => {
           setData(data.filter(item => item.fournisseur_id !== itemToDelete.fournisseur_id));
           toast.success('Fournisseur supprimé avec succès.'); // Message de succès
         } else {
-          toast.error('Erreur lors de la suppression du fournisseur.'); // Message d'erreur
+          toast.error('Erreur lors de la suppression du fournisseur'); // Message d'erreur
         }
       } catch (error) {
         console.error('Erreur lors de la suppression du fournisseur:', error);
-        toast.error('Erreur lors de la suppression du fournisseur.'); // Message d'erreur
+        toast.error('Ce fournisseur est attribué a un produit !'); // Message d'erreur
       }
       setShowConfirmModal(false);
       setItemToDelete(null);
@@ -297,9 +297,12 @@ const styles = {
     marginTop: '20px',
   },
   paginationWrapper: {
+    position: 'fixed',
+    bottom: '2px',  
+    left: '50%',
+    right: '0',
     display: 'flex',
-    justifyContent: 'center',
-    marginTop: '20px',
+    zIndex: 1000,  
   },
   pagination: {
     cursor: 'pointer',

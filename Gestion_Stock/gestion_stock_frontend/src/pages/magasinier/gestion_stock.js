@@ -145,7 +145,7 @@ const GestionStockMagasinier = () => {
             </button>
           </div>
           <StockMagasinier />
-          <ProductFormModal isOpen={isModalOpen} onClose={handleCloseModal} />
+          <ProductFormModal isOpen={isModalOpen} onClose={handleCloseModal}  />
         </div>
       </div>
     </div>

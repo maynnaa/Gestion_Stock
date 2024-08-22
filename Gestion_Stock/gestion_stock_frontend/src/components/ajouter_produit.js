@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 // Set the root element for accessibility
 Modal.setAppElement('#root');
 
-const ProductFormModal = ({ isOpen, onClose }) => {
+const ProductFormModal = ({ isOpen, onClose ,style}) => {
   const [brand, setBrand] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [deliveryDate, setDeliveryDate] = useState('');
@@ -113,7 +113,7 @@ const ProductFormModal = ({ isOpen, onClose }) => {
         style={customStyles}
       >
         <div className="container">
-          <h2 className="my-4">Ajouter un produit</h2>
+          <h2 >Ajouter un produit</h2>
           <form onSubmit={handleSubmit}>
             {error && <div className="alert alert-danger">{error}</div>} {/* Display error message */}
             <div className="mb-3">
@@ -243,15 +243,18 @@ const ProductFormModal = ({ isOpen, onClose }) => {
 // Custom styles for the modal
 const customStyles = {
   content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: '600px',
-    width: '100%'
-  }
+  top: '50%',
+  left: '50%',
+  right: 'auto',
+  bottom: 'auto',
+  marginRight: '-50%',
+  transform: 'translate(-50%, -50%)',
+  maxWidth: '600px',
+  width: '100%',
+  maxHeight: '85vh', // Adjust the height as needed
+  overflowY: 'auto', // Ensures content is scrollable if it exceeds the height
+}
+
 };
 
 export default ProductFormModal;

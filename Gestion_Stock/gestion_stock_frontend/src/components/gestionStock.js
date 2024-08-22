@@ -7,7 +7,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Search from './search';
 
-
 const StockMagasinier = () => {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,14 +20,14 @@ const StockMagasinier = () => {
 
   useEffect(() => {
     axios.get('http://localhost:9091/api/produit')
-    .then(response => {
-      const produitsDisponibles = response.data.filter(produit => produit.disponibilite === 'disponible');
-      setData(produitsDisponibles);
-    })
-    .catch(error => {
-      console.error('Erreur lors de la récupération des données:', error);
-    });
- 
+      .then(response => {
+        const produitsDisponibles = response.data.filter(produit => produit.disponibilite === 'disponible');
+        setData(produitsDisponibles);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données:', error);
+      });
+
     axios.get('http://localhost:9091/api/materiel')
       .then(response => {
         setMaterielList(response.data);
@@ -111,17 +110,17 @@ const StockMagasinier = () => {
         ppr: ppr,
         produitId: selectedItem.id_produit
       });
-      
+
       if (response.status === 200) {
         console.log('Article affecté avec succès:', response.data);
 
         handlePPRModalClose();
-        window.location.reload(); 
+        window.location.reload();
 
         toast.success('Article affecté avec succès.');
       }
     } catch (error) {
-      handlePPRModalClose(); 
+      handlePPRModalClose();
 
       console.error('Erreur lors de l\'affectation de l\'article:', error.response?.data || error.message);
       toast.error('PPR introuvable.');
@@ -156,12 +155,13 @@ const StockMagasinier = () => {
   };
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-2" style={styles.container}>
       <ToastContainer />
 
       <div style={styles.searchWrapper}>
         <Search onSearch={handleSearch} />
       </div>
+
       <div className="table-responsive" style={styles.tableWrapper}>
         <table className="table table-bordered">
           <thead>
@@ -202,7 +202,8 @@ const StockMagasinier = () => {
           </tbody>
         </table>
       </div>
-      <nav>
+
+      <nav style={styles.paginationWrapper}>
         <ul className="pagination justify-content-center">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
             <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
@@ -261,55 +262,50 @@ const StockMagasinier = () => {
               <Form.Group controlId="formMateriel">
                 <Form.Label>Matériel</Form.Label>
                 <Form.Control as="select" defaultValue={selectedItem.materiel?.libelle || ''}>
-                  {materielList.map((materiel) => (
-                    <option key={materiel.id_materiel} value={materiel.libelle}>
-                      {materiel.libelle}
-                    </option>
+                  {materielList.map((m) => (
+                    <option key={m.id_materiel}>{m.libelle}</option>
                   ))}
                 </Form.Control>
               </Form.Group>
               <Form.Group controlId="formFournisseur">
                 <Form.Label>Fournisseur</Form.Label>
                 <Form.Control as="select" defaultValue={selectedItem.fournisseur?.nom || ''}>
-                  {fournisseurList.map((fournisseur) => (
-                    <option key={fournisseur.id_fournisseur} value={fournisseur.nom}>
-                      {fournisseur.nom}
-                    </option>
+                  {fournisseurList.map((f) => (
+                    <option key={f.id_fournisseur}>{f.nom}</option>
                   ))}
                 </Form.Control>
               </Form.Group>
-              <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
-              Sauvegarder
+              <Button variant="primary" type="submit"  style={{ marginTop: '20px' }}>
+                Sauvegarder
               </Button>
             </Form>
           )}
         </Modal.Body>
       </Modal>
 
-      <Modal show={showPPRModal} onHide={handlePPRModalClose}>
+      <Modal show={showPPRModal} onHide={handlePPRModalClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Attribuer un PPR</Modal.Title>
+          <Modal.Title>Affecter l'article</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedItem && (
-            <Form onSubmit={handleSavePPR}>
-              <Form.Group controlId="formPPR">
-                <Form.Label>PPR</Form.Label>
-                <Form.Control type="text" required />
-              </Form.Group>
-              <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
-                Attribuer
-              </Button>
-            </Form>
-          )}
+          <Form onSubmit={handleSavePPR}>
+            <Form.Group controlId="formPPR">
+              <Form.Label>PPR</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Entrez le PPR"
+                required
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit"  style={{ marginTop: '20px' }}>
+              Sauvegarder
+            </Button>
+          </Form>
         </Modal.Body>
       </Modal>
     </div>
   );
 };
-
-
-
 
 const styles = {
   searchWrapper: {
@@ -317,13 +313,18 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     padding: '0 1rem',
-    marginBottom: '20px',
   },
   tableWrapper: {
     marginTop: '1rem',
+    marginBottom: '80px', 
   },
   paginationWrapper: {
-    marginTop: '1rem',
+    position: 'fixed',
+    bottom: '2px',  
+    left: '50%',
+    right: '0',
+    display: 'flex',
+    zIndex: 1000,  
   },
   pagination: {
     marginBottom: '0',
@@ -335,8 +336,7 @@ const styles = {
     marginBottom: '10px',
     maxWidth: '350px', 
     margin: '0 auto', 
-    
   },
 };
-export default StockMagasinier;
 
+export default StockMagasinier;

@@ -146,7 +146,7 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     width: '500px',
-    height: '490px',
+    height: '505px',
     padding: '20px',
     borderRadius: '8px',
   },
