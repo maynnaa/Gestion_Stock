@@ -57,7 +57,7 @@ const ProductFormModal = ({ isOpen, onClose ,style}) => {
     e.preventDefault();
   
     // Validate brand field
-    const brandRegex = /^[A-Za-z\s]+$/;
+    const brandRegex = /^[A-Za-z\s-]+$/;
     if (!brandRegex.test(brand)) {
       toast.error('La marque ne doit contenir que des lettres.');
       return;

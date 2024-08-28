@@ -1,6 +1,7 @@
 package ma.Stock.service;
 
 import ma.Stock.entities.Entite;
+import ma.Stock.entities.Fonction;
 import ma.Stock.entities.Personnel;
 import ma.Stock.repository.EntiteRepository;
 import ma.Stock.repository.PersonnelRepository;
@@ -45,6 +46,10 @@ public class PersonnelService {
 
     public Integer getFonctionIdByPersonnelId(int idPersonnel) {
         return personnelRepository.findFonctionIdByPersonnelId(idPersonnel);
+    }
+
+    public Fonction getFonctionByPersonnelId(int idPersonnel) {
+        return personnelRepository.findFonctionByPersonnelId(idPersonnel);
     }
 
     public Optional<Personnel> findByEmail(String email) {

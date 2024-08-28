@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Navbar, Nav, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Dropdown, Badge } from 'react-bootstrap';
 import { FaBell, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,10 +9,11 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [iconColor, setIconColor] = useState('#000');
   const [showPopup, setShowPopup] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [fonction, setFonction] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
   const fetchNotifications = useCallback(async () => {
     if (!id_personnel) {
@@ -28,9 +29,25 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
       );
 
       setNotifications(userNotifications);
-      setIconColor(userNotifications.length > 0 ? 'red' : '#000');
     } catch (error) {
       console.error('Erreur lors de la récupération des notifications :', error);
+    }
+  }, [id_personnel]);
+
+  useEffect(() => {
+    const fetchFonction = async () => {
+      try {
+        const response = await axios.get(`/api/personnel/${id_personnel}/fonctionn`);
+        setFonction(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la Fonction:', error);
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    if (id_personnel) {
+      fetchFonction();
     }
   }, [id_personnel]);
 
@@ -39,29 +56,30 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   }, [fetchNotifications, refresh]);
 
   const handleNotificationClick = async (notification) => {
-    try {
-      await axios.put(`http://localhost:9091/api/notification/${notification.id_notification}`, {
-        ...notification,
-        is_seen: "true",
-      });
-      setNotifications(notifications.map(notif => 
-        notif.id_notification === notification.id_notification 
-          ? { ...notif, is_seen: "true" } 
-          : notif
-      ));
-      
-      setSelectedNotification(notification);
-      setShowPopup(true);
-      setShowNotifications(false);
+    setSelectedNotification(notification);
+    setShowPopup(true);
+    setShowNotifications(false);
 
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour de la notification :', error);
+    if (notification.type === 'reponse' || notification.personnel.fonction.id_fonction === 4) {
+      try {
+        await axios.put(`http://localhost:9091/api/notification/${notification.id_notification}`, {
+          ...notification,
+          is_seen: "true",
+        });
+        setNotifications(notifications.map(notif =>
+          notif.id_notification === notification.id_notification
+            ? { ...notif, is_seen: "true" }
+            : notif
+        ));
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de la notification :', error);
+      }
     }
   };
 
   const handleCloseModal = () => {
     setShowPopup(false);
-    window.location.reload();
+    setRefresh(prev => !prev); 
   };
 
   const handleActionClick = async (action) => {
@@ -80,11 +98,9 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
   const handleLogout = () => {
     localStorage.removeItem('id_personnel');
     navigate('/login', { replace: true });
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function () {
-      window.history.go(1);
-    };
   };
+
+  const unreadCount = notifications.length;
 
   return (
     <div>
@@ -146,6 +162,9 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
             text-align: center;
             color: #888;
           }
+
+      
+
         `}
       </style>
       <Navbar className="navbar-custom" expand="lg">
@@ -157,11 +176,23 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
           >
             Accueil
           </Nav.Link>
+          <Nav className="navbar-nav">
+  <span style={styles.fonctionLink}>
+    Vous êtes : <strong>{fonction && fonction.libelle}</strong>
+  </span>
+</Nav>
 
+
+         
           <div className="nav-right">
             <Dropdown show={showNotifications} onToggle={(isOpen) => setShowNotifications(isOpen)}>
               <Dropdown.Toggle as="a" className="nav-link" id="notification-dropdown">
-                <FaBell size={25} color={iconColor} />
+                <FaBell size={25} />
+                {unreadCount > 0 && (
+                  <Badge bg="danger" pill style={{ position: 'absolute', top: 5, right: 0 }}>
+                    {unreadCount}
+                  </Badge>
+                )}
               </Dropdown.Toggle>
 
               <Dropdown.Menu align="end">
@@ -175,7 +206,7 @@ const NavBar = ({ id_personnel, onAccueilClick }) => {
                     >
                       <div className="notification-title">
                         {notification.type === 'Demande de besoins' 
-                          ? 'Vous avez une nouvelle demande de besoin à consulter ' 
+                          ? 'Vous avez une nouvelle demande de besoin à consulter' 
                           : 'Vous avez une réponse'}
                       </div>
                     </Dropdown.Item>
@@ -210,8 +241,13 @@ const styles = {
     fontWeight: 'bold',
     color: '#6c757d',
     fontSize: '18px',
-    marginRight: '83%',
     textDecoration: 'none',
+  },
+  fonctionLink: {
+    flexGrow: 1, 
+    whiteSpace: 'nowrap',
+    marginLeft: '84%', 
+    marginRight: '5px', 
   },
 };
 

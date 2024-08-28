@@ -1,5 +1,6 @@
 package ma.Stock.controller;
 
+import ma.Stock.entities.Fonction;
 import ma.Stock.entities.Personnel;
 import ma.Stock.service.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class PersonnelController {
     public ResponseEntity<Integer> getFonctionIdByPersonnelId(@PathVariable int idPersonnel) {
         Integer idFonction = personnelService.getFonctionIdByPersonnelId(idPersonnel);
         return ResponseEntity.ok(idFonction);
+    }
+
+    @GetMapping("/{idPersonnel}/fonctionn")
+    public ResponseEntity<Fonction> getFonctionByPersonnelId(@PathVariable int idPersonnel) {
+        Fonction Fonction = personnelService.getFonctionByPersonnelId(idPersonnel);
+        return ResponseEntity.ok(Fonction);
     }
 
     @GetMapping("/{id}")

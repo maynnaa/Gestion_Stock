@@ -61,8 +61,8 @@ const StockMagasinier = () => {
   };
 
   const handleSave = async (event) => {
-    event.preventDefault();
-
+    event.preventDefault(); // Empêche le rechargement de la page
+  
     const updatedItem = {
       ...selectedItem,
       num_serie: event.target.formNumSerie.value,
@@ -71,7 +71,7 @@ const StockMagasinier = () => {
       materiel: materielList.find(m => m.libelle === event.target.formMateriel.value),
       fournisseur: fournisseurList.find(f => f.nom === event.target.formFournisseur.value),
     };
-
+  
     try {
       const response = await axios.put(`http://localhost:9091/api/produit/${updatedItem.id_produit}`, updatedItem);
       if (response.status === 200) {
@@ -81,14 +81,19 @@ const StockMagasinier = () => {
           )
         );
         handleModalClose();
-
-        toast.success('L\'article a été modifié avec succès.');
+  
+        // Ajouter un petit délai avant d'afficher le toast pour éviter les doublons
+        setTimeout(() => {
+          toast.success('L\'article a été modifié avec succès.');
+        }, 100);
       }
     } catch (error) {
       console.error('Erreur lors de la mise à jour des données:', error);
       toast.error('Erreur lors de la mise à jour des données.');
     }
   };
+  
+
 
   const handlePPR = (item) => {
     setSelectedItem(item);

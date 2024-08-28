@@ -148,8 +148,8 @@ const styles = {
     marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%',
-    maxWidth: '800px',
+    width: '100%',
+    maxWidth: '1000px',
     margin: '20px auto',
   },
   accueilLink: {

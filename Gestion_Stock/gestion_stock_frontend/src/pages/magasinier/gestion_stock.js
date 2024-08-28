@@ -172,7 +172,7 @@ const styles = {
   },
   content: {
     flex: 1,
-    padding: '20px',
+    padding: '30px',
     backgroundColor: '#f8f9fa',
     display: 'flex',
     flexDirection: 'column',

@@ -49,7 +49,7 @@ const ScrollableTable = () => {
       <div className="table-responsive" style={styles.tableWrapper}>
         <table className="table table-bordered">
           <thead>
-            <tr className="text-center">
+            <tr className="text-center" >
               <th>Nom</th>
               <th>Quantité</th>
             </tr>
@@ -57,8 +57,10 @@ const ScrollableTable = () => {
           <tbody className="text-center">
             {data.map((item, index) => (
               <tr key={index}>
-                <td>{item.nom}</td>
-                <td>{item.quantite > 0 ? 'En stock' : 'En rupture de stock'}</td>
+                <td style={{ color: '#002e63'}}>{item.nom}</td>
+                <td style={{ color: item.quantite > 0 ? 'lightseagreen' : 'red' }}>
+                <strong>{item.quantite > 0 ? 'En stock' : 'En rupture de stock'}</strong>
+              </td>
               </tr>
             ))}
           </tbody>
@@ -68,11 +70,12 @@ const ScrollableTable = () => {
   );
 };
 
+
 const styles = {
   tableWrapper: {
     maxWidth: '800px',
     margin: '0 auto',
-    height: '550px',
+    height: '800px',
     overflowY: 'auto',
     scrollbarWidth: 'thin',
   },

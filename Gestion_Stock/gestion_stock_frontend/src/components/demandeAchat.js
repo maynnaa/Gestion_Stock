@@ -232,8 +232,8 @@ const FormulaireDemandeAchat = ({ id }) => {
 
 const styles = {
   card: {
-    width: '80%',
-    maxWidth: '600px',
+    width: '100%',
+    maxWidth: '700px',
   },
   cardTitle: {
     textAlign: 'center',

@@ -106,6 +106,7 @@ const HistoriqueDivision = () => {
         <div style={styles.contentContainer}>
           <div style={styles.tableWrapper}>
             <DefaultExample  /> 
+
           </div>
         </div>
       </div>
@@ -139,7 +140,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  contentContainer: {
+   contentContainer: {
     width: '100%',
     height: '100%',
     overflowY: 'auto',
@@ -147,11 +148,12 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: '55px',
+
   },
   tableWrapper: {
-    width: '80%', 
-    maxWidth: '800px', 
-    margin: '20px auto', 
+    width: '90%',
+    maxWidth: '1000px',
+    margin: '20px auto',
   },
   accueilLink: {
     fontWeight: 'bold',

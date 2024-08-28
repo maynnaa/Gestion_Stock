@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../../layout/sidebar';
 import NavBar from '../../components/navbar';
-import Search from '../../components/search'; 
 import Button from '../../components/button'; 
 import DemandeAchat from '../../components/historiqueAchat';
 import { Nav } from 'react-bootstrap';
@@ -168,8 +167,8 @@ const styles = {
     marginTop: '55px',
   },
   tableWrapper: {
-    width: '80%',
-    maxWidth: '800px',
+    width: '100%',
+    maxWidth: '1000px',
     margin: '20px auto',
   },
   accueilLink: {

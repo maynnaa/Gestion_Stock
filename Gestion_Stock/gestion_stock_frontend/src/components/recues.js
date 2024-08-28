@@ -7,29 +7,33 @@ import { FaArrowRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, FormControl } from 'react-bootstrap';
 
-function Recues({ id }) { 
+function Recues({ id }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [formulaireMaterielData, setFormulaireMaterielData] = useState([]);
   const [personnelData, setPersonnelData] = useState([]);
   const [materielData, setMaterielData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Nouveau state pour la recherche
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    // Fetch the notifications
     axios.get(`/api/notification`)
       .then(response => {
         const filteredNotifications = response.data.filter(notification => 
           notification.personnel.id_personnel === parseInt(id, 10)
         );
-        setNotifications(filteredNotifications);
+
+        const notificationsWithSequence = filteredNotifications.map((notification, index) => ({
+          ...notification,
+          sequenceNumber: index + 1
+        }));
+
+        setNotifications(notificationsWithSequence);
       })
       .catch(error => {
         console.error('Error fetching notifications:', error);
       });
 
-    // Fetch the formulaireMateriel data
     axios.get(`/api/formulaireMateriel`)
       .then(response => {
         setFormulaireMaterielData(response.data);
@@ -38,7 +42,6 @@ function Recues({ id }) {
         console.error('Error fetching formulaireMateriel data:', error);
       });
 
-    // Fetch the personnel data
     axios.get(`/api/personnel`)
       .then(response => {
         setPersonnelData(response.data);
@@ -47,7 +50,6 @@ function Recues({ id }) {
         console.error('Error fetching personnel data:', error);
       });
 
-    // Fetch the materiel data
     axios.get(`/api/materiel`)
       .then(response => {
         setMaterielData(response.data);
@@ -83,10 +85,9 @@ function Recues({ id }) {
     return personnel ? personnel.nom_complet : '';
   };
 
-  // Filtrage par date
   const filteredNotifications = notifications.filter(item => {
     if (!searchTerm) return true;
-    return item.formulaireBesoins.date_creation.includes(searchTerm); // Comparer avec la date de création
+    return item.formulaireBesoins.date_creation.includes(searchTerm);
   });
 
   return (
@@ -105,22 +106,39 @@ function Recues({ id }) {
         <ListGroup>
           {filteredNotifications.map(item => (
             <ListGroup.Item key={item.id_notification}>
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>Demande de besoin N°{item.formulaireBesoins.id_formulaire}</strong>
-                </div>
-                <div className="d-flex align-items-center">
-                  <div>
-                    <strong>Date de création:</strong> {formatDate(item.formulaireBesoins.date_creation)}
-                  </div>
-                  <button
-                    onClick={() => handleModalOpen(item)}
-                    className="btn btn-link ml-3"
-                  >
-                    <FaArrowRight />
-                  </button>
-                </div>
-              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <div>
+    <strong>Demande de besoin N°{item.sequenceNumber}</strong>
+  </div>
+
+  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ marginRight: '8rem', textAlign: 'center', width: '250px' }}>
+      <p className="mb-0">
+        <strong 
+          style={{
+            color: item.formulaireBesoins.validation === 'Premiere validation' ? 'orange' :
+                   item.formulaireBesoins.validation === 'Approbation du directeur' ? 'lightseagreen' :
+                   item.formulaireBesoins.validation === 'refusée' ? 'red' : 'Chocolate',
+            display: 'inline-block'
+          }}
+        >
+          {item.formulaireBesoins.validation}
+        </strong>
+      </p>
+    </div>
+    <div style={{ marginRight: '1rem' }}>
+      <strong>Date de création:</strong> {formatDate(item.formulaireBesoins.date_creation)}
+    </div>
+    <Button
+      onClick={() => handleModalOpen(item)}
+      variant="link"
+      style={{ padding: 0 }}
+    >
+      <FaArrowRight />
+    </Button>
+  </div>
+</div>
+
             </ListGroup.Item>
           ))}
         </ListGroup>
@@ -135,7 +153,17 @@ function Recues({ id }) {
             <div>
               <p><strong>Demande de besoin N°:</strong> {selectedItem.formulaireBesoins.id_formulaire}</p>
               <p><strong>Date de création:</strong> {formatDate(selectedItem.formulaireBesoins.date_creation)}</p>
-              <p><strong>Validation:</strong> {selectedItem.formulaireBesoins.validation}</p>
+              <p>
+                <strong>Validation: </strong> 
+                <strong 
+                    style={{
+                        color: selectedItem.formulaireBesoins.validation === 'Premiere validation' ? 'orange' :
+                               selectedItem.formulaireBesoins.validation === 'Approbation du directeur' ? 'lightseagreen' :
+                               selectedItem.formulaireBesoins.validation === 'refusée' ? 'red' : 'Chocolate'
+                    }}>
+                    {selectedItem.formulaireBesoins.validation}
+                </strong>
+              </p>
 
               <Table responsive="xl" className="text-center">
                 <thead>

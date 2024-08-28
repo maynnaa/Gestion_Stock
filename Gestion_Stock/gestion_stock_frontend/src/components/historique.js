@@ -14,7 +14,7 @@ function DefaultExample({ searchTerm = '' }) {
   const [selectedArticles, setSelectedArticles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [searchDate, setSearchDate] = useState(searchTerm); // État pour la recherche par date
+  const [searchDate, setSearchDate] = useState(searchTerm);
   const { id_personnel } = useParams();
 
   useEffect(() => {
@@ -26,10 +26,15 @@ function DefaultExample({ searchTerm = '' }) {
 
       try {
         const response = await axios.get(`/api/formulaireBesoins/user/${id_personnel}`);
-        console.log('FormulaireBesoins response:', response);
-
         if (Array.isArray(response.data)) {
-          setFormulaireBesoins(response.data);
+          const sortedData = response.data.sort((a, b) => new Date(a.date_creation) - new Date(b.date_creation));
+          
+          const dataWithSequentialNumbers = sortedData.map((item, index) => ({
+            ...item,
+            sequentialNumber: index + 1,
+          }));
+
+          setFormulaireBesoins(dataWithSequentialNumbers);
         } else {
           console.error('Expected an array but got:', response.data);
           setFormulaireBesoins([]);
@@ -48,7 +53,6 @@ function DefaultExample({ searchTerm = '' }) {
       const fetchSelectedArticles = async () => {
         try {
           const response = await axios.get(`/api/formulaireMateriel/formulaire/${selectedItem.id_formulaire}`);
-          console.log('Selected Articles:', response.data);
           setSelectedArticles(response.data);
         } catch (error) {
           console.error('Error fetching selected articles:', error);
@@ -60,7 +64,6 @@ function DefaultExample({ searchTerm = '' }) {
     }
   }, [selectedItem]);
 
-  // Filtrage par date
   const filteredItems = formulaireBesoins.filter(item => {
     if (!searchDate) return true;
     const itemDate = new Date(item.date_creation).toISOString().split('T')[0];
@@ -93,28 +96,38 @@ function DefaultExample({ searchTerm = '' }) {
         style={{ width: '40%', margin: '0 auto' }} 
         title="Rechercher par date" 
       />
-      <div style={{ width: '100%', maxWidth: '750px', margin: '0 auto' }}>
-        <ListGroup>
-          {filteredItems.map(item => (
-            <ListGroup.Item key={item.id_formulaire}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div><strong>Demande de besoin N°{item.id_formulaire}</strong></div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div><strong>Date de création:</strong> {formatDate(item.date_creation)}</div>
-                  <Button 
-                    onClick={() => handleShowModal(item)} 
-                    style={{ background: 'none', border: 'none', padding: '0', marginLeft: '1rem' }} 
-                  >
-                    <FaArrowRight style={{ color: 'blue' }} />
-                  </Button>
-                </div>
-              </div>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+      <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
+      <ListGroup>
+  {filteredItems.map(item => (
+    <ListGroup.Item key={item.id_formulaire}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div><strong>Demande de besoin N°{item.sequentialNumber}</strong></div>
+        <div>
+          <strong 
+            style={{
+              color: item.validation === 'Premiere validation' ? 'orange' :
+                     item.validation === 'Approbation du directeur' ? 'lightseagreen' :
+                     item.validation === 'refusée' ? 'red' : 'Chocolate'
+            }}>
+            {item.validation}
+          </strong>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div><strong>Date de création:</strong> {formatDate(item.date_creation)}</div>
+          <Button 
+            onClick={() => handleShowModal(item)} 
+            style={{ background: 'none', border: 'none', padding: '0', marginLeft: '1rem' }} 
+          >
+            <FaArrowRight style={{ color: 'blue' }} />
+          </Button>
+        </div>
+      </div>
+    </ListGroup.Item>
+  ))}
+</ListGroup>
+
       </div>
 
-      {/* Modal for displaying item details */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Détail de la demande de besoins</Modal.Title>
@@ -124,8 +137,17 @@ function DefaultExample({ searchTerm = '' }) {
             <div>
               <p><strong>Demande de besoin N°:</strong> {selectedItem.id_formulaire}</p>
               <p><strong>Date de création:</strong> {formatDate(selectedItem.date_creation)}</p>
-              <p><strong>Validation:</strong> {selectedItem.validation}</p>
-
+              <p>
+                <strong>Validation: </strong>
+                <strong 
+                  style={{
+                    color: selectedItem.validation === 'Premiere validation' ? 'orange' :
+                           selectedItem.validation === 'Approbation du directeur' ? 'lightseagreen' :
+                           selectedItem.validation === 'refusée' ? 'red' : 'Chocolate'
+                  }}>
+                  {selectedItem.validation}
+                </strong>
+              </p>
               <Table responsive="xl" className="text-center">
                 <thead>
                   <tr>

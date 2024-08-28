@@ -305,8 +305,7 @@ const styles = {
     width: '100%',
     maxWidth: '700px',
     minWidth: '600px',
-    height: '70%',
-    maxHeight: '',
+  
     overflowY: 'auto',
     borderRadius: '10px',
     backgroundColor: '#fff',

@@ -65,7 +65,13 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
       console.error('ID Formulaire ou ID Personnel manquant');
       return;
     }
-
+    try {
+      // Mettre à jour la notification reçue pour marquer comme vue
+      await axios.put(`/api/notification/${notification.id_notification}`, {
+        ...notification,
+        is_seen: "true",
+      });
+  
     if (fonctionId === 1 || fonctionId === 2) {
       try {
         const notificationData = {
@@ -95,37 +101,41 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
     } else {
       console.log('Action non autorisée pour cette fonction');
     }
-
+  } catch (error) {
+    console.error('Erreur lors de l\'approbation de la demande:', error);
+  }
     handleCloseModal();
 
   };
-
   const handleApprove = async () => {
     const idFormulaire = notification?.formulaireBesoins?.id_formulaire;
+    const idPersonnel = notification?.formulaireBesoins?.personnel?.id_personnel;
   
     console.log('ID Formulaire:', idFormulaire);
   
-    if (!idFormulaire) {
-      console.error('ID Formulaire manquant');
+    if (!idFormulaire || !idPersonnel) {
+      console.error('ID Formulaire ou ID Personnel manquant');
       return;
     }
   
     try {
+      // Mettre à jour la notification reçue pour marquer comme vue
+      await axios.put(`/api/notification/${notification.id_notification}`, {
+        ...notification,
+        is_seen: "true",
+      });
+  
+      // Traiter selon l'ID fonction
       if (fonctionId === 1) {
+        // Notification pour le Directeur
         const notificationData1 = {
           is_seen: "false",
           type: 'reponse',
-          formulaireBesoins: {
-            id_formulaire: idFormulaire
-          },
-          personnel: {
-            id_personnel: idPersonnel
-          }
+          formulaireBesoins: { id_formulaire: idFormulaire },
+          personnel: { id_personnel: idPersonnel }
         };
-        console.log('Données envoyées pour la première notification:', notificationData1);
   
         await axios.post('/api/notification', notificationData1);
-  
         await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
           validation: 'Approbation du directeur'
         });
@@ -133,51 +143,38 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
         const notificationData2 = {
           is_seen: "false",
           type: 'Demande de besoins',
-          formulaireBesoins: {
-            id_formulaire: idFormulaire
-          },
-          personnel: {
-            id_personnel: 14
-          }
+          formulaireBesoins: { id_formulaire: idFormulaire },
+          personnel: { id_personnel: 14 }
         };
-        console.log('Données envoyées pour la deuxième notification:', notificationData2);
-        window.location.reload();
-        
+  
         await axios.post('/api/notification', notificationData2);
   
-        console.log('Approbation du directeur enregistrée et notifications créées');
       } else if (fonctionId === 2) {
+        // Notification pour le Chef de Division
         const notificationData = {
           is_seen: "false",
           type: 'Demande de besoins',
-          formulaireBesoins: {
-            id_formulaire: idFormulaire
-          },
-          personnel: {
-            id_personnel: 15
-          }
+          formulaireBesoins: { id_formulaire: idFormulaire },
+          personnel: { id_personnel: 15 }
         };
-        console.log('Données envoyées pour la notification:', notificationData);
   
         await axios.post('/api/notification', notificationData);
-  
         await axios.put(`/api/formulaireBesoins/${idFormulaire}`, {
           validation: 'Premiere validation'
         });
   
-        console.log('Demande approuvée et notification créée');
-        window.location.reload();
-
       } else {
         console.log('Action non autorisée pour cette fonction');
       }
+  
+      console.log('Approbation enregistrée et notifications créées');
     } catch (error) {
       console.error('Erreur lors de l\'approbation de la demande:', error);
     }
   
     handleCloseModal();
-
   };
+  
   
   if (loading) {
     return null; // N'affiche rien tant que les données ne sont pas chargées
@@ -191,8 +188,17 @@ function DivisionPopup({ showModal, handleCloseModal, notification, id }) {
       <Modal.Body>
         <p><strong>Demande de besoin N°:</strong> {notification.formulaireBesoins.id_formulaire}</p>
         <p><strong>Date de création:</strong> {new Date(notification.formulaireBesoins.date_creation).toLocaleDateString()}</p>
-        <p><strong>Validation:</strong> {notification.formulaireBesoins.validation}</p>
-
+        <p><strong>Validation: </strong> 
+        <span 
+            style={{
+                color: notification.formulaireBesoins.validation === 'Premiere validation' ? 'orange' :
+                       notification.formulaireBesoins.validation === 'Approbation du directeur' ? 'lightseagreen' :
+                       notification.formulaireBesoins.validation === 'refusée' ? 'red' : 'Chocolate',
+                fontWeight: 'bold'
+            }}>
+            {notification.formulaireBesoins.validation}
+        </span>
+    </p>
         <Table responsive="xl" className="text-center">
           <thead>
             <tr>

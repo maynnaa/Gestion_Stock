@@ -53,7 +53,7 @@ function DemandeAchat() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return format(date, 'dd/MM/yyyy HH:mm');
+    return format(date, 'dd/MM/yyyy ');
   };
 
   const selectedArticles = articles.filter(
@@ -71,14 +71,14 @@ function DemandeAchat() {
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Rechercher par date"
           className="mb-3"
-          style={{ width: '50%', margin: '0 auto' }} 
+          style={{ width: '40%', margin: '0 auto' }} 
           title="Rechercher par date" 
         />
-        <div className="scrollable-list" style={{ width: '300%', maxWidth: '750px' }}>
+        <div className="scrollable-list" style={{ width: '100%', maxWidth: '1000px' }}>
           <ListGroup>
             {filteredItems.map((item) => (
               <ListGroup.Item key={item.id_demande}>
-                <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-between align-items-center" >
                   <div>
                     <strong>Demande d'achat N°{item.id_demande}</strong>
                   </div>
@@ -106,9 +106,9 @@ function DemandeAchat() {
         <Modal.Body>
           {selectedItemId !== null ? (
             <div>
-              <p>Demande d'achat ID: {selectedItemId}</p>
-              <p>Fournisseur: {fournisseurName}</p>
-              <Table responsive="xl">
+            <p>  <strong>Demande d'achat ID : </strong> {selectedItemId}</p>
+            <p> <strong>Fournisseur : </strong> {fournisseurName}</p>
+              <Table responsive="xl" className="text-center">
                 <thead>
                   <tr>
                     <th>Matériel</th>
